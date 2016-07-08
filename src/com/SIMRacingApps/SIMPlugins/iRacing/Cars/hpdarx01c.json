@@ -1,0 +1,127 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/hpd.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Tachometer": {
+            "default-R": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6100.0, "End": 9800.0},
+                    "SHIFT":       {"Start": 9800.0, "End": 9850.0},
+                    "SHIFTBLINK":  {"Start": 9850.0, "End": 9999999.0} 
+                }
+            },
+            "default-N": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 0.0,    "End": 5050.0},
+                    "SHIFT":       {"Start": 5050.0, "End": 5600.0},
+                    "SHIFTBLINK":  {"Start": 5600.0, "End": 9999999.0} 
+                }
+            },
+            "default-1": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6100.0, "End": 9800.0},
+                    "SHIFT":       {"Start": 9800.0, "End": 9900.0},
+                    "SHIFTBLINK":  {"Start": 9900.0, "End": 9999999.0} 
+                }
+            },
+            "default-2": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7850.0, "End": 9950.0},
+                    "SHIFT":       {"Start": 9950.0, "End": 10000.0},
+                    "SHIFTBLINK":  {"Start": 10000.0,"End": 9999999.0} 
+                }
+            },
+            "default-3": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7680.0, "End": 9550.0},
+                    "SHIFT":       {"Start": 9550.0, "End": 9600.0},
+                    "SHIFTBLINK":  {"Start": 9600.0, "End": 9999999.0} 
+                }
+            },
+            "default-4": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 8800.0, "End": 9650.0},
+                    "SHIFT":       {"Start": 9650.0, "End": 9700.0},
+                    "SHIFTBLINK":  {"Start": 9700.0, "End": 9999999.0} 
+                }
+            },
+            "default-5": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 8800.0, "End": 9450.0},
+                    "SHIFT":       {"Start": 9450.0, "End": 9500.0},
+                    "SHIFTBLINK":  {"Start": 9500.0, "End": 9999999.0} 
+                }
+            },
+            "default-6": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 8900.0, "End": 9999.9},
+                    "SHIFT":       {"Start": 9999.9, "End": 10000.0},
+                    "SHIFTBLINK":  {"Start": 10000.0,"End": 9999999.0} 
+                }
+            }
+        },
+        "FuelLevel": {
+            "gal": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "gal",
+                "Minimum":           0.0,
+                "Maximum":           22.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   21.134,
+                "CapacityIncrement": 0.352,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            },
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "kg",
+                "Minimum":           0.0,
+                "Maximum":           80.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   80.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 3.0},
+                    "WARNING":  {"Start": 3.0, "End": 6.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "Minimum":           0.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   4.8,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            }
+        }
+    }
+}

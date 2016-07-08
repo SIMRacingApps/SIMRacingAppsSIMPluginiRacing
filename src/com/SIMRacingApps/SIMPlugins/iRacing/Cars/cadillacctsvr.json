@@ -1,0 +1,215 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "Cadillac CTS-V Racecar",
+    "MfrLogo":     "com/SIMRacingApps/Cars/cadillac.png",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           9.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "RPMPitRoadSpeed":   3950.0,
+                "StateAscending":    true
+            },
+            "default-R": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6600.0, "End": 7400.0},
+                    "SHIFT":       {"Start": 7400.0, "End": 7410.0},
+                    "SHIFTBLINK":  {"Start": 7410.0, "End": 99999999.0}
+                }
+            },
+            "default-N": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6600.0, "End": 7400.0},
+                    "SHIFT":       {"Start": 7400.0, "End": 7410.0},
+                    "SHIFTBLINK":  {"Start": 7410.0, "End": 99999999.0}
+                }
+            },
+            "default-1": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6600.0, "End": 7400.0},
+                    "SHIFT":       {"Start": 7400.0, "End": 7410.0},
+                    "SHIFTBLINK":  {"Start": 7410.0, "End": 99999999.0}
+                }
+            },
+            "default-2": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6800.0, "End": 7400.0},
+                    "SHIFT":       {"Start": 7400.0, "End": 7410.0},
+                    "SHIFTBLINK":  {"Start": 7410.0, "End": 99999999.0}
+                }
+            },
+            "default-3": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7000.0, "End": 7400.0},
+                    "SHIFT":       {"Start": 7400.0, "End": 7410.0},
+                    "SHIFTBLINK":  {"Start": 7410.0, "End": 99999999.0}
+                }
+            },
+            "default-4": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7100.0, "End": 7400.0},
+                    "SHIFT":       {"Start": 7400.0, "End": 7410.0},
+                    "SHIFTBLINK":  {"Start": 7410.0, "End": 99999999.0}
+                }
+            },
+            "default-5": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7200.0, "End": 7400.0},
+                    "SHIFT":       {"Start": 7400.0, "End": 7410.0},
+                    "SHIFTBLINK":  {"Start": 7410.0, "End": 99999999.0}
+                }
+            },
+            "default-6": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7200.0, "End": 7400.0},
+                    "SHIFT":       {"Start": 7400.0, "End": 7410.0},
+                    "SHIFTBLINK":  {"Start": 7410.0, "End": 99999999.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    20.0,
+                "MinorIncrement":    10.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 5.0},
+                    "WARNING":  {"Start": 5.0, "End": 15.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "gal",
+                "Minimum":           0.0,
+                "Maximum":           24.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   23.8,
+                "CapacityIncrement": 1.3,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false
+            }
+        },
+        "TirePressureLF": {
+            "default": {
+                "Name":              "LF TIRE",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   20.0,
+                "CapacityMaximum":   30.0,
+                "CapacityIncrement": 0.5,
+                "OnResetChange":     true,
+                "IsFixed":           false,
+                "IsChangable":       true
+            }
+        },
+        "TirePressureLR": {
+            "default": {
+                "Name":              "LR TIRE",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   20.0,
+                "CapacityMaximum":   30.0,
+                "CapacityIncrement": 0.5,
+                "OnResetChange":     true,
+                "IsFixed":           false,
+                "IsChangable":       true
+            }
+        },
+        "TirePressureRF": {
+            "default": {
+                "Name":              "RF TIRE",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   20.0,
+                "CapacityMaximum":   30.0,
+                "CapacityIncrement": 0.5,
+                "OnResetChange":     true,
+                "IsFixed":           false,
+                "IsChangable":       true
+            }
+        },
+        "TirePressureRR": {
+            "default": {
+                "Name":              "RR TIRE",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   20.0,
+                "CapacityMaximum":   30.0,
+                "CapacityIncrement": 0.5,
+                "OnResetChange":     true,
+                "IsFixed":           false,
+                "IsChangable":       true
+            }
+        },
+        "BrakeBiasAdjustment": {
+            "default": {
+                "Name":              "BRAKE BIAS ADJ",
+                "TypeName":          "",
+                "UOM":               "%",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   43.4,
+                "CapacityMaximum":   60.3,
+                "CapacityIncrement": 0.338970184326174,
+                "IsFixed":           false
+            }
+        }
+    }
+}

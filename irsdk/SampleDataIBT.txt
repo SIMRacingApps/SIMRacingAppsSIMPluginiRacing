@@ -1,0 +1,2963 @@
+{
+"WeekendInfo": {
+"TrackName": "texas roadcourse",
+"TrackID": 122,
+"TrackLength": "3.66 km",
+"TrackDisplayName": "Texas Motor Speedway",
+"TrackDisplayShortName": "Texas",
+"TrackConfigName": "Road Course Combined",
+"TrackCity": "Ft. Worth",
+"TrackCountry": "USA",
+"TrackAltitude": "199.78 m",
+"TrackLatitude": "33.037293 m",
+"TrackLongitude": "-97.284231 m",
+"TrackNumTurns": 10,
+"TrackPitSpeedLimit": "72.00 kph",
+"TrackType": "road course",
+"TrackWeatherType": "Constant",
+"TrackSkies": "Partly Cloudy",
+"TrackSurfaceTemp": "39.81 C",
+"TrackAirTemp": "25.56 C",
+"TrackAirPressure": "29.22 Hg",
+"TrackWindVel": "0.89 m/s",
+"TrackWindDir": "0.00 rad",
+"TrackRelativeHumidity": "55 %",
+"TrackFogLevel": "0 %",
+"SeriesID": 0,
+"SeasonID": 0,
+"SessionID": 0,
+"SubSessionID": 0,
+"LeagueID": 0,
+"Official": 0,
+"RaceWeek": 0,
+"EventType": "Test",
+"Category": "Road",
+"SimMode": "full",
+"TeamRacing": 0,
+"MinDrivers": 0,
+"MaxDrivers": 0,
+"DCRuleSet": "None",
+"QualifierMustStartRace": 0,
+"NumCarClasses": 1,
+"NumCarTypes": 1,
+"WeekendOptions": {
+"NumStarters": 0,
+"StartingGrid": "single file",
+"QualifyScoring": "best lap",
+"CourseCautions": false,
+"StandingStart": 0,
+"Restarts": "single file",
+"WeatherType": "Constant",
+"Skies": "Partly Cloudy",
+"WindDirection": "N",
+"WindSpeed": "3.22 km/h",
+"WeatherTemp": "25.56 C",
+"RelativeHumidity": "55 %",
+"FogLevel": "0 %",
+"Unofficial": 0,
+"CommercialMode": "consumer",
+"NightMode": 0,
+"IsFixedSetup": 0,
+"StrictLapsChecking": "default",
+"HasOpenRegistration": 0,
+"HardcoreLevel": 1
+},
+"TelemetryOptions": {
+"TelemetryDiskFile": ""
+}
+},
+"SessionInfo": {
+"Sessions": [
+{
+"SessionNum": 0,
+"SessionLaps": "unlimited",
+"SessionTime": "unlimited",
+"SessionNumLapsToAvg": 0,
+"SessionType": "Offline Testing",
+"ResultsPositions": null,
+"ResultsFastestLap": [
+{
+"CarIdx": 255,
+"FastestLap": 0,
+"FastestTime": -1
+}
+],
+"ResultsAverageLapTime": -1,
+"ResultsNumCautionFlags": 0,
+"ResultsNumCautionLaps": 0,
+"ResultsNumLeadChanges": 0,
+"ResultsLapsComplete": -1,
+"ResultsOfficial": 0
+}
+]
+},
+"CameraInfo": {
+"Groups": [
+{
+"GroupNum": 1,
+"GroupName": "Nose",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamNose"
+}
+]
+},
+{
+"GroupNum": 2,
+"GroupName": "Gearbox",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamGearbox"
+}
+]
+},
+{
+"GroupNum": 3,
+"GroupName": "Roll Bar",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamRoll Bar"
+}
+]
+},
+{
+"GroupNum": 4,
+"GroupName": "LF Susp",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamLF Susp"
+}
+]
+},
+{
+"GroupNum": 5,
+"GroupName": "LR Susp",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamLR Susp"
+}
+]
+},
+{
+"GroupNum": 6,
+"GroupName": "Gyro",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamGyro"
+}
+]
+},
+{
+"GroupNum": 7,
+"GroupName": "RF Susp",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamRF Susp"
+}
+]
+},
+{
+"GroupNum": 8,
+"GroupName": "RR Susp",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamRR Susp"
+}
+]
+},
+{
+"GroupNum": 9,
+"GroupName": "Cockpit",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamCockpit"
+}
+]
+},
+{
+"GroupNum": 10,
+"GroupName": "TV1",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamTV1_00"
+},
+{
+"CameraNum": 2,
+"CameraName": "CamTV1_01"
+},
+{
+"CameraNum": 3,
+"CameraName": "CamTV1_02"
+},
+{
+"CameraNum": 4,
+"CameraName": "CamTV1_04"
+},
+{
+"CameraNum": 5,
+"CameraName": "CamTV1_05"
+},
+{
+"CameraNum": 6,
+"CameraName": "CamTV1_06"
+},
+{
+"CameraNum": 7,
+"CameraName": "CamTV1_07"
+},
+{
+"CameraNum": 8,
+"CameraName": "CamTV1_08"
+},
+{
+"CameraNum": 9,
+"CameraName": "CamTV1_09"
+}
+]
+},
+{
+"GroupNum": 11,
+"GroupName": "TV2",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamTV2_00"
+},
+{
+"CameraNum": 2,
+"CameraName": "CamTV2_01"
+},
+{
+"CameraNum": 3,
+"CameraName": "CamTV2_02"
+},
+{
+"CameraNum": 4,
+"CameraName": "CamTV2_03"
+},
+{
+"CameraNum": 5,
+"CameraName": "CamTV2_04"
+},
+{
+"CameraNum": 6,
+"CameraName": "CamTV2_05"
+},
+{
+"CameraNum": 7,
+"CameraName": "CamTV2_06"
+},
+{
+"CameraNum": 8,
+"CameraName": "CamTV2_07"
+},
+{
+"CameraNum": 9,
+"CameraName": "CamTV2_08"
+}
+]
+},
+{
+"GroupNum": 12,
+"GroupName": "TV3",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamTV3_00"
+},
+{
+"CameraNum": 2,
+"CameraName": "CamTV3_01"
+},
+{
+"CameraNum": 3,
+"CameraName": "CamTV3_02"
+},
+{
+"CameraNum": 4,
+"CameraName": "CamTV3_03"
+},
+{
+"CameraNum": 5,
+"CameraName": "CamTV3_04"
+},
+{
+"CameraNum": 6,
+"CameraName": "CamTV3_05"
+},
+{
+"CameraNum": 7,
+"CameraName": "CamTV3_06"
+},
+{
+"CameraNum": 8,
+"CameraName": "CamTV3_07"
+}
+]
+},
+{
+"GroupNum": 13,
+"GroupName": "Scenic",
+"IsScenic": true,
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "Scenic_01"
+},
+{
+"CameraNum": 2,
+"CameraName": "Scenic_02"
+},
+{
+"CameraNum": 3,
+"CameraName": "Scenic_03"
+},
+{
+"CameraNum": 4,
+"CameraName": "Scenic_04"
+},
+{
+"CameraNum": 5,
+"CameraName": "Scenic_05"
+},
+{
+"CameraNum": 6,
+"CameraName": "Scenic_06"
+}
+]
+},
+{
+"GroupNum": 14,
+"GroupName": "Pit Lane",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamPit Lane"
+}
+]
+},
+{
+"GroupNum": 15,
+"GroupName": "Pit Lane 2",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamPit Lane 2"
+}
+]
+},
+{
+"GroupNum": 16,
+"GroupName": "Chopper",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamChopper"
+}
+]
+},
+{
+"GroupNum": 17,
+"GroupName": "Blimp",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamBlimp"
+}
+]
+},
+{
+"GroupNum": 18,
+"GroupName": "Chase",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamChase"
+}
+]
+},
+{
+"GroupNum": 19,
+"GroupName": "Far Chase",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamFar Chase"
+}
+]
+},
+{
+"GroupNum": 20,
+"GroupName": "Rear Chase",
+"Cameras": [
+{
+"CameraNum": 1,
+"CameraName": "CamRear Chase"
+}
+]
+}
+]
+},
+"RadioInfo": {
+"SelectedRadioNum": 0,
+"Radios": [
+{
+"RadioNum": 0,
+"HopCount": 1,
+"NumFrequencies": 7,
+"TunedToFrequencyNum": 0,
+"ScanningIsOn": 1,
+"Frequencies": [
+{
+"FrequencyNum": 0,
+"FrequencyName": "@ALLTEAMS",
+"Priority": 12,
+"CarIdx": -1,
+"EntryIdx": -1,
+"ClubID": 0,
+"CanScan": 1,
+"CanSquawk": 1,
+"Muted": 0,
+"IsMutable": 1,
+"IsDeletable": 0
+},
+{
+"FrequencyNum": 1,
+"FrequencyName": "@DRIVERS",
+"Priority": 15,
+"CarIdx": -1,
+"EntryIdx": -1,
+"ClubID": 0,
+"CanScan": 1,
+"CanSquawk": 1,
+"Muted": 0,
+"IsMutable": 1,
+"IsDeletable": 0
+},
+{
+"FrequencyNum": 2,
+"FrequencyName": "@TEAM",
+"Priority": 60,
+"CarIdx": 0,
+"EntryIdx": -1,
+"ClubID": 0,
+"CanScan": 1,
+"CanSquawk": 1,
+"Muted": 0,
+"IsMutable": 0,
+"IsDeletable": 0
+},
+{
+"FrequencyNum": 3,
+"FrequencyName": "@CLUB",
+"Priority": 20,
+"CarIdx": -1,
+"EntryIdx": -1,
+"ClubID": 21,
+"CanScan": 1,
+"CanSquawk": 1,
+"Muted": 0,
+"IsMutable": 1,
+"IsDeletable": 0
+},
+{
+"FrequencyNum": 4,
+"FrequencyName": "@ADMIN",
+"Priority": 90,
+"CarIdx": -1,
+"EntryIdx": -1,
+"ClubID": 0,
+"CanScan": 1,
+"CanSquawk": 1,
+"Muted": 0,
+"IsMutable": 0,
+"IsDeletable": 0
+},
+{
+"FrequencyNum": 5,
+"FrequencyName": "@RACECONTROL",
+"Priority": 80,
+"CarIdx": -1,
+"EntryIdx": -1,
+"ClubID": 0,
+"CanScan": 1,
+"CanSquawk": 1,
+"Muted": 0,
+"IsMutable": 0,
+"IsDeletable": 0
+},
+{
+"FrequencyNum": 6,
+"FrequencyName": "@PRIVATE",
+"Priority": 70,
+"CarIdx": -1,
+"EntryIdx": 0,
+"ClubID": 0,
+"CanScan": 1,
+"CanSquawk": 1,
+"Muted": 0,
+"IsMutable": 0,
+"IsDeletable": 0
+}
+]
+}
+]
+},
+"DriverInfo": {
+"DriverCarIdx": 0,
+"DriverHeadPosX": 0.275,
+"DriverHeadPosY": -0.18,
+"DriverHeadPosZ": 0.479,
+"DriverCarIdleRPM": 3000,
+"DriverCarRedLine": 10000,
+"DriverCarFuelKgPerLtr": 0.75,
+"DriverCarFuelMaxLtr": 80,
+"DriverCarMaxFuelPct": 1,
+"DriverCarSLFirstRPM": 6113,
+"DriverCarSLShiftRPM": 9800,
+"DriverCarSLLastRPM": 9800,
+"DriverCarSLBlinkRPM": 9850,
+"DriverPitTrkPct": 0.058,
+"DriverCarEstLapTime": 65.534,
+"DriverSetupName": "baseline.sto",
+"DriverSetupIsModified": 0,
+"DriverSetupLoadTypeName": "baseline",
+"DriverSetupPassedTech": 1,
+"Drivers": [
+{
+"CarIdx": 0,
+"UserName": "Jeffrey Gilliam",
+"AbbrevName": null,
+"Initials": null,
+"UserID": 44175,
+"TeamID": 0,
+"TeamName": "Jeffrey Gilliam",
+"CarNumber": "64",
+"CarNumberRaw": 64,
+"CarPath": "hpdarx01c",
+"CarClassID": 0,
+"CarID": 39,
+"CarScreenName": "HPD ARX-01c",
+"CarScreenNameShort": "HPD ARX-01c",
+"CarClassShortName": null,
+"CarClassRelSpeed": 0,
+"CarClassLicenseLevel": 0,
+"CarClassMaxFuelPct": "1.000 %",
+"CarClassWeightPenalty": "0.000 kg",
+"CarClassColor": 16777215,
+"IRating": 1,
+"LicLevel": 1,
+"LicSubLevel": 1,
+"LicString": "R 0.01",
+"LicColor": 87003,
+"IsSpectator": 0,
+"CarDesignStr": "0,ffffff,cccccc,666666",
+"HelmetDesignStr": "67,270000,55040d,000000",
+"SuitDesignStr": "14,ffffff,aa1d37,6D6E71",
+"CarNumberDesignStr": "0,0,ffffff,777777,000000",
+"CarSponsor_1": 0,
+"CarSponsor_2": 0
+}
+]
+},
+"SplitTimeInfo": {
+"Sectors": [
+{
+"SectorNum": 0,
+"SectorStartPct": 0
+},
+{
+"SectorNum": 1,
+"SectorStartPct": 0.369
+},
+{
+"SectorNum": 2,
+"SectorStartPct": 0.542
+},
+{
+"SectorNum": 3,
+"SectorStartPct": 0.651
+}
+]
+},
+"VarHeaders": {
+"AirDensity": {
+"Count": 1,
+"Desc": "Density of air at start/finish line",
+"Name": "AirDensity",
+"Offset": 256,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kg/m^3",
+"Value": 1.2019165754318237
+},
+"AirPressure": {
+"Count": 1,
+"Desc": "Pressure of air at start/finish line",
+"Name": "AirPressure",
+"Offset": 260,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "Hg",
+"Value": 29.21806526184082
+},
+"AirTemp": {
+"Count": 1,
+"Desc": "Temperature of air at start/finish line",
+"Name": "AirTemp",
+"Offset": 244,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 25.55555534362793
+},
+"Alt": {
+"Count": 1,
+"Desc": "Altitude in meters",
+"Name": "Alt",
+"Offset": 236,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 200.63497924804688
+},
+"Brake": {
+"Count": 1,
+"Desc": "0=brake released to 1=max pedal force",
+"Name": "Brake",
+"Offset": 59,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0
+},
+"BrakeRaw": {
+"Count": 1,
+"Desc": "Raw brake input 0=brake released to 1=max pedal force",
+"Name": "BrakeRaw",
+"Offset": 329,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0
+},
+"CFSRrideHeight": {
+"Count": 1,
+"Desc": "Center front splitter ride height",
+"Name": "CFSRrideHeight",
+"Offset": 661,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 0.04020298644900322
+},
+"Clutch": {
+"Count": 1,
+"Desc": "0=disengaged to 1=fully engaged",
+"Name": "Clutch",
+"Offset": 63,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 1
+},
+"CpuUsageBG": {
+"Count": 1,
+"Desc": "Percent of available tim bg thread took with a 1 sec avg",
+"Name": "CpuUsageBG",
+"Offset": 38,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.12099828571081161
+},
+"DriverMarker": {
+"Count": 1,
+"Desc": "Driver activated flag",
+"Name": "DriverMarker",
+"Offset": 32,
+"Type": {
+"size": 1,
+"type": 1,
+"typeName": "bool"
+},
+"Unit": "",
+"Value": 0
+},
+"EngineWarnings": {
+"Count": 1,
+"Desc": "Bitfield for warning lights",
+"Name": "EngineWarnings",
+"Offset": 333,
+"Type": {
+"size": 4,
+"type": 3,
+"typeName": "bitField"
+},
+"Unit": "irsdk_EngineWarnings",
+"Value": 32
+},
+"EnterExitReset": {
+"Count": 1,
+"Desc": "Indicate action the reset key will take 0 enter 1 exit 2 reset",
+"Name": "EnterExitReset",
+"Offset": 216,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 2
+},
+"FogLevel": {
+"Count": 1,
+"Desc": "Fog level",
+"Name": "FogLevel",
+"Offset": 276,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0
+},
+"FrameRate": {
+"Count": 1,
+"Desc": "Average frames per second",
+"Name": "FrameRate",
+"Offset": 34,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "fps",
+"Value": 84.09175872802734
+},
+"FuelLevel": {
+"Count": 1,
+"Desc": "Liters of fuel remaining",
+"Name": "FuelLevel",
+"Offset": 337,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "l",
+"Value": 78.8779525756836
+},
+"FuelLevelPct": {
+"Count": 1,
+"Desc": "Percent fuel remaining",
+"Name": "FuelLevelPct",
+"Offset": 341,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.9859743714332581
+},
+"FuelPress": {
+"Count": 1,
+"Desc": "Engine fuel pressure",
+"Name": "FuelPress",
+"Offset": 397,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "bar",
+"Value": 3.7899999618530273
+},
+"Gear": {
+"Count": 1,
+"Desc": "-1=reverse  0=neutral  1..n=current gear",
+"Name": "Gear",
+"Offset": 67,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 1
+},
+"IsOnTrack": {
+"Count": 1,
+"Desc": "1=Car on track physics running with player in car",
+"Name": "IsOnTrack",
+"Offset": 33,
+"Type": {
+"size": 1,
+"type": 1,
+"typeName": "bool"
+},
+"Unit": "",
+"Value": 1
+},
+"IsOnTrackCar": {
+"Count": 1,
+"Desc": "1=Car on track physics running",
+"Name": "IsOnTrackCar",
+"Offset": 288,
+"Type": {
+"size": 1,
+"type": 1,
+"typeName": "bool"
+},
+"Unit": "",
+"Value": 1
+},
+"LFcoldPressure": {
+"Count": 1,
+"Desc": "LF tire cold pressure  as set in the garage",
+"Name": "LFcoldPressure",
+"Offset": 573,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 161.94766235351562
+},
+"LFpressure": {
+"Count": 1,
+"Desc": "LF tire pressure",
+"Name": "LFpressure",
+"Offset": 569,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 190.7948455810547
+},
+"LFrideHeight": {
+"Count": 1,
+"Desc": "LF ride height",
+"Name": "LFrideHeight",
+"Offset": 645,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 0.02847139909863472
+},
+"LFshockDefl": {
+"Count": 1,
+"Desc": "LF shock deflection",
+"Name": "LFshockDefl",
+"Offset": 637,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 0.0222352035343647
+},
+"LFshockVel": {
+"Count": 1,
+"Desc": "LF shock velocity",
+"Name": "LFshockVel",
+"Offset": 641,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 0.033720534294843674
+},
+"LFspeed": {
+"Count": 1,
+"Desc": "LF wheel speed",
+"Name": "LFspeed",
+"Offset": 565,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 37.574623107910156
+},
+"LFtempCL": {
+"Count": 1,
+"Desc": "LF tire left carcass temperature",
+"Name": "LFtempCL",
+"Offset": 589,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.8817138671875
+},
+"LFtempCM": {
+"Count": 1,
+"Desc": "LF tire middle carcass temperature",
+"Name": "LFtempCM",
+"Offset": 593,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 51.78485107421875
+},
+"LFtempCR": {
+"Count": 1,
+"Desc": "LF tire right carcass temperature",
+"Name": "LFtempCR",
+"Offset": 597,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.0953369140625
+},
+"LFtempL": {
+"Count": 1,
+"Desc": "LF tire left surface temperature",
+"Name": "LFtempL",
+"Offset": 577,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 45.79620361328125
+},
+"LFtempM": {
+"Count": 1,
+"Desc": "LF tire middle surface temperature",
+"Name": "LFtempM",
+"Offset": 581,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.106231689453125
+},
+"LFtempR": {
+"Count": 1,
+"Desc": "LF tire right surface temperature",
+"Name": "LFtempR",
+"Offset": 585,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.002349853515625
+},
+"LFwearL": {
+"Count": 1,
+"Desc": "LF tire left percent tread remaining",
+"Name": "LFwearL",
+"Offset": 601,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 1.0000145435333252
+},
+"LFwearM": {
+"Count": 1,
+"Desc": "LF tire middle percent tread remaining",
+"Name": "LFwearM",
+"Offset": 605,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 1.0001410245895386
+},
+"LFwearR": {
+"Count": 1,
+"Desc": "LF tire right percent tread remaining",
+"Name": "LFwearR",
+"Offset": 609,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 1.0000641345977783
+},
+"LRcoldPressure": {
+"Count": 1,
+"Desc": "LR tire cold pressure  as set in the garage",
+"Name": "LRcoldPressure",
+"Offset": 477,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 155.0529022216797
+},
+"LRpressure": {
+"Count": 1,
+"Desc": "LR tire pressure",
+"Name": "LRpressure",
+"Offset": 473,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 182.99832153320312
+},
+"LRrideHeight": {
+"Count": 1,
+"Desc": "LR ride height",
+"Name": "LRrideHeight",
+"Offset": 653,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 0.06547185033559799
+},
+"LRshockDefl": {
+"Count": 1,
+"Desc": "LR shock deflection",
+"Name": "LRshockDefl",
+"Offset": 621,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 0.0272653941065073
+},
+"LRshockVel": {
+"Count": 1,
+"Desc": "LR shock velocity",
+"Name": "LRshockVel",
+"Offset": 625,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": -0.01555507630109787
+},
+"LRspeed": {
+"Count": 1,
+"Desc": "LR wheel speed",
+"Name": "LRspeed",
+"Offset": 469,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 37.62074279785156
+},
+"LRtempCL": {
+"Count": 1,
+"Desc": "LR tire left carcass temperature",
+"Name": "LRtempCL",
+"Offset": 493,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.0325927734375
+},
+"LRtempCM": {
+"Count": 1,
+"Desc": "LR tire middle carcass temperature",
+"Name": "LRtempCM",
+"Offset": 497,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 51.725494384765625
+},
+"LRtempCR": {
+"Count": 1,
+"Desc": "LR tire right carcass temperature",
+"Name": "LRtempCR",
+"Offset": 501,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.37506103515625
+},
+"LRtempL": {
+"Count": 1,
+"Desc": "LR tire left surface temperature",
+"Name": "LRtempL",
+"Offset": 481,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 48.921905517578125
+},
+"LRtempM": {
+"Count": 1,
+"Desc": "LR tire middle surface temperature",
+"Name": "LRtempM",
+"Offset": 485,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 53.078277587890625
+},
+"LRtempR": {
+"Count": 1,
+"Desc": "LR tire right surface temperature",
+"Name": "LRtempR",
+"Offset": 489,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 53.012786865234375
+},
+"LRwearL": {
+"Count": 1,
+"Desc": "LR tire left percent tread remaining",
+"Name": "LRwearL",
+"Offset": 505,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 1.0000814199447632
+},
+"LRwearM": {
+"Count": 1,
+"Desc": "LR tire middle percent tread remaining",
+"Name": "LRwearM",
+"Offset": 509,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 1.0000735521316528
+},
+"LRwearR": {
+"Count": 1,
+"Desc": "LR tire right percent tread remaining",
+"Name": "LRwearR",
+"Offset": 513,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 1.0000278949737549
+},
+"Lap": {
+"Count": 1,
+"Desc": "Lap count",
+"Name": "Lap",
+"Offset": 75,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 0
+},
+"LapBestLap": {
+"Count": 1,
+"Desc": "Players best lap number",
+"Name": "LapBestLap",
+"Offset": 87,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 0
+},
+"LapBestLapTime": {
+"Count": 1,
+"Desc": "Players best lap time",
+"Name": "LapBestLapTime",
+"Offset": 91,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"LapBestNLapLap": {
+"Count": 1,
+"Desc": "Player last lap in best N average lap time",
+"Name": "LapBestNLapLap",
+"Offset": 111,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 0
+},
+"LapBestNLapTime": {
+"Count": 1,
+"Desc": "Player best N average lap time",
+"Name": "LapBestNLapTime",
+"Offset": 115,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"LapCurrentLapTime": {
+"Count": 1,
+"Desc": "Estimate of players current lap time as shown in F3 box",
+"Name": "LapCurrentLapTime",
+"Offset": 99,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"LapDeltaToBestLap": {
+"Count": 1,
+"Desc": "Delta time for best lap",
+"Name": "LapDeltaToBestLap",
+"Offset": 119,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"LapDeltaToBestLap_DD": {
+"Count": 1,
+"Desc": "Rate of change of delta time for best lap",
+"Name": "LapDeltaToBestLap_DD",
+"Offset": 123,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s/s",
+"Value": 0
+},
+"LapDeltaToBestLap_OK": {
+"Count": 1,
+"Desc": "Delta time for best lap is valid",
+"Name": "LapDeltaToBestLap_OK",
+"Offset": 127,
+"Type": {
+"size": 1,
+"type": 1,
+"typeName": "bool"
+},
+"Unit": "",
+"Value": 0
+},
+"LapDeltaToOptimalLap": {
+"Count": 1,
+"Desc": "Delta time for optimal lap",
+"Name": "LapDeltaToOptimalLap",
+"Offset": 128,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 5.829040050506592
+},
+"LapDeltaToOptimalLap_DD": {
+"Count": 1,
+"Desc": "Rate of change of delta time for optimal lap",
+"Name": "LapDeltaToOptimalLap_DD",
+"Offset": 132,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s/s",
+"Value": 0.2578238248825073
+},
+"LapDeltaToOptimalLap_OK": {
+"Count": 1,
+"Desc": "Delta time for optimal lap is valid",
+"Name": "LapDeltaToOptimalLap_OK",
+"Offset": 136,
+"Type": {
+"size": 1,
+"type": 1,
+"typeName": "bool"
+},
+"Unit": "",
+"Value": 1
+},
+"LapDeltaToSessionBestLap": {
+"Count": 1,
+"Desc": "Delta time for session best lap",
+"Name": "LapDeltaToSessionBestLap",
+"Offset": 137,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"LapDeltaToSessionBestLap_DD": {
+"Count": 1,
+"Desc": "Rate of change of delta time for session best lap",
+"Name": "LapDeltaToSessionBestLap_DD",
+"Offset": 141,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s/s",
+"Value": 0
+},
+"LapDeltaToSessionBestLap_OK": {
+"Count": 1,
+"Desc": "Delta time for session best lap is valid",
+"Name": "LapDeltaToSessionBestLap_OK",
+"Offset": 145,
+"Type": {
+"size": 1,
+"type": 1,
+"typeName": "bool"
+},
+"Unit": "",
+"Value": 0
+},
+"LapDeltaToSessionLastlLap": {
+"Count": 1,
+"Desc": "Delta time for session last lap",
+"Name": "LapDeltaToSessionLastlLap",
+"Offset": 155,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"LapDeltaToSessionLastlLap_DD": {
+"Count": 1,
+"Desc": "Rate of change of delta time for session last lap",
+"Name": "LapDeltaToSessionLastlLap_DD",
+"Offset": 159,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s/s",
+"Value": 0
+},
+"LapDeltaToSessionLastlLap_OK": {
+"Count": 1,
+"Desc": "Delta time for session last lap is valid",
+"Name": "LapDeltaToSessionLastlLap_OK",
+"Offset": 163,
+"Type": {
+"size": 1,
+"type": 1,
+"typeName": "bool"
+},
+"Unit": "",
+"Value": 0
+},
+"LapDeltaToSessionOptimalLap": {
+"Count": 1,
+"Desc": "Delta time for session optimal lap",
+"Name": "LapDeltaToSessionOptimalLap",
+"Offset": 146,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"LapDeltaToSessionOptimalLap_DD": {
+"Count": 1,
+"Desc": "Rate of change of delta time for session optimal lap",
+"Name": "LapDeltaToSessionOptimalLap_DD",
+"Offset": 150,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s/s",
+"Value": 0
+},
+"LapDeltaToSessionOptimalLap_OK": {
+"Count": 1,
+"Desc": "Delta time for session optimal lap is valid",
+"Name": "LapDeltaToSessionOptimalLap_OK",
+"Offset": 154,
+"Type": {
+"size": 1,
+"type": 1,
+"typeName": "bool"
+},
+"Unit": "",
+"Value": 0
+},
+"LapDist": {
+"Count": 1,
+"Desc": "Meters traveled from S/F this lap",
+"Name": "LapDist",
+"Offset": 79,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 2723.543701171875
+},
+"LapDistPct": {
+"Count": 1,
+"Desc": "Percentage distance around lap",
+"Name": "LapDistPct",
+"Offset": 83,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.7445124983787537
+},
+"LapLasNLapSeq": {
+"Count": 1,
+"Desc": "Player num consecutive clean laps completed for N average",
+"Name": "LapLasNLapSeq",
+"Offset": 103,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 0
+},
+"LapLastLapTime": {
+"Count": 1,
+"Desc": "Players last lap time",
+"Name": "LapLastLapTime",
+"Offset": 95,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"LapLastNLapTime": {
+"Count": 1,
+"Desc": "Player last N average lap time",
+"Name": "LapLastNLapTime",
+"Offset": 107,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"Lat": {
+"Count": 1,
+"Desc": "Latitude in decimal degrees",
+"Name": "Lat",
+"Offset": 220,
+"Type": {
+"size": 8,
+"type": 5,
+"typeName": "double"
+},
+"Unit": "deg",
+"Value": 33.03810841320528
+},
+"LatAccel": {
+"Count": 1,
+"Desc": "Lateral acceleration (including gravity)",
+"Name": "LatAccel",
+"Offset": 168,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s^2",
+"Value": 3.331320285797119
+},
+"Lon": {
+"Count": 1,
+"Desc": "Longitude in decimal degrees",
+"Name": "Lon",
+"Offset": 228,
+"Type": {
+"size": 8,
+"type": 5,
+"typeName": "double"
+},
+"Unit": "deg",
+"Value": -97.27834190765154
+},
+"LongAccel": {
+"Count": 1,
+"Desc": "Longitudinal acceleration (including gravity)",
+"Name": "LongAccel",
+"Offset": 164,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s^2",
+"Value": -1.53287935256958
+},
+"ManifoldPress": {
+"Count": 1,
+"Desc": "Engine manifold pressure",
+"Name": "ManifoldPress",
+"Offset": 417,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "bar",
+"Value": 0.013730521313846111
+},
+"OilLevel": {
+"Count": 1,
+"Desc": "Engine oil level",
+"Name": "OilLevel",
+"Offset": 409,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "l",
+"Value": 6
+},
+"OilPress": {
+"Count": 1,
+"Desc": "Engine oil pressure",
+"Name": "OilPress",
+"Offset": 405,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "bar",
+"Value": 5.2399983406066895
+},
+"OilTemp": {
+"Count": 1,
+"Desc": "Engine oil temperature",
+"Name": "OilTemp",
+"Offset": 401,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 102.07574462890625
+},
+"OnPitRoad": {
+"Count": 1,
+"Desc": "Is the player car on pit road between the cones",
+"Name": "OnPitRoad",
+"Offset": 50,
+"Type": {
+"size": 1,
+"type": 1,
+"typeName": "bool"
+},
+"Unit": "",
+"Value": 0
+},
+"PitOptRepairLeft": {
+"Count": 1,
+"Desc": "Time left for optional repairs if repairs are active",
+"Name": "PitOptRepairLeft",
+"Offset": 284,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"PitRepairLeft": {
+"Count": 1,
+"Desc": "Time left for mandatory pit repairs if repairs are active",
+"Name": "PitRepairLeft",
+"Offset": 280,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "s",
+"Value": 0
+},
+"PitSvFlags": {
+"Count": 1,
+"Desc": "Bitfield of pit service checkboxes",
+"Name": "PitSvFlags",
+"Offset": 345,
+"Type": {
+"size": 4,
+"type": 3,
+"typeName": "bitField"
+},
+"Unit": "irsdk_PitSvFlags",
+"Value": 16
+},
+"PitSvFuel": {
+"Count": 1,
+"Desc": "Pit service fuel add amount",
+"Name": "PitSvFuel",
+"Offset": 365,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "l",
+"Value": 14.666666984558105
+},
+"PitSvLFP": {
+"Count": 1,
+"Desc": "Pit service left front tire pressure",
+"Name": "PitSvLFP",
+"Offset": 349,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 161.94766235351562
+},
+"PitSvLRP": {
+"Count": 1,
+"Desc": "Pit service left rear tire pressure",
+"Name": "PitSvLRP",
+"Offset": 357,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 155.0529022216797
+},
+"PitSvRFP": {
+"Count": 1,
+"Desc": "Pit service right front tire pressure",
+"Name": "PitSvRFP",
+"Offset": 353,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 161.94766235351562
+},
+"PitSvRRP": {
+"Count": 1,
+"Desc": "Pit service right rear tire pressure",
+"Name": "PitSvRRP",
+"Offset": 361,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 155.0529022216797
+},
+"Pitch": {
+"Count": 1,
+"Desc": "Pitch orientation",
+"Name": "Pitch",
+"Offset": 208,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "rad",
+"Value": 0.0069763315841555595
+},
+"PitchRate": {
+"Count": 1,
+"Desc": "Pitch rate",
+"Name": "PitchRate",
+"Offset": 180,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "rad/s",
+"Value": -0.03703506663441658
+},
+"PlayerCarClassPosition": {
+"Count": 1,
+"Desc": "Players class position in race",
+"Name": "PlayerCarClassPosition",
+"Offset": 46,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 0
+},
+"PlayerCarPosition": {
+"Count": 1,
+"Desc": "Players position in race",
+"Name": "PlayerCarPosition",
+"Offset": 42,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 0
+},
+"RFcoldPressure": {
+"Count": 1,
+"Desc": "RF tire cold pressure  as set in the garage",
+"Name": "RFcoldPressure",
+"Offset": 525,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 161.94766235351562
+},
+"RFpressure": {
+"Count": 1,
+"Desc": "RF tire pressure",
+"Name": "RFpressure",
+"Offset": 521,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 190.70169067382812
+},
+"RFrideHeight": {
+"Count": 1,
+"Desc": "RF ride height",
+"Name": "RFrideHeight",
+"Offset": 649,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 0.024695128202438354
+},
+"RFshockDefl": {
+"Count": 1,
+"Desc": "RF shock deflection",
+"Name": "RFshockDefl",
+"Offset": 629,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 0.027915559709072113
+},
+"RFshockVel": {
+"Count": 1,
+"Desc": "RF shock velocity",
+"Name": "RFshockVel",
+"Offset": 633,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 0.034280482679605484
+},
+"RFspeed": {
+"Count": 1,
+"Desc": "RF wheel speed",
+"Name": "RFspeed",
+"Offset": 517,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 37.790767669677734
+},
+"RFtempCL": {
+"Count": 1,
+"Desc": "RF tire left carcass temperature",
+"Name": "RFtempCL",
+"Offset": 541,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 51.87664794921875
+},
+"RFtempCM": {
+"Count": 1,
+"Desc": "RF tire middle carcass temperature",
+"Name": "RFtempCM",
+"Offset": 545,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 51.8763427734375
+},
+"RFtempCR": {
+"Count": 1,
+"Desc": "RF tire right carcass temperature",
+"Name": "RFtempCR",
+"Offset": 549,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.944549560546875
+},
+"RFtempL": {
+"Count": 1,
+"Desc": "RF tire left surface temperature",
+"Name": "RFtempL",
+"Offset": 529,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 51.25335693359375
+},
+"RFtempM": {
+"Count": 1,
+"Desc": "RF tire middle surface temperature",
+"Name": "RFtempM",
+"Offset": 533,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 51.425750732421875
+},
+"RFtempR": {
+"Count": 1,
+"Desc": "RF tire right surface temperature",
+"Name": "RFtempR",
+"Offset": 537,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 45.9532470703125
+},
+"RFwearL": {
+"Count": 1,
+"Desc": "RF tire left percent tread remaining",
+"Name": "RFwearL",
+"Offset": 553,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.9999487400054932
+},
+"RFwearM": {
+"Count": 1,
+"Desc": "RF tire middle percent tread remaining",
+"Name": "RFwearM",
+"Offset": 557,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.9999486207962036
+},
+"RFwearR": {
+"Count": 1,
+"Desc": "RF tire right percent tread remaining",
+"Name": "RFwearR",
+"Offset": 561,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.999999463558197
+},
+"RPM": {
+"Count": 1,
+"Desc": "Engine rpm",
+"Name": "RPM",
+"Offset": 71,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "revs/min",
+"Value": 9843.8671875
+},
+"RRcoldPressure": {
+"Count": 1,
+"Desc": "RR tire cold pressure  as set in the garage",
+"Name": "RRcoldPressure",
+"Offset": 429,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 155.0529022216797
+},
+"RRpressure": {
+"Count": 1,
+"Desc": "RR tire pressure",
+"Name": "RRpressure",
+"Offset": 425,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "kPa",
+"Value": 182.88104248046875
+},
+"RRrideHeight": {
+"Count": 1,
+"Desc": "RR ride height",
+"Name": "RRrideHeight",
+"Offset": 657,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 0.06574638932943344
+},
+"RRshockDefl": {
+"Count": 1,
+"Desc": "RR shock deflection",
+"Name": "RRshockDefl",
+"Offset": 613,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m",
+"Value": 0.025577038526535034
+},
+"RRshockVel": {
+"Count": 1,
+"Desc": "RR shock velocity",
+"Name": "RRshockVel",
+"Offset": 617,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": -0.04379434511065483
+},
+"RRspeed": {
+"Count": 1,
+"Desc": "RR wheel speed",
+"Name": "RRspeed",
+"Offset": 421,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 37.737648010253906
+},
+"RRtempCL": {
+"Count": 1,
+"Desc": "RR tire left carcass temperature",
+"Name": "RRtempCL",
+"Offset": 445,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 51.8486328125
+},
+"RRtempCM": {
+"Count": 1,
+"Desc": "RR tire middle carcass temperature",
+"Name": "RRtempCM",
+"Offset": 449,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 51.711822509765625
+},
+"RRtempCR": {
+"Count": 1,
+"Desc": "RR tire right carcass temperature",
+"Name": "RRtempCR",
+"Offset": 453,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.86688232421875
+},
+"RRtempL": {
+"Count": 1,
+"Desc": "RR tire left surface temperature",
+"Name": "RRtempL",
+"Offset": 433,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.524322509765625
+},
+"RRtempM": {
+"Count": 1,
+"Desc": "RR tire middle surface temperature",
+"Name": "RRtempM",
+"Offset": 437,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 52.61737060546875
+},
+"RRtempR": {
+"Count": 1,
+"Desc": "RR tire right surface temperature",
+"Name": "RRtempR",
+"Offset": 441,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 48.44439697265625
+},
+"RRwearL": {
+"Count": 1,
+"Desc": "RR tire left percent tread remaining",
+"Name": "RRwearL",
+"Offset": 457,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 1.0001224279403687
+},
+"RRwearM": {
+"Count": 1,
+"Desc": "RR tire middle percent tread remaining",
+"Name": "RRwearM",
+"Offset": 461,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 1.000160813331604
+},
+"RRwearR": {
+"Count": 1,
+"Desc": "RR tire right percent tread remaining",
+"Name": "RRwearR",
+"Offset": 465,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.9999995231628418
+},
+"RelativeHumidity": {
+"Count": 1,
+"Desc": "Relative Humidity",
+"Name": "RelativeHumidity",
+"Offset": 272,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.550000011920929
+},
+"Roll": {
+"Count": 1,
+"Desc": "Roll orientation",
+"Name": "Roll",
+"Offset": 212,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "rad",
+"Value": -0.1551184207201004
+},
+"RollRate": {
+"Count": 1,
+"Desc": "Roll rate",
+"Name": "RollRate",
+"Offset": 176,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "rad/s",
+"Value": -0.06840258836746216
+},
+"SessionLapsRemain": {
+"Count": 1,
+"Desc": "Laps left till session ends",
+"Name": "SessionLapsRemain",
+"Offset": 28,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 32767
+},
+"SessionNum": {
+"Count": 1,
+"Desc": "Session number",
+"Name": "SessionNum",
+"Offset": 8,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 0
+},
+"SessionState": {
+"Count": 1,
+"Desc": "Session state",
+"Name": "SessionState",
+"Offset": 12,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "irsdk_SessionState",
+"Value": 4
+},
+"SessionTime": {
+"Count": 1,
+"Desc": "Seconds since session start",
+"Name": "SessionTime",
+"Offset": 0,
+"Type": {
+"size": 8,
+"type": 5,
+"typeName": "double"
+},
+"Unit": "s",
+"Value": 2858.0166657853424
+},
+"SessionTimeRemain": {
+"Count": 1,
+"Desc": "Seconds left till session ends",
+"Name": "SessionTimeRemain",
+"Offset": 20,
+"Type": {
+"size": 8,
+"type": 5,
+"typeName": "double"
+},
+"Unit": "s",
+"Value": 604800
+},
+"SessionUniqueID": {
+"Count": 1,
+"Desc": "Session ID",
+"Name": "SessionUniqueID",
+"Offset": 16,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 1
+},
+"ShiftGrindRPM": {
+"Count": 1,
+"Desc": "RPM of shifter grinding noise",
+"Name": "ShiftGrindRPM",
+"Offset": 321,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "RPM",
+"Value": 0
+},
+"ShiftIndicatorPct": {
+"Count": 1,
+"Desc": "DEPRECATED use DriverCarSLBlinkRPM instead",
+"Name": "ShiftIndicatorPct",
+"Offset": 313,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.9983599185943604
+},
+"ShiftPowerPct": {
+"Count": 1,
+"Desc": "Friction torque applied to gears when shifting or grinding",
+"Name": "ShiftPowerPct",
+"Offset": 317,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0
+},
+"Skies": {
+"Count": 1,
+"Desc": "Skies (0=clear/1=p cloudy/2=m cloudy/3=overcast)",
+"Name": "Skies",
+"Offset": 252,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 1
+},
+"Speed": {
+"Count": 1,
+"Desc": "GPS vehicle speed",
+"Name": "Speed",
+"Offset": 188,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 37.68440246582031
+},
+"SteeringWheelAngle": {
+"Count": 1,
+"Desc": "Steering wheel angle",
+"Name": "SteeringWheelAngle",
+"Offset": 51,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "rad",
+"Value": 0.23268528282642365
+},
+"SteeringWheelAngleMax": {
+"Count": 1,
+"Desc": "Steering wheel max angle",
+"Name": "SteeringWheelAngleMax",
+"Offset": 309,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "rad",
+"Value": 11.250380516052246
+},
+"SteeringWheelPctDamper": {
+"Count": 1,
+"Desc": "Force feedback % max damping",
+"Name": "SteeringWheelPctDamper",
+"Offset": 305,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0
+},
+"SteeringWheelPctTorque": {
+"Count": 1,
+"Desc": "Force feedback % max torque on steering shaft unsigned",
+"Name": "SteeringWheelPctTorque",
+"Offset": 293,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.13703744113445282
+},
+"SteeringWheelPctTorqueSign": {
+"Count": 1,
+"Desc": "Force feedback % max torque on steering shaft signed",
+"Name": "SteeringWheelPctTorqueSign",
+"Offset": 297,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": -0.13703744113445282
+},
+"SteeringWheelPctTorqueSignStops": {
+"Count": 1,
+"Desc": "Force feedback % max torque on steering shaft signed stops",
+"Name": "SteeringWheelPctTorqueSignStops",
+"Offset": 301,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": -0.16980816423892975
+},
+"SteeringWheelTorque": {
+"Count": 1,
+"Desc": "Output torque on steering shaft",
+"Name": "SteeringWheelTorque",
+"Offset": 289,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "N*m",
+"Value": -3.703598976135254
+},
+"Throttle": {
+"Count": 1,
+"Desc": "0=off throttle to 1=full throttle",
+"Name": "Throttle",
+"Offset": 55,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.18756169080734253
+},
+"ThrottleRaw": {
+"Count": 1,
+"Desc": "Raw throttle input 0=off throttle to 1=full throttle",
+"Name": "ThrottleRaw",
+"Offset": 325,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "%",
+"Value": 0.18756169080734253
+},
+"TrackTemp": {
+"Count": 1,
+"Desc": "Temperature of track at start/finish line",
+"Name": "TrackTemp",
+"Offset": 240,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 39.80555725097656
+},
+"VelocityX": {
+"Count": 1,
+"Desc": "X velocity",
+"Name": "VelocityX",
+"Offset": 192,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 37.684207916259766
+},
+"VelocityY": {
+"Count": 1,
+"Desc": "Y velocity",
+"Name": "VelocityY",
+"Offset": 196,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 0.12101525068283081
+},
+"VelocityZ": {
+"Count": 1,
+"Desc": "Z velocity",
+"Name": "VelocityZ",
+"Offset": 200,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 0.5233434438705444
+},
+"VertAccel": {
+"Count": 1,
+"Desc": "Vertical acceleration (including gravity)",
+"Name": "VertAccel",
+"Offset": 172,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s^2",
+"Value": 11.404959678649902
+},
+"Voltage": {
+"Count": 1,
+"Desc": "Engine voltage",
+"Name": "Voltage",
+"Offset": 413,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "V",
+"Value": 12
+},
+"WaterLevel": {
+"Count": 1,
+"Desc": "Engine coolant level",
+"Name": "WaterLevel",
+"Offset": 393,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "l",
+"Value": 4.5
+},
+"WaterTemp": {
+"Count": 1,
+"Desc": "Engine coolant temp",
+"Name": "WaterTemp",
+"Offset": 389,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "C",
+"Value": 62.317020416259766
+},
+"WeatherType": {
+"Count": 1,
+"Desc": "Weather type (0=constant  1=dynamic)",
+"Name": "WeatherType",
+"Offset": 248,
+"Type": {
+"size": 4,
+"type": 2,
+"typeName": "int"
+},
+"Unit": "",
+"Value": 0
+},
+"WindDir": {
+"Count": 1,
+"Desc": "Wind direction at start/finish line",
+"Name": "WindDir",
+"Offset": 268,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "rad",
+"Value": 0
+},
+"WindVel": {
+"Count": 1,
+"Desc": "Wind velocity at start/finish line",
+"Name": "WindVel",
+"Offset": 264,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "m/s",
+"Value": 0.8939999938011169
+},
+"Yaw": {
+"Count": 1,
+"Desc": "Yaw orientation",
+"Name": "Yaw",
+"Offset": 204,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "rad",
+"Value": -2.997866153717041
+},
+"YawRate": {
+"Count": 1,
+"Desc": "Yaw rate",
+"Name": "YawRate",
+"Offset": 184,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "rad/s",
+"Value": 0.1329827457666397
+},
+"dcBrakeBias": {
+"Count": 1,
+"Desc": "In car brake bias adjustment",
+"Name": "dcBrakeBias",
+"Offset": 369,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "",
+"Value": 0
+},
+"dcEnginePower": {
+"Count": 1,
+"Desc": "In car engine power adjustment",
+"Name": "dcEnginePower",
+"Offset": 373,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "",
+"Value": 8
+},
+"dcTractionControl": {
+"Count": 1,
+"Desc": "In car traction control adjustment",
+"Name": "dcTractionControl",
+"Offset": 381,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "",
+"Value": 4
+},
+"dcTractionControl2": {
+"Count": 1,
+"Desc": "In car traction control 2 adjustment",
+"Name": "dcTractionControl2",
+"Offset": 385,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "",
+"Value": 1
+},
+"dpPSSetting": {
+"Count": 1,
+"Desc": "Pitstop power steering adjustment",
+"Name": "dpPSSetting",
+"Offset": 377,
+"Type": {
+"size": 4,
+"type": 4,
+"typeName": "float"
+},
+"Unit": "",
+"Value": 1
+}
+},
+"Vars": {
+"AirDensity": 1.2019165754318237,
+"AirPressure": 29.21806526184082,
+"AirTemp": 25.55555534362793,
+"Alt": 200.63497924804688,
+"Brake": 0,
+"BrakeRaw": 0,
+"CFSRrideHeight": 0.04020298644900322,
+"Clutch": 1,
+"CpuUsageBG": 0.12099828571081161,
+"DriverMarker": 0,
+"EngineWarnings": 32,
+"EnterExitReset": 2,
+"FogLevel": 0,
+"FrameRate": 84.09175872802734,
+"FuelLevel": 78.8779525756836,
+"FuelLevelPct": 0.9859743714332581,
+"FuelPress": 3.7899999618530273,
+"Gear": 1,
+"IsOnTrack": 1,
+"IsOnTrackCar": 1,
+"LFcoldPressure": 161.94766235351562,
+"LFpressure": 190.7948455810547,
+"LFrideHeight": 0.02847139909863472,
+"LFshockDefl": 0.0222352035343647,
+"LFshockVel": 0.033720534294843674,
+"LFspeed": 37.574623107910156,
+"LFtempCL": 52.8817138671875,
+"LFtempCM": 51.78485107421875,
+"LFtempCR": 52.0953369140625,
+"LFtempL": 45.79620361328125,
+"LFtempM": 52.106231689453125,
+"LFtempR": 52.002349853515625,
+"LFwearL": 1.0000145435333252,
+"LFwearM": 1.0001410245895386,
+"LFwearR": 1.0000641345977783,
+"LRcoldPressure": 155.0529022216797,
+"LRpressure": 182.99832153320312,
+"LRrideHeight": 0.06547185033559799,
+"LRshockDefl": 0.0272653941065073,
+"LRshockVel": -0.01555507630109787,
+"LRspeed": 37.62074279785156,
+"LRtempCL": 52.0325927734375,
+"LRtempCM": 51.725494384765625,
+"LRtempCR": 52.37506103515625,
+"LRtempL": 48.921905517578125,
+"LRtempM": 53.078277587890625,
+"LRtempR": 53.012786865234375,
+"LRwearL": 1.0000814199447632,
+"LRwearM": 1.0000735521316528,
+"LRwearR": 1.0000278949737549,
+"Lap": 0,
+"LapBestLap": 0,
+"LapBestLapTime": 0,
+"LapBestNLapLap": 0,
+"LapBestNLapTime": 0,
+"LapCurrentLapTime": 0,
+"LapDeltaToBestLap": 0,
+"LapDeltaToBestLap_DD": 0,
+"LapDeltaToBestLap_OK": 0,
+"LapDeltaToOptimalLap": 5.829040050506592,
+"LapDeltaToOptimalLap_DD": 0.2578238248825073,
+"LapDeltaToOptimalLap_OK": 1,
+"LapDeltaToSessionBestLap": 0,
+"LapDeltaToSessionBestLap_DD": 0,
+"LapDeltaToSessionBestLap_OK": 0,
+"LapDeltaToSessionLastlLap": 0,
+"LapDeltaToSessionLastlLap_DD": 0,
+"LapDeltaToSessionLastlLap_OK": 0,
+"LapDeltaToSessionOptimalLap": 0,
+"LapDeltaToSessionOptimalLap_DD": 0,
+"LapDeltaToSessionOptimalLap_OK": 0,
+"LapDist": 2723.543701171875,
+"LapDistPct": 0.7445124983787537,
+"LapLasNLapSeq": 0,
+"LapLastLapTime": 0,
+"LapLastNLapTime": 0,
+"Lat": 33.03810841320528,
+"LatAccel": 3.331320285797119,
+"Lon": -97.27834190765154,
+"LongAccel": -1.53287935256958,
+"ManifoldPress": 0.013730521313846111,
+"OilLevel": 6,
+"OilPress": 5.2399983406066895,
+"OilTemp": 102.07574462890625,
+"OnPitRoad": 0,
+"PitOptRepairLeft": 0,
+"PitRepairLeft": 0,
+"PitSvFlags": 16,
+"PitSvFuel": 14.666666984558105,
+"PitSvLFP": 161.94766235351562,
+"PitSvLRP": 155.0529022216797,
+"PitSvRFP": 161.94766235351562,
+"PitSvRRP": 155.0529022216797,
+"Pitch": 0.0069763315841555595,
+"PitchRate": -0.03703506663441658,
+"PlayerCarClassPosition": 0,
+"PlayerCarPosition": 0,
+"RFcoldPressure": 161.94766235351562,
+"RFpressure": 190.70169067382812,
+"RFrideHeight": 0.024695128202438354,
+"RFshockDefl": 0.027915559709072113,
+"RFshockVel": 0.034280482679605484,
+"RFspeed": 37.790767669677734,
+"RFtempCL": 51.87664794921875,
+"RFtempCM": 51.8763427734375,
+"RFtempCR": 52.944549560546875,
+"RFtempL": 51.25335693359375,
+"RFtempM": 51.425750732421875,
+"RFtempR": 45.9532470703125,
+"RFwearL": 0.9999487400054932,
+"RFwearM": 0.9999486207962036,
+"RFwearR": 0.999999463558197,
+"RPM": 9843.8671875,
+"RRcoldPressure": 155.0529022216797,
+"RRpressure": 182.88104248046875,
+"RRrideHeight": 0.06574638932943344,
+"RRshockDefl": 0.025577038526535034,
+"RRshockVel": -0.04379434511065483,
+"RRspeed": 37.737648010253906,
+"RRtempCL": 51.8486328125,
+"RRtempCM": 51.711822509765625,
+"RRtempCR": 52.86688232421875,
+"RRtempL": 52.524322509765625,
+"RRtempM": 52.61737060546875,
+"RRtempR": 48.44439697265625,
+"RRwearL": 1.0001224279403687,
+"RRwearM": 1.000160813331604,
+"RRwearR": 0.9999995231628418,
+"RelativeHumidity": 0.550000011920929,
+"Roll": -0.1551184207201004,
+"RollRate": -0.06840258836746216,
+"SessionLapsRemain": 32767,
+"SessionNum": 0,
+"SessionState": 4,
+"SessionTime": 2858.0166657853424,
+"SessionTimeRemain": 604800,
+"SessionUniqueID": 1,
+"ShiftGrindRPM": 0,
+"ShiftIndicatorPct": 0.9983599185943604,
+"ShiftPowerPct": 0,
+"Skies": 1,
+"Speed": 37.68440246582031,
+"SteeringWheelAngle": 0.23268528282642365,
+"SteeringWheelAngleMax": 11.250380516052246,
+"SteeringWheelPctDamper": 0,
+"SteeringWheelPctTorque": 0.13703744113445282,
+"SteeringWheelPctTorqueSign": -0.13703744113445282,
+"SteeringWheelPctTorqueSignStops": -0.16980816423892975,
+"SteeringWheelTorque": -3.703598976135254,
+"Throttle": 0.18756169080734253,
+"ThrottleRaw": 0.18756169080734253,
+"TrackTemp": 39.80555725097656,
+"VelocityX": 37.684207916259766,
+"VelocityY": 0.12101525068283081,
+"VelocityZ": 0.5233434438705444,
+"VertAccel": 11.404959678649902,
+"Voltage": 12,
+"WaterLevel": 4.5,
+"WaterTemp": 62.317020416259766,
+"WeatherType": 0,
+"WindDir": 0,
+"WindVel": 0.8939999938011169,
+"Yaw": -2.997866153717041,
+"YawRate": 0.1329827457666397,
+"dcBrakeBias": 0,
+"dcEnginePower": 8,
+"dcTractionControl": 4,
+"dcTractionControl2": 1,
+"dpPSSetting": 1
+}
+}

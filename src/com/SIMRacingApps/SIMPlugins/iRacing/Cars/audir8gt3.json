@@ -1,0 +1,99 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "Audi R8 LMS",
+    "MfrLogo":     "com/SIMRacingApps/Cars/audi.png",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           9.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6450.0, "End": 7800.0},
+                    "SHIFT":       {"Start": 7800.0, "End": 7850.0},
+                    "SHIFTBLINK":  {"Start": 7850.0, "End": 99999999.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           120.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   120.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 4.0},
+                    "WARNING":  {"Start": 4.0, "End": 8.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "Minimum":           0.0,
+                "Maximum":           30.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   26.4,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 10.0},
+                    "WARNING":  {"Start": 10.0, "End": 20.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   16.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 4.0},
+                    "WARNING":  {"Start": 4.0, "End": 8.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true
+            }
+        }
+    }
+}            

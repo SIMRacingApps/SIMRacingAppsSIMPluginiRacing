@@ -1,0 +1,128 @@
+
+Variables you can get from telemetry
+
+Name    Type    Disk    Live    Description
+dcABS   float   1   1   In car abs adjustment
+dcAntiRollFront float   1   1   In car front anti roll bar adjustment
+dcAntiRollRear  float   1   1   In car rear anti roll bar adjustment
+dcBoostLevel    float   1   1   In car boost level adjustment
+dcBrakeBias float   1   1   In car brake bias adjustment
+dcBrakeBias float   1   1   In car brake bias adjustment
+dcDiffEntry float   1   1   In car diff entry adjustment
+dcDiffExit  float   1   1   In car diff exit adjustment
+dcDiffMiddle    float   1   1   In car diff middle adjustment
+dcEngineBraking float   1   1   In car engine braking adjustment
+dcEnginePower   float   1   1   In car engine power adjustment
+dcFuelMixture   float   1   1   In car fuel mixture adjustment
+DCLapStatus  int    0   1    Status of driver change lap requirements
+dcRevLimiter    float   1   1   In car rev limiter adjustment
+dcThrottleShape float   1   1   In car throttle shape adjustment
+dcTractionControl   float   1   1   In car traction control adjustment
+dcTractionControl2  float   1   1   In car traction control 2 adjustment
+dcTractionControlToggle bool    1   1   In car traction control active
+dcWeightJackerLeft  float   1   1   In car left weight jacker adjustment
+dcWeightJackerRight float   1   1   In car right weight jacker adjustment
+dcWingFront float   1   1   In car front wing adjustment
+dcWingRear  float   1   1   In car rear wing adjustment
+DisplayUnits     int    0   1    Default units for the user interface 0 = english 1 = metric
+dpFNOMKnobSetting   float   1   1   Pitstop front flap adjustment
+dpFUFangleIndex float   1   1   Pitstop front upper flap adjustment
+dpFWingAngle    float   1   1   Pitstop front wing adjustment
+dpFWingIndex    float   1   1   Pitstop front wing adjustment
+dpLrWedgeAdj    float   1   1   Pitstop lr spring offset adjustment
+dpPSSetting float   1   1   Pitstop power steering adjustment
+dpQtape float   1   1   Pitstop qtape adjustment
+dpRBarSetting   float   1   1   Pitstop rear bar adjustment
+dpRFTruckarmP1Dz    float   1   1   Pitstop rftruckarmP1Dz adjustment
+dpRRDamperPerchOffsetm  float   1   1   Pitstop right rear dampter perch offset adjustment
+dpRrPerchOffsetm    float   1   1   Pitstop right rear spring offset adjustment
+dpRrWedgeAdj    float   1   1   Pitstop rr spring offset adjustment
+dpRWingAngle    float   1   1   Pitstop rear wing adjustment
+dpRWingIndex    float   1   1   Pitstop rear wing adjustment
+dpRWingSetting  float   1   1   Pitstop rear wing adjustment
+dpTruckarmP1Dz  float   1   1   Pitstop truckarmP1Dz adjustment
+dpWedgeAdj  float   1   1   Pitstop wedge adjustment
+
+
+Commands you can send back to the sim
+
+enum irsdk_ChatCommandMode
+{
+    irsdk_ChatCommand_Macro = 0,        // pass in a number from 1-15 representing the chat macro to launch
+    irsdk_ChatCommand_BeginChat,        // Open up a new chat window
+    irsdk_ChatCommand_Reply,            // Reply to last private chat
+    irsdk_ChatCommand_Cancel            // Close chat window
+};
+
+enum irsdk_PitCommandMode               // this only works when the driver is in the car
+{
+    irsdk_PitCommand_Clear = 0,         // Clear all pit checkboxes
+    irsdk_PitCommand_WS,                // Clean the winshield, using one tear off
+    irsdk_PitCommand_Fuel,              // Add fuel, optionally specify the amount to add in liters or pass '0' to use existing amount
+    irsdk_PitCommand_LF,                // Change the left front tire, optionally specifying the pressure in KPa or pass '0' to use existing pressure
+    irsdk_PitCommand_RF,                // right front
+    irsdk_PitCommand_LR,                // left rear
+    irsdk_PitCommand_RR,                // right rear
+    irsdk_PitCommand_ClearTires,        // Clear tire pit checkboxes
+    irsdk_PitCommand_FR,                // Request a fast repair
+};
+
+
+
+
+dcBrakeBias, In car brake bias adjustment
+dcAntiRollFront, In car front anti roll bar adjustment
+dcAntiRollRear, In car rear anti roll bar adjustment
+dcFuelMixture, In car fuel mixture adjustment
+dcBoostLevel, In car boost level adjustment
+dcRevLimiter, In car rev limiter adjustment
+dcWeightJackerLeft, In car left weight jacker adjustment
+dcWeightJackerRight, In car right weight jacker adjustment
+dcABS, In car abs adjustment
+dcTractionControl, In car traction control adjustment
+dcTractionControl2, In car traction control 2 adjustment
+dcWingFront, In car front wing adjustment
+dcWingRear, In car rear wing adjustment
+dcDiffEntry, In car diff entry adjustment
+dcDiffMiddle, In car diff middle adjustment
+dcDiffExit, In car diff exit adjustment
+dcEngineBraking, In car engine braking adjustment
+dcEnginePower, In car engine power adjustment
+dcThrottleShape, In car throttle shape adjustment
+dcTractionControlToggle, In car traction control active
+dcBrakeBias, In car brake bias adjustment
+
+dpFWingIndex, Pitstop front wing adjustment
+dpRWingIndex, Pitstop rear wing adjustment
+dpRWingSetting, Pitstop rear wing adjustment
+dpWedgeAdj, Pitstop wedge adjustment
+dpPSSetting, Pitstop power steering adjustment
+dpRRDamperPerchOffsetm, Pitstop right rear dampter perch offset adjustment
+dpRBarSetting, Pitstop rear bar adjustment
+dpRFTruckarmP1Dz, Pitstop rftruckarmP1Dz adjustment
+dpTruckarmP1Dz, Pitstop truckarmP1Dz adjustment
+dpQtape, Pitstop qtape adjustment
+dpFNOMKnobSetting, Pitstop front flap adjustment
+dpFWingAngle, Pitstop front wing adjustment
+dpRWingAngle, Pitstop rear wing adjustment
+dpFUFangleIndex, Pitstop front upper flap adjustment
+dpRrPerchOffsetm, Pitstop right rear spring offset adjustment
+dpLrWedgeAdj, Pitstop lr spring offset adjustment
+dpRrWedgeAdj, Pitstop rr spring offset adjustment
+
+LFrideHeight, LF ride height, "m"
+CFrideHeight, CF ride height, "m"
+RFrideHeight, RF ride height, "m"
+LRrideHeight, LR ride height, "m"
+CRrideHeight, CR ride height, "m"
+RRrideHeight, RR ride height, "m"
+CFSRrideHeight, Center front splitter ride height, "m"
+
+// I believe that %s is LF RF LR RR, but it may be more complicated than that
+%sshockDefl, %s shock deflection, "m"
+%sshockVel, %s shock velocity, "m/s"
+
+%sbrakeLinePress, %s brake line pressure, "bar"
+
+
+

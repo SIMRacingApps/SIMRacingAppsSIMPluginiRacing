@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="sra" name="SIMRacingApps-SIMPlugin-iRacing">
+    <property name="plugin.name" value="iRacing" />
+    <property name="build.prefix" value="" />
+    <tstamp>
+        <format property="build.time" pattern="yyyy.MM.dd.HH.mm.ss" />
+    </tstamp>
+    <tstamp>
+        <format property="build.date" pattern="yyyy.MM.dd" />
+    </tstamp>
+    <tstamp>
+        <format property="build.year" pattern="yyyy" />
+    </tstamp>
+    <property name="version.properties" value="src/com/SIMRacingApps/SIMPlugins/${plugin.name}/version.properties" />
+    <property environment="env"/>
+    <property name="ECLIPSE_HOME" value="../../../../PortableApps/EclipsePortable/App/Eclipse/"/>
+    <property name="SIMRacingAppsServer.location" value="../SIMRacingAppsServer"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.8"/>
+    <property name="source" value="1.8"/>
+    <path id="Web App Libraries.libraryclasspath">
+        <pathelement location="${SIMRacingAppsServer.location}/WebContent/WEB-INF/lib/snakeyaml-1.13.jar"/>
+        <pathelement location="${SIMRacingAppsServer.location}/WebContent/WEB-INF/lib/genson-1.3.jar"/>
+    </path>
+    <path id="SIMRacingAppsServer.classpath">
+        <pathelement location="${SIMRacingAppsServer.location}/WebContent/WEB-INF/classes"/>
+        <path refid="Web App Libraries.libraryclasspath"/>
+    </path>
+    <path id="SIMRacingAppsSIMPlugin.classpath">
+        <pathelement location="classes"/>
+        <path refid="SIMRacingAppsServer.classpath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="classes"/>
+        <copy includeemptydirs="false" todir="classes">
+            <fileset dir="src">
+                <exclude name="**/*.launch"/>
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="classes"/>
+    </target>
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="classes" includeantruntime="false" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="SIMRacingAppsSIMPlugin.classpath"/>
+        </javac>
+    </target>
+    <target name="version">
+        <sequential>
+            <propertyfile file="${version.properties}">
+                <entry key="major" type="int" value="1" />
+                <entry key="minor" type="int" value="0" />
+                <entry key="build" type="string" value="${build.prefix}${build.date}" />
+                <entry key="built-by" type="string" value="Jeffrey Gilliam" />
+                <entry key="copyright" type="string" value="Copyright (C) ${build.year} Jeffrey Gilliam" />
+                <entry key="license" type="string" value="Apache License, Version 2.0, January 2004" />
+            </propertyfile>
+            <replaceregexp match="^#.*$" replace="#Sat, 01 Jan 2000 00:00:00 -0000" byline="true">
+                <fileset dir="." includes="${version.properties}" />
+            </replaceregexp>
+            <property file="${version.properties}" prefix="version" />
+            <property name="version" value="${version.major}.${version.minor}_Build_${version.build}" />
+            <echo message="${version.properties} Remember to Tag Git with Version_${version}" />
+        </sequential>
+    </target>
+    <target name="sra" depends="build">
+        <property file="${version.properties}" prefix="version" />
+        <property name="version" value="${version.major}.${version.minor}_Build_${version.build}" />
+        <zip destfile="${java.io.tmpdir}/SIMRacingAppsPlugin-${plugin.name}.sra" basedir="classes" />
+    </target>
+</project>

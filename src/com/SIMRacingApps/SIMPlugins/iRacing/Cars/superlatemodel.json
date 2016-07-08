@@ -1,0 +1,94 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/superlatemodel.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          9.0,
+                "MajorIncrement":   1.0,
+                "MinorIncrement":   0.2,
+                "States": {
+                    "SHIFT": { "Start": 6900.0, "End": 99999.0 }
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          22.0,
+                "MajorIncrement":   2.0,
+                "MinorIncrement":   1.0,
+                "CapacityMinimum":  0.0,
+                "CapacityMaximum":  22.2,
+                "CapacityIncrement":1.0,
+                "States": {
+                    "CRITICAL": { "Start": 0.0, "End": 1.0 },
+                    "WARNING":  { "Start": 1.0, "End": 2.0 }
+                }
+            }
+        },
+        "FuelPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          10.0,
+                "MajorIncrement":   1.0,
+                "MinorIncrement":   0.5,
+                "States": {
+                    "CRITICAL": { "Start": 0.0, "End": 3.0 }
+                }
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          100.0,
+                "MajorIncrement":   20.0,
+                "MinorIncrement":   10.0,
+                "States": {
+                    "CRITICAL": { "Start": 0.0,  "End": 10.0 },
+                    "WARNING":  { "Start": 10.0, "End": 30.0 }
+                }
+            }
+        },
+        "OilTemp": {
+            "default": {
+                "Minimum":          120.0,
+                "Maximum":          320.0,
+                "MajorIncrement":   20.0,
+                "MinorIncrement":   10.0
+            }
+        },
+        "WaterPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          100.0,
+                "MajorIncrement":   20.0,
+                "MinorIncrement":   10.0,
+                "States": {
+                    "CRITICAL": { "Start": 0.0,  "End": 10.0 },
+                    "WARNING":  { "Start": 10.0, "End": 30.0 }
+                }
+            }
+        },
+        "WaterTemp": {
+            "default": {
+                "Minimum":          100.0,
+                "Maximum":          280.0,
+                "MajorIncrement":   20.0,
+                "MinorIncrement":   10.0,
+                "States": {
+                    "CRITICAL": { "Start": 240.0, "End": 999999999.0 }
+                }
+            }
+        },
+        "Tape": {
+            "default": {
+                "Reader": "DataVarTape4"
+            }
+        }
+    }
+}

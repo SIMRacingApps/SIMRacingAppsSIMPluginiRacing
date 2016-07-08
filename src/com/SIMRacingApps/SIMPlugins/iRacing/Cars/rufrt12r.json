@@ -1,0 +1,9 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/ruf.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+    }
+}

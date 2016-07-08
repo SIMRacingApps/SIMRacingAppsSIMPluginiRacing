@@ -1,0 +1,30 @@
+{
+    "CHAT": {
+        "ALL":       "[TEXT]{ENTER}",
+        "REPLY":     "[TEXT]{ENTER}",
+        "DRIVER":    "/[DRIVER] [TEXT]"
+    },
+    "ADMIN_COMMANDS": {
+        "ADMIN":     "!admin [DRIVER]",
+        "ADVANCE":   "!advance",
+        "BLACK":     "!black [DRIVER] [TIME]",
+        "CHAT":      "!chat [DRIVER]",
+        "CLEAR":     "!clear [DRIVER]",
+        "DQ":        "!dq [DRIVER]",
+        "EOL":       "!eol [DRIVER]",
+        "NADMIN":    "!nadmin [DRIVER]",
+        "NCHAT":     "!nchat [DRIVER]",
+        "REMOVE":    "!remove [DRIVER]",
+        "WAVEBY":    "!waveby [DRIVER]",
+        "YELLOW":    "!yellow"
+    },
+    "RADIO_COMMANDS": {
+        "ADD":       "@add [NAME]",
+        "REMOVE":    "@remove [NAME]",
+        "TRANSMIT":  "@transmit [NAME]",
+        "MUTE":      "@mute [NAME]",
+        "UNMUTE":    "@unmute [NAME]",
+        "SCAN":      "@scan",
+        "NOSCAN":    "@noscan"
+    }
+}

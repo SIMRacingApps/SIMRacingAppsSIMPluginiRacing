@@ -1,0 +1,71 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "Mazda MX-5 Cup",
+    "MfrLogo":     "com/SIMRacingApps/Cars/mazda.png",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           8.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "States": {
+                   "SHIFTLIGHTS":  {"Start": 5000.0,  "End": 6800.0},
+                    "SHIFT":       {"Start": 6800.0,  "End": 6850.00},
+                    "SHIFTBLINK":  {"Start": 6850.0,  "End": 99999999.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "gal",
+                "Minimum":           0.0,
+                "Maximum":           13.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   11.8843081,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true
+            }
+        },
+        "WaterPressure": {
+            "default": {
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 10.0},
+                    "WARNING":  {"Start": 10.0, "End": 20.0}
+                }
+            }
+        }
+    }
+}    

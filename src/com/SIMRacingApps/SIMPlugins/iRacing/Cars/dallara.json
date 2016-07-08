@@ -1,0 +1,140 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/dallara.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true,
+                "States": {
+                    "R": {"Start": -1.0, "End": 0.0, "Name": "Car/Gauge/Gear", "Value": "R"},
+                    "N": {"Start":  0.0, "End": 1.0, "Name": "Car/Gauge/Gear", "Value": "N"},
+                    "1": {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/Gear", "Value": "1"},
+                    "2": {"Start":  2.0, "End": 3.0, "Name": "Car/Gauge/Gear", "Value": "2"},
+                    "3": {"Start":  3.0, "End": 4.0, "Name": "Car/Gauge/Gear", "Value": "3"},
+                    "4": {"Start":  4.0, "End": 5.0, "Name": "Car/Gauge/Gear", "Value": "4"},
+                    "5": {"Start":  5.0, "End": 6.0, "Name": "Car/Gauge/Gear", "Value": "5"},
+                    "6": {"Start":  6.0, "End": 7.0, "Name": "Car/Gauge/Gear", "Value": "6"}
+                }
+            }
+        },
+        "FrontWing": {
+            "default": {
+                "Name":              "FRONT",
+                "TypeName":          "WING",
+                "UOM":               "deg",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    2.0,
+                "CapacityMinimum":   12.0,
+                "CapacityMaximum":   33.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        },
+        "RearWing": {
+            "default": {
+                "Name":              "REAR",
+                "TypeName":          "WING",
+                "UOM":               "deg",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    2.0,
+                "CapacityMinimum":   49.0,
+                "CapacityMaximum":   68.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   6.3,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.5},
+                    "WARNING":  {"Start": 1.5, "End": 3.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   6.3,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.5},
+                    "WARNING":  {"Start": 1.5, "End": 3.0}
+                }
+            }
+        },
+        "WaterPressure": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "Minimum":           0.0,
+                "Maximum":           150.0,
+                "MajorIncrement":    30.0,
+                "MinorIncrement":    15.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 15.0},
+                    "WARNING":  {"Start": 20.0, "End": 40.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "gal",
+                "Minimum":           0.0,
+                "Maximum":           22.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   22.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            }
+        }
+    }
+}

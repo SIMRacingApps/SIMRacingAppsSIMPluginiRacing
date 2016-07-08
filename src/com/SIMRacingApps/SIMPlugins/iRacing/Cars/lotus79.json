@@ -1,0 +1,112 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/lotus.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   4.2,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "impgal",
+                "Minimum":           0.0,
+                "Maximum":           18.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   18.0,
+                "CapacityIncrement": 0.5,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            }
+        },
+        "AntiRollFront": {
+            "default": {
+                "Name":              "ANTI ROLL",
+                "TypeName":          "FRONT",
+                "UOM":               "",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "States": {
+                    "0": {"Start":  0.0, "End": 1.0, "Name": "Car/Gauge/Gear", "Value": "soft"},
+                    "1": {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/Gear", "Value": "2"},
+                    "2": {"Start":  2.0, "End": 3.0, "Name": "Car/Gauge/Gear", "Value": "3"},
+                    "3": {"Start":  3.0, "End": 4.0, "Name": "Car/Gauge/Gear", "Value": "4"},
+                    "4": {"Start":  4.0, "End": 5.0, "Name": "Car/Gauge/Gear", "Value": "5"},
+                    "5": {"Start":  5.0, "End": 6.0, "Name": "Car/Gauge/Gear", "Value": "6"},
+                    "6": {"Start":  6.0, "End": 7.0, "Name": "Car/Gauge/Gear", "Value": "firm"}
+                }
+            }
+        },
+        "AntiRollRear": {
+            "default": {
+                "Name":              "ANTI ROLL",
+                "TypeName":          "REAR",
+                "UOM":               "",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "States": {
+                    "0": {"Start":  0.0, "End": 1.0, "Name": "Car/Gauge/Gear", "Value": "soft"},
+                    "1": {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/Gear", "Value": "2"},
+                    "2": {"Start":  2.0, "End": 3.0, "Name": "Car/Gauge/Gear", "Value": "3"},
+                    "3": {"Start":  3.0, "End": 4.0, "Name": "Car/Gauge/Gear", "Value": "4"},
+                    "4": {"Start":  4.0, "End": 5.0, "Name": "Car/Gauge/Gear", "Value": "5"},
+                    "5": {"Start":  5.0, "End": 6.0, "Name": "Car/Gauge/Gear", "Value": "6"},
+                    "6": {"Start":  6.0, "End": 7.0, "Name": "Car/Gauge/Gear", "Value": "firm"}
+                }
+            }
+        }
+    }
+}

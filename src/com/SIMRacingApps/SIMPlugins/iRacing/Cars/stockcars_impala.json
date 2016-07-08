@@ -1,0 +1,32 @@
+{
+    "Description": "Chevrolet Impala COT",
+    "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
+    "Copyright": "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "Gauges" : {
+        "Tape": {
+            "default": {
+                "Reader": "DataVarTape"
+            }
+        },
+        "Tachometer": {
+            "daytona oval": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7800.0, "End": 8800.0},
+                    "SHIFT": {"Start": 8800.0, "End": 99999999.0}
+                }
+            },
+            "daytona 2011 oval": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7800.0, "End": 8800.0},
+                    "SHIFT": {"Start": 8800.0, "End": 99999999.0}
+                }
+            },
+            "talladega": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7800.0, "End": 8800.0},
+                    "SHIFT": {"Start": 8800.0, "End": 99999999.0}
+                }
+            }
+        }
+    }
+}
