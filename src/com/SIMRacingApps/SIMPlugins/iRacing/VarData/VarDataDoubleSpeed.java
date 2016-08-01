@@ -10,9 +10,8 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
  */
 
 public class VarDataDoubleSpeed extends VarDataDouble {
-    private static final long serialVersionUID = 1464755072577475290L;
-    
-    private final int NUM_SPEED_SAMPLES     = 10;
+    private final double SPEED_FACTOR       = 1.0;
+    private final int NUM_SPEED_SAMPLES     = 3;
     private double  m_speed                 = 0.0;
     private double  m_speed_sessionTime[]   = new double[NUM_SPEED_SAMPLES];
     private double  m_speed_percentage[]    = new double[NUM_SPEED_SAMPLES];
@@ -89,6 +88,8 @@ public class VarDataDoubleSpeed extends VarDataDouble {
                     m_speed       = meters / distanceTime;
                     if (m_speed > 500.0 || m_speed < 1.0)
                         m_speed = 0.0;
+                    else
+                        m_speed *= SPEED_FACTOR; 
                 }
             }
         }

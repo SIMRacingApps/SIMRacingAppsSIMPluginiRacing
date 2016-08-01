@@ -970,6 +970,41 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
+    public    Data setCamera(String carIdentifier, String group, String camera) {
+        Data d = super.setCamera(carIdentifier,group,camera);
+        
+        if (m_SIMPlugin.isConnected()) {
+            Car car              = getCar(carIdentifier);
+            
+            if (car != null) {
+                int CamCarIdx        = m_SIMPlugin.getIODriver().getVars().getInteger("CamCarIndex");
+                int CamCameraNumber  = m_SIMPlugin.getIODriver().getVars().getInteger("CamCameraNumber");
+                int CamGroupNumber   = m_SIMPlugin.getIODriver().getVars().getInteger("CamGroupNumber");
+                String currentGroup  = m_SIMPlugin.getIODriver().getSessionInfo().getString("CameraInfo","Groups",Integer.toString(CamGroupNumber-1),"GroupName");
+                String currentCamera = m_SIMPlugin.getIODriver().getSessionInfo().getString("CameraInfo","Groups",Integer.toString(CamGroupNumber-1),"Cameras",Integer.toString(CamCameraNumber-1),"CameraName");
+                
+                d.setValue(currentGroup + "/" + currentCamera,"Camera",Data.State.NORMAL);
+                
+                String csMode = Integer.toString(carIdentifier.equalsIgnoreCase("LEADER") || carIdentifier.equalsIgnoreCase("LEADERCLASS") 
+                              ? BroadcastMsg.csMode.csFocusAtLeader 
+                              : BroadcastMsg.csMode.csFocusAtDriver + car.getId().getInteger());
+                
+                //check if the current camera is different from the requested.
+                String newCamGroupNumber  = Integer.toString(CamGroupNumber);    //default to the current group
+                String newCamCameraNumber = Integer.toString(CamCameraNumber);   //default to the current camera
+                
+                //TODO: lookup the group and camera numbers
+                
+                Server.logger().info("Changing Camera to "+carIdentifier+"(carIdx="+csMode+") - "+d.getString());
+                
+                BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,newCamGroupNumber,newCamCameraNumber);
+            }            
+        }
+        
+        return d;
+    }
+
+    @Override
     public    Data setCautionFlag() {
         Data d = super.setCautionFlag();
         

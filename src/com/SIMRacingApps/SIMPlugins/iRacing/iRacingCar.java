@@ -1545,8 +1545,8 @@ else
     @Override
     public Data getPitLocation() {
         Data d = super.getPitLocation();
-        d.setValue(m_pitLocation >= 0.0 ? m_pitLocation * 100.0 : 0.0,"%");
-        d.setState(Data.State.NORMAL);
+        if (m_pitLocation >= 0.0)
+            d.setValue(m_pitLocation * 100.0,"%",Data.State.NORMAL);
         return d;
     }
     
@@ -1936,6 +1936,18 @@ else
     }
     
     @Override
+    public    Data setCamera(String group, String camera) {
+        Data d = super.setCamera(group,camera);
+        
+        if (isValid()) {
+            Data s = m_SIMPlugin.getSession().setCamera("N"+Integer.toString(m_id), group, camera);
+            d.setValue(s.getString(),s.getUOM(),s.getState());
+        }
+        
+        return d;
+    }
+    
+    @Override
     public    Data setChat(String text) {
         Data d = super.setChat(text);
         d.setValue(m_SIMPlugin.getSession().setChat(
@@ -2092,7 +2104,14 @@ else
 //                if (!s.isEmpty())
 //                    this.m_lapCompletedPercent = Double.parseDouble(s);
 //            }
-            m_lapCompletedPercent = m_SIMPlugin.getSession().getCar(Session.CarIdentifiers.REFERENCE).getPitLocation().getDouble() / 100.0;
+            Data pitLocation      = m_SIMPlugin.getSession().getCar(Session.CarIdentifiers.REFERENCE).getPitLocation();
+            //only if we know the pit location of the reference car, update these variables on the pitstall car.
+            if (pitLocation.getState().equals(Data.State.NORMAL))
+                m_pitLocation         = pitLocation.getDouble() / 100.0;
+            else 
+                m_pitLocation         = -1.0;
+            
+            m_lapCompletedPercent = m_pitLocation;
             m_prevStatus.setState(Car.Status.INPITSTALL, m_sessionTime);
             return true;
         }
