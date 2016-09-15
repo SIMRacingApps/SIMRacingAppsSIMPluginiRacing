@@ -991,7 +991,7 @@ else
             if (flags == -1)
                 flags = 0;
             
-            if ((flags & SessionFlags.black) != 0)
+            if ((flags & SessionFlags.black) != 0 || (flags & SessionFlags.repair) != 0)
                 d.setValue(true);
         }
         return d;
