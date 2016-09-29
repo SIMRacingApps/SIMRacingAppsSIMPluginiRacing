@@ -356,6 +356,19 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
+    public Data getId() {
+        Data d = super.getId();
+        if (m_SIMPlugin.isConnected()) {
+            String seasonID = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SeasonID");
+            String seriesID = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SeriesID");
+            String sessionID = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SessionID");
+            String subSessionID = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SubSessionID");
+            d.setValue(String.format("%s/%s/%s/%s",seasonID,seriesID,sessionID,subSessionID ),"",Data.State.NORMAL);
+        }
+        return d;
+    }
+    
+    @Override
     public Data getIncidentLimit() {
         Data d = super.getIncidentLimit();
         if (m_SIMPlugin.isConnected()) {
@@ -534,6 +547,16 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         return d;
     }
 
+    @Override
+    public Data getLeagueId() {
+        Data d = super.getId();
+        if (m_SIMPlugin.isConnected()) {
+            String ID = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","LeagueID");
+            d.setValue(ID,"",Data.State.NORMAL);
+        }
+        return d;
+    }
+    
     @Override
     public Data getMessages() {
         Data d = super.getMessages();
