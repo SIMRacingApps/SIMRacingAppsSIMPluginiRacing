@@ -14,12 +14,7 @@
                 "Maximum":           8.4,
                 "MajorIncrement":    1.0,
                 "MinorIncrement":    0.1,
-                "StateAscending":    true,
-                "States": {
-                    "SHIFTLIGHTS": {"Start": 6113.0, "End": 7300.0},
-                    "SHIFT":       {"Start": 7300.0, "End": 7350.0},
-                    "SHIFTBLINK":  {"Start": 7400.0, "End": 99999999.0}
-                }
+                "StateAscending":    true
             }
         },
         "FuelLevel": {
