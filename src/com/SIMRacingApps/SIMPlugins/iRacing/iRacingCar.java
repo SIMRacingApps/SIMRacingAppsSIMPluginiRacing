@@ -1076,6 +1076,15 @@ else
     }
 
     @Override
+    public Data getIsPaceCar() {
+        Data d = super.getIsPaceCar();
+        if (isValid()) {
+            d.setValue(isPaceCar(),"boolean",Data.State.NORMAL);
+        }
+        return d;
+    }
+    
+    @Override
     public Data getIsYellowFlag() {
         Data d = super.getIsYellowFlag();
         if (isValid() && isME()) {
