@@ -3060,6 +3060,9 @@ else
 
         //These values are used a lot, so go ahead and cache them
         m_number     = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumber");
+        String numberRaw  = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberRaw");
+        if (!numberRaw.isEmpty())
+            m_numberRaw = Integer.parseInt(numberRaw);
         m_driverName = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"UserName");
 
         //get the lap completed from the results, then we will use current lap later to keep this updated.
