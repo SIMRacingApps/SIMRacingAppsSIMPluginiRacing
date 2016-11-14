@@ -48,6 +48,7 @@ public class iRacingCar extends Car {
     private Integer m_driversIdx            = -1;   //The index of the car in the DriverInfo.Drivers[] array.
     private String  m_driverName            = "";
     private String  m_number                = "";
+    private Integer m_numberRaw             = -1;
 
     private State   m_prevStatus            = new State(Car.Status.INVALID,0.0);
     private State   m_surfacelocation       = new State("",0.0);
@@ -1473,6 +1474,19 @@ else
         return d;
     }
 
+    /**
+     * Returns the integer version of the car number to be used with camera commands.
+     * 
+     * @return The raw car number as an integer
+     */
+    public int getNumberRaw() {
+        if (m_numberRaw > -1)
+            return m_numberRaw;
+        if (!m_number.isEmpty())
+            return Integer.parseInt(m_number);
+        return -1;
+    }
+    
     private static FindFile m_fontnames = null;
         
     @Override

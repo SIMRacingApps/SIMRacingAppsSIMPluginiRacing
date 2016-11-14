@@ -1007,7 +1007,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         Data d = super.setCamera(carIdentifier,group,camera);
         
         if (m_SIMPlugin.isConnected()) {
-            Car car              = getCar(carIdentifier);
+            iRacingCar car              = (iRacingCar) getCar(carIdentifier);
             
             if (car != null) {
                 int CamCarIdx        = m_SIMPlugin.getIODriver().getVars().getInteger("CamCarIndex");
@@ -1015,22 +1015,28 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 int CamGroupNumber   = m_SIMPlugin.getIODriver().getVars().getInteger("CamGroupNumber");
                 String currentGroup  = m_SIMPlugin.getIODriver().getSessionInfo().getString("CameraInfo","Groups",Integer.toString(CamGroupNumber-1),"GroupName");
                 String currentCamera = m_SIMPlugin.getIODriver().getSessionInfo().getString("CameraInfo","Groups",Integer.toString(CamGroupNumber-1),"Cameras",Integer.toString(CamCameraNumber-1),"CameraName");
+                String status        = car.getStatus().getString();
                 
-                d.setValue(currentGroup + "/" + currentCamera,"Camera",Data.State.NORMAL);
+                if (status.equals(Car.Status.INVALID)) {
+                    Server.logger().info("Cannot change Camera to #"+car.getNumber().getString()+". Not on the track.");
+                }
+                else {
+                    d.setValue(currentGroup + "/" + currentCamera,"Camera",Data.State.NORMAL);
+                    
+                    String csMode = Integer.toString(carIdentifier.equalsIgnoreCase("LEADER") || carIdentifier.equalsIgnoreCase("LEADERCLASS") 
+                                  ? BroadcastMsg.csMode.csFocusAtLeader 
+                                  : BroadcastMsg.csMode.csFocusAtDriver + car.getNumberRaw());
+                    
+                    //check if the current camera is different from the requested.
+                    String newCamGroupNumber  = Integer.toString(CamGroupNumber);    //default to the current group
+                    String newCamCameraNumber = Integer.toString(CamCameraNumber);   //default to the current camera
+                    
+                    //TODO: lookup the group and camera numbers
+                    
+                    Server.logger().info("Changing Camera to #"+car.getNumber().getString()+"(raw="+csMode+",carIdx="+car.getId().getString()+",status="+status+") - "+d.getString());
                 
-                String csMode = Integer.toString(carIdentifier.equalsIgnoreCase("LEADER") || carIdentifier.equalsIgnoreCase("LEADERCLASS") 
-                              ? BroadcastMsg.csMode.csFocusAtLeader 
-                              : BroadcastMsg.csMode.csFocusAtDriver + car.getId().getInteger());
-                
-                //check if the current camera is different from the requested.
-                String newCamGroupNumber  = Integer.toString(CamGroupNumber);    //default to the current group
-                String newCamCameraNumber = Integer.toString(CamCameraNumber);   //default to the current camera
-                
-                //TODO: lookup the group and camera numbers
-                
-                Server.logger().info("Changing Camera to "+carIdentifier+"(carIdx="+csMode+") - "+d.getString());
-                
-                BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,newCamGroupNumber,newCamCameraNumber);
+                    BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,newCamGroupNumber,newCamCameraNumber);
+                }
             }            
         }
         
