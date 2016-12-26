@@ -204,6 +204,14 @@ public class SharedMemoryIODriver extends IODriver {
             if ((header.getStatus() & StatusField.stConnected) == 0 || header.getLatest_VarBuf() == m_prev_VarBuf)
                 Windows.waitForSingleObject(m_hDataValidEvent, 100);
         }
+        else {
+            //here the SIM is not publishing data, 
+            //so sleep a little so we don't consume the CPU
+            try {
+                Thread.sleep(100L);
+            } catch (InterruptedException e) {
+            }
+        }
     }
 
 //send a remote control message to the sim
