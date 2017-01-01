@@ -6,6 +6,10 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 /**
  * use this class if the tape value returns these 4 possible values, 0,100,200,300,400
  * it will convert them to percentage.
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
  */
 
 public class VarDataDoubleTape4 extends VarDataDouble {

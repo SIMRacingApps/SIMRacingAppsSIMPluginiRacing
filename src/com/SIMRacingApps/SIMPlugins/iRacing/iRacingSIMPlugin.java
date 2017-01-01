@@ -13,6 +13,12 @@ import com.SIMRacingApps.SIMPlugins.iRacing.VarHeaders.VarHeader;
 import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.*;
 import com.SIMRacingApps.Util.FindFile;
 import com.owlike.genson.Genson;
+/**
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
+ */
 
 public class iRacingSIMPlugin extends SIMPlugin {
 

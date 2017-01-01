@@ -4,6 +4,12 @@ import com.SIMRacingApps.SIMPlugin.SIMPluginException;
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.SIMPlugins.iRacing.VarHeaders.VarHeader;
+/**
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
+ */
 
 public class iRacingTrack extends com.SIMRacingApps.Track {
 

@@ -7,7 +7,10 @@ import com.SIMRacingApps.SIMPlugins.iRacing.VarHeaders.VarHeader;
 
 /**
  * This class overrides the Data class and reads the iRacingValue
- * 
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
  */
 public class VarDataDouble extends Data {
     

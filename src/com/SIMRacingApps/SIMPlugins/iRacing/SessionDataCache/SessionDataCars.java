@@ -13,6 +13,12 @@ import com.SIMRacingApps.Session;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingSIMPlugin;
 
+/**
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
+ */
 public class SessionDataCars extends SessionData {
 
     private int m_maxCars = 64;

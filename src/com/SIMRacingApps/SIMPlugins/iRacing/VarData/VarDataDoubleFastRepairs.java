@@ -5,6 +5,10 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 
 /**
  * Returns the number of fast repairs you have remaining. 
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
  */
 
 public class VarDataDoubleFastRepairs extends VarDataDouble {

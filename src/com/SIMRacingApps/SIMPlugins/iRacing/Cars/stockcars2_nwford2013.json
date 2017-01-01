@@ -1,7 +1,7 @@
 {
     "Description": "Ford Mustang Class B",
     "MfrLogo":     "com/SIMRacingApps/Cars/ford.png",
-    "Copyright": "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "Copyright": "Copyright (C) 2015 - 2017 Jeffrey Gilliam",
     "Gauges" : {
         "FuelPressure": {
             "default": {

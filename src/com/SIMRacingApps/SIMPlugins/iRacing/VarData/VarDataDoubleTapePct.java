@@ -5,6 +5,10 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 
 /**
  * This tape reader simply divides the value by 100 to normalize it to a percentage
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
  */
 
 public class VarDataDoubleTapePct extends VarDataDouble {

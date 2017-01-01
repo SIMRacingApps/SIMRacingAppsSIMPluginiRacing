@@ -11,11 +11,12 @@ import java.util.TreeMap;
 
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.SIMPlugins.iRacing.VarHeaders.VarHeader;
-
-//import net.sf.cglib.beans.BeanGenerator;
-//import net.sf.cglib.beans.BeanMap;
-
-//import lib.Unit;
+/**
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
+ */
 
 public class Vars {
 

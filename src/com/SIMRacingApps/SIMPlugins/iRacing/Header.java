@@ -2,6 +2,12 @@ package com.SIMRacingApps.SIMPlugins.iRacing;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+/**
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
+ */
 
 public class Header {
 	public final static int IRSDK_MAX_BUFS = 4;

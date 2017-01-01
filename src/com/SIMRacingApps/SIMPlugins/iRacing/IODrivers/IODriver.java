@@ -17,6 +17,12 @@ import com.SIMRacingApps.Server;
 import com.SIMRacingApps.SIMPlugins.iRacing.*;
 import com.SIMRacingApps.Util.FindFile;
 
+/**
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
+ */
 public class IODriver {
     //TODO: Move the builds to it's own class and pass an instance of it down to SessionInfo
     //functions that will return true if the driver returns a start date after the build date

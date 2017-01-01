@@ -8,6 +8,10 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
  * This tape reader conditionally returns the tape percentage based on the build
  * if prior to april 22, 2014 the tape was simply values from 0 to 10
  * after that, 0 - 100.
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
  */
 
 public class VarDataDoubleTape extends VarDataDouble {

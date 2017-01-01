@@ -8,6 +8,10 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 /**
  * Returns the speed of a car provided by iRacing 
  * If the car is not ME, then we have to calculate it based on time and distance traveled.
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
  */
 
 public class VarDataDoubleWaterPressure extends VarDataDouble {

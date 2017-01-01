@@ -6,6 +6,10 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 /**
  * This class will convert Brake as a percentage to PSI range from 0 to 580.
  * It will apply the brake bias percentage as an influence.
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
  */
 
 public class VarDataDoubleBrakePressure extends VarDataDouble {

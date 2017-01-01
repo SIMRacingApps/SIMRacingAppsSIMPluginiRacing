@@ -3,6 +3,12 @@ package com.SIMRacingApps.SIMPlugins.iRacing.SessionDataCache;
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingSIMPlugin;
 
+/**
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
+ */
 public abstract class SessionData extends Data {
     
     protected iRacingSIMPlugin m_SIMPlugin;

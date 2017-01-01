@@ -20,6 +20,12 @@ import com.SIMRacingApps.Windows;
 import com.SIMRacingApps.SIMPlugins.iRacing.SessionDataCache.*;
 import com.SIMRacingApps.Util.FindFile;
 import com.SIMRacingApps.Util.SendKeys;
+/**
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
+ * @since 1.0
+ * @license Apache License 2.0
+ */
 
 public class iRacingSession extends com.SIMRacingApps.Session {
 
