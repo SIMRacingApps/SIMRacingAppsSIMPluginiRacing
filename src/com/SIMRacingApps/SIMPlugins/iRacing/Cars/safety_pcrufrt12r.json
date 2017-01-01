@@ -1,0 +1,36 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2016 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "Safety Ruf RT 12R",
+    "MfrLogo":     "com/SIMRacingApps/Cars/ruf.png",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           8.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true
+            }
+        }
+    }
+}
