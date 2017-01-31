@@ -29,6 +29,7 @@ import com.SIMRacingApps.Util.State;
 public class iRacingCar extends Car {
     
     private final double ENTER_PIT_DELAY   = 2.0;  //seconds to wait when entering pits before we're sure they stopped and did not over shoot the pit stall
+                                                   //this was set to 2.0, but the Dallara was sending the tire readings before that
     private final double EXIT_PIT_DELAY    = 1.0;  //seconds to wait to confirm we have exited the pits long enough before resetting the pit black boxes and updating the historical values.
     private final double RESET_PIT_DELAY   = 0.3;  //seconds to wait after leaving pit road to send pit commands
     private final double INVALID_INPITSTALL= 1.0;  //seconds to wait before declaring invalid while in pit stall
@@ -2931,7 +2932,7 @@ else
                         //in here the flag is being reset.
                         //if we're in the pits, then tell the gauge to take the after pit readings.
                         if (gauge.getChangeFlag().getBoolean()) {
-                            if (m_prevStatus.equals(iRacingCar.Status.INPITSTALL) ) {
+                            if (m_prevStatus.equals(iRacingCar.Status.INPITSTALL) || m_prevStatus.equals(iRacingCar.Status.ENTERINGPITSTALL) ) {
                                 gauge.takeReading();
                                 gauge.afterPitting(m_lapPitted);
                             }
@@ -2944,7 +2945,7 @@ else
                         
                             //if we're in the pitstall and the flag is being turned on
                             //take a before reading
-                            if (m_prevStatus.equals(iRacingCar.Status.INPITSTALL)) {
+                            if (m_prevStatus.equals(iRacingCar.Status.INPITSTALL) || m_prevStatus.equals(iRacingCar.Status.ENTERINGPITSTALL) ) {
                                 gauge.beforePitting(m_lapPitted);
                             }
                         }                        
