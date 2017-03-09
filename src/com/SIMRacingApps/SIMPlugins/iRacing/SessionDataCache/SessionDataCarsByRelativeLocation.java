@@ -98,7 +98,7 @@ public class SessionDataCarsByRelativeLocation extends SessionData {
 
                 if (c != null 
                 && c.isValid()
-                &&  !c.getIsSpectator().getBoolean()
+//                &&  !c.getIsSpectator().getBoolean()
                 &&  c.getLap(iRacingCar.LapType.COMPLETEDPERCENT).getDouble() >= 0.0
                 &&  m_SIMPlugin.getIODriver().getVars().getInteger("CarIdxLap", c.getId().getInteger()) != -1
                 &&  !c.getStatus().getString().equals(iRacingCar.Status.INVALID)

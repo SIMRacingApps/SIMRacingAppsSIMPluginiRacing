@@ -15,7 +15,6 @@ import com.SIMRacingApps.SIMPlugins.iRacing.iRacingSIMPlugin;
  * @license Apache License 2.0
  */
 public class SessionDataCarsByRelative extends SessionData {
-    private static final long serialVersionUID = 6607583677416699852L;
     SessionDataCars m_cars;
     iRacingSIMPlugin m_SIMPlugin;
     
@@ -69,7 +68,7 @@ public class SessionDataCarsByRelative extends SessionData {
 
                 if (c != null
                 &&  c.isValid()
-                &&  !c.getIsSpectator().getBoolean()
+//                &&  !c.getIsSpectator().getBoolean()
                 &&  ( //if it is the pace car, it cannot be in the pits
                      (c.getIsEqual("PACECAR").getBoolean() && !c.getStatus().getString().contains("PIT"))
                      ||
