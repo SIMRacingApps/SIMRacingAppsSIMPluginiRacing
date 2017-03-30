@@ -1,0 +1,182 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2017 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "Legends Dirt Ford  34 Coupe",
+    "MfrLogo":     "com/SIMRacingApps/Cars/ford.png",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           11.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           5.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   5.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "Minimum":           0.0,
+                "Maximum":           5.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   3.2,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    20.0,
+                "MinorIncrement":    2.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 20.0},
+                    "WARNING":  {"Start": 20.0, "End": 40.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "gal",
+                "Minimum":           0.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.25,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   5.3,
+                "CapacityIncrement": 1.1,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 0.5},
+                    "WARNING":  {"Start": 0.5, "End": 1.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "Minimum":           0.0,
+                "Maximum":           2.0,
+                "MajorIncrement":    0.5,
+                "MinorIncrement":    0.25,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   1.1,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 0.5},
+                    "WARNING":  {"Start": 0.5, "End": 0.8}
+                }
+            }
+        },
+        "TirePressureLF": {
+            "default": {
+                "Name":              "LF TIRE",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   10.0,
+                "CapacityMaximum":   40.0,
+                "CapacityIncrement": 0.5,
+                "OnResetChange":     true,
+                "IsFixed":           false,
+                "IsChangable":       true
+            }
+        },
+        "TirePressureLR": {
+            "default": {
+                "Name":              "LR TIRE",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   10.0,
+                "CapacityMaximum":   40.0,
+                "CapacityIncrement": 0.5,
+                "OnResetChange":     true,
+                "IsFixed":           false,
+                "IsChangable":       true
+            }
+        },
+        "TirePressureRF": {
+            "default": {
+                "Name":              "RF TIRE",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   10.0,
+                "CapacityMaximum":   40.0,
+                "CapacityIncrement": 0.5,
+                "OnResetChange":     true,
+                "IsFixed":           false,
+                "IsChangable":       true
+            }
+        },
+        "TirePressureRR": {
+            "default": {
+                "Name":              "RR TIRE",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   10.0,
+                "CapacityMaximum":   40.0,
+                "CapacityIncrement": 0.5,
+                "OnResetChange":     true,
+                "IsFixed":           false,
+                "IsChangable":       true
+            }
+        }
+    }
+}

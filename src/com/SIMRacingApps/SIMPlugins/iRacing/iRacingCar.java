@@ -3227,6 +3227,11 @@ else
             this._getGauge(Gauge.Type.LRWEDGEADJUSTMENT)  .setSIMValue(new VarDataDouble(m_SIMPlugin.getIODriver(),this,"dpLrWedgeAdj", "mm"),    Gauge.SIMValueTypes.ForSetup);
             //this._getGauge(Gauge.Type.RRPERCHOFFSET)      .setSIMValue(new VarDataDouble(m_SIMPlugin.getIODriver(),this,"dpRrPerchOffsetm", "mm"),Gauge.SIMValueTypes.ForSetup);
 
+            //Added for the Sprint Dirt Cars
+            if (m_SIMPlugin.getIODriver().getVarHeaders().getVarHeader("dcWingRear") != null) {
+                this._getGauge(Gauge.Type.REARWING)           .setSIMValue(new VarDataDouble(m_SIMPlugin.getIODriver(),this,"dcWingRear", "mm"),   Gauge.SIMValueTypes.ForCarAndSetup);
+            }
+            else
             if (m_SIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRWingAngle") != null) {
                 this._getGauge(Gauge.Type.FRONTWING)          .setSIMValue(new VarDataDouble(m_SIMPlugin.getIODriver(),this,"dpFWingAngle", "deg"),   Gauge.SIMValueTypes.ForSetup);
                 this._getGauge(Gauge.Type.REARWING)           .setSIMValue(new VarDataDouble(m_SIMPlugin.getIODriver(),this,"dpRWingAngle", "deg"),   Gauge.SIMValueTypes.ForSetup);
