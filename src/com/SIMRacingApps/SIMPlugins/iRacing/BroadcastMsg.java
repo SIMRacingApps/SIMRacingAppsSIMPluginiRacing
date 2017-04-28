@@ -231,7 +231,7 @@ public class BroadcastMsg {
     {
     	public final static short csFocusAtIncident = -3;
     	public final static short csFocusAtLeader   = -2;
-    	public final static short csFocusAtExiting  = -1;
+    	public final static short csFocusAtExciting = -1;
     	// ctFocusAtDriver + car number...
     	public final static short csFocusAtDriver   = 0;
     };

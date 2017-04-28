@@ -34,6 +34,22 @@ public class SessionDataCarsByPosition extends SessionData {
         return -1;
     }
 
+    private int m_dataVersion = -1;
+    protected boolean _needsUpdating() {
+        boolean b = super._needsUpdating();
+        
+        if (!b 
+        &&  m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying")
+        &&  m_SIMPlugin.isConnected()
+        &&  this.m_dataVersion != m_SIMPlugin.getIODriver().getHeader().getLatest_VarBufTick()
+        ) {
+            b = true;
+            this.m_dataVersion = m_SIMPlugin.getIODriver().getHeader().getLatest_VarBufTick();
+        }
+
+        return b;
+    }
+    
     private void _update() {
         if (this._needsUpdating()) {
             m_positions = new HashMap<Integer,Integer>();

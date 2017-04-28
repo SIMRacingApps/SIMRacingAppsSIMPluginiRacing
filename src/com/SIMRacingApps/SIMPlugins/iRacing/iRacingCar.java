@@ -121,7 +121,7 @@ public class iRacingCar extends Car {
 
         private void _refresh() {
             //TODO: Does qualifying results ever change during a session? If not, only update them once?
-            if (m_sessionVersion == m_SIMPlugin.getIODriver().getHeader().getSessionInfoUpdate() || m_id == -1)
+            if ((!m_SIMPlugin.getSession().getIsReplay().getBoolean() && m_sessionVersion == m_SIMPlugin.getIODriver().getHeader().getSessionInfoUpdate()) || m_id == -1)
                 return;
 
             m_sessionVersion = m_SIMPlugin.getIODriver().getHeader().getSessionInfoUpdate();
@@ -191,16 +191,20 @@ public class iRacingCar extends Car {
         private void _refresh() {
             int m_position_2015 = -1;
             int m_positionClass_2015 = -1;
-            
+            int m_lapCompleted_2015 = -1;
 
-//These were causing funny results. Don't need them since it works from the session string without them.            
-//            if (m_SIMPlugin.getIODriver().build_June_9_2015() && m_id >= 0) {
-//                //according to a post in the forums, this is updated during a replay while the session info isn't. TODO: Verify
-//                m_position_2015      = m_SIMPlugin.getIODriver().getVars().getInteger("CarIdxPosition",m_id);
-//                m_positionClass_2015 = m_SIMPlugin.getIODriver().getVars().getInteger("CarIdxClassPosition",m_id);
-//            }
+//These were causing funny results. Don't need them, unless replay, since it works from the session string without them.            
+            if (m_SIMPlugin.getIODriver().build_June_9_2015() 
+            &&  m_id >= 0
+            &&  m_SIMPlugin.getSession().getIsReplay().getBoolean()  //only if in a replay
+            ) {
+                //according to a post in the forums, this is updated during a replay while the session info isn't. TODO: Verify
+                m_position_2015      = m_SIMPlugin.getIODriver().getVars().getInteger("CarIdxPosition",m_id);
+                m_positionClass_2015 = m_SIMPlugin.getIODriver().getVars().getInteger("CarIdxClassPosition",m_id);
+                m_lapCompleted_2015 = m_SIMPlugin.getIODriver().getVars().getInteger("CarIdxLapCompleted",m_id);
+            }
             
-            if (m_id == -1 || m_sessionVersion == m_SIMPlugin.getIODriver().getHeader().getSessionInfoUpdate())
+            if (m_id == -1 || (m_sessionVersion == m_SIMPlugin.getIODriver().getHeader().getSessionInfoUpdate() && !m_SIMPlugin.getSession().getIsReplay().getBoolean()))
                 return;
 
             m_sessionVersion = m_SIMPlugin.getIODriver().getHeader().getSessionInfoUpdate();
@@ -239,7 +243,7 @@ public class iRacingCar extends Car {
                     }
                     else {
                         String s;
-                        if (m_position_2015 > 0) {  //if new value is valid use it
+                        if (m_position_2015 >= 0) {  //if new value is valid use it
                             m_position = m_position_2015;
                         }
                         else {
@@ -248,7 +252,7 @@ public class iRacingCar extends Car {
                                 m_position      = Integer.parseInt(s);
                         }
                         
-                        if (m_positionClass_2015 > 0 ) {  //if new value is valid use it
+                        if (m_positionClass_2015 >= 0 ) {  //if new value is valid use it
                             m_positionClass = m_positionClass_2015;
                         }
                         else {
@@ -266,21 +270,28 @@ public class iRacingCar extends Car {
                                 m_positionClass = m_position;
                         }
 
-                        s = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_SIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"LapsComplete");
-                        if (!s.isEmpty() && Integer.parseInt(s) > 0.0) {
-                            //do this for when we've just entered the session and we don't know the laps completed.
-                            if (m_lapCompleted < Integer.parseInt(s)) {
-                                
-                                m_lapCompleted = Integer.parseInt(s);
-
-                                //now save this last known position for this lap has history
-                                while (m_positions.size() < m_lapCompleted) {
-                                    m_positions.add(m_position);
-                                }
-                                while (m_positionsClass.size() < m_lapCompleted) {
-                                    m_positionsClass.add(m_positionClass);
+                        if (m_lapCompleted_2015 >= 0)
+                        {
+                            m_lapCompleted = m_lapCompleted_2015;
+                        }
+                        else {
+                            s = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_SIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"LapsComplete");
+                            if (!s.isEmpty() && Integer.parseInt(s) > 0.0) {
+                                //do this for when we've just entered the session and we don't know the laps completed.
+                                if (m_lapCompleted < Integer.parseInt(s)) {
+                                    
+                                    m_lapCompleted = Integer.parseInt(s);
+    
                                 }
                             }
+                        }
+                        
+                        //now save this last known position for this lap has history
+                        while (m_positions.size() < m_lapCompleted) {
+                            m_positions.add(m_position);
+                        }
+                        while (m_positionsClass.size() < m_lapCompleted) {
+                            m_positionsClass.add(m_positionClass);
                         }
 
                         s = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_SIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"LapsLed");
@@ -1966,18 +1977,6 @@ else
     }
     
     @Override
-    public    Data setCamera(String group, String camera) {
-        Data d = super.setCamera(group,camera);
-        
-        if (isValid()) {
-            Data s = m_SIMPlugin.getSession().setCamera("N"+Integer.toString(m_id), group, camera);
-            d.setValue(s.getString(),s.getUOM(),s.getState());
-        }
-        
-        return d;
-    }
-    
-    @Override
     public    Data setChat(String text) {
         Data d = super.setChat(text);
         d.setValue(m_SIMPlugin.getSession().setChat(
@@ -3038,6 +3037,9 @@ else
 
         int sessionNum = m_SIMPlugin.getIODriver().getVars().getInteger("SessionNum");
 
+        if (m_SIMPlugin.getSession().getIsReplay().getBoolean())
+            Server.logger().fine("Replay Mode Detected");
+        
         //cache the session type so we aren't parsing in the Session String during these updates every time.
         m_sessionType = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",Integer.toString(sessionNum),"SessionType").toUpperCase();
 

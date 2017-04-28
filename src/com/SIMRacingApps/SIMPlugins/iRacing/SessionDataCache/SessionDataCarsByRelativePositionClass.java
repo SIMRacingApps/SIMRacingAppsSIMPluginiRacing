@@ -28,6 +28,22 @@ public class SessionDataCarsByRelativePositionClass extends SessionData {
         m_cars      = cars;
     }
 
+    private int m_dataVersion = -1;
+    protected boolean _needsUpdating() {
+        boolean b = super._needsUpdating();
+        
+        if (!b 
+        &&  m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying")
+        &&  m_SIMPlugin.isConnected()
+        &&  this.m_dataVersion != m_SIMPlugin.getIODriver().getHeader().getLatest_VarBufTick()
+        ) {
+            b = true;
+            this.m_dataVersion = m_SIMPlugin.getIODriver().getHeader().getLatest_VarBufTick();
+        }
+
+        return b;
+    }
+    
     public int getCarIdx(int position) {
         this._update();
         setValue(-1,"integer",State.OFF);

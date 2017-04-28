@@ -40,6 +40,22 @@ public class SessionDataCarsByRelativePosition extends SessionData {
         return getInteger();
     }
 
+    private int m_dataVersion = -1;
+    protected boolean _needsUpdating() {
+        boolean b = super._needsUpdating();
+        
+        if (!b 
+        &&  m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying")
+        &&  m_SIMPlugin.isConnected()
+        &&  this.m_dataVersion != m_SIMPlugin.getIODriver().getHeader().getLatest_VarBufTick()
+        ) {
+            b = true;
+            this.m_dataVersion = m_SIMPlugin.getIODriver().getHeader().getLatest_VarBufTick();
+        }
+
+        return b;
+    }
+    
     private void _update() {
         if (this._needsUpdating()) {
             //first populate a TreeMap to sort by the position in the race.

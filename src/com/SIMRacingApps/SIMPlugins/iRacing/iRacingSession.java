@@ -3,6 +3,7 @@ package com.SIMRacingApps.SIMPlugins.iRacing;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -58,6 +59,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     private SessionDataCarsByRelative                m_carsByRelative;
     private SessionDataCarsByRelativeLocation        m_carsByRelativeLocation;
     private Map<String,Object>                       m_sendKeys;
+    private String                                   m_cameraFocusOn = "DRIVER"; //TODO: report to iRacing need to know what current focus is
     
     private void _init() {
         m_sessionUniqueID                = -1;
@@ -271,6 +273,166 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             }
         }
         return keys;
+    }
+
+    private class _camera {
+        String name;
+        String group;
+        int groupNumber;
+        String camera;
+        int cameraNumber;
+        private _camera() {};
+        
+        _camera(String group, int groupNumber, String camera, int cameraNumber) {
+            this.name = group + "." + camera;
+            this.group = group;
+            this.groupNumber = groupNumber;
+            this.camera = camera;
+            this.cameraNumber = cameraNumber;
+        }
+    };
+    
+    private Map<String,_camera> m_cameras = null;
+    private Map<String,_camera> m_camera_groups = null;
+    private Map<String,_camera> m_cameras_by_number = null;
+    private Map<String,_camera> m_camera_groups_by_number = null;
+    private ArrayList<String> m_cameras_array = null;
+    private ArrayList<String> m_camera_groups_array = null;
+    
+    private boolean _loadCameras() {
+        if (m_SIMPlugin.isConnected() && m_cameras == null) {
+            m_cameras = new TreeMap<String,_camera>();
+            m_camera_groups = new TreeMap<String,_camera>();
+            
+            @SuppressWarnings("unchecked")
+            ArrayList<Map<String,Object>> groups = (ArrayList<Map<String,Object>>)m_SIMPlugin.getIODriver().getSessionInfo().getObject("CameraInfo","Groups");
+
+            for (int groupIdx = 0; groupIdx < groups.size(); groupIdx++) {
+                String groupName = (String) groups.get(groupIdx).get("GroupName");
+                int groupNumber  = (int) groups.get(groupIdx).get("GroupNum");
+                
+                @SuppressWarnings("unchecked")
+                ArrayList<Map<String,Object>> cameras = (ArrayList<Map<String,Object>>) groups.get(groupIdx).get("Cameras");
+                
+                for (int cameraIdx = 0; cameraIdx < cameras.size(); cameraIdx++) {
+                    String cameraName = (String) cameras.get(cameraIdx).get("CameraName");
+                    int cameraNumber  = (int) cameras.get(cameraIdx).get("CameraNum");
+
+                    _camera camera = new _camera(groupName,groupNumber,cameraName,cameraNumber);
+                    m_cameras.put(camera.name.toLowerCase(),camera);
+                    m_camera_groups.putIfAbsent(camera.group.toLowerCase(),camera);
+                }
+            }
+            
+            //now create the sorted arrays
+            Iterator<Entry<String, _camera>> itr = m_cameras.entrySet().iterator();
+            m_cameras_array = new ArrayList<String>();
+            m_cameras_by_number = new HashMap<String,_camera>();
+            while (itr.hasNext()) {
+                _camera camera = itr.next().getValue();
+                m_cameras_array.add(camera.name);
+                m_cameras_by_number.put(String.format("%d.%d",camera.groupNumber,camera.cameraNumber), camera);
+            }
+            
+            itr = m_camera_groups.entrySet().iterator();
+            m_camera_groups_array = new ArrayList<String>();
+            m_camera_groups_by_number = new HashMap<String,_camera>();
+            while (itr.hasNext()) {
+                _camera camera = itr.next().getValue();
+                m_camera_groups_array.add(camera.group);
+                m_camera_groups_by_number.put(String.format("%d",camera.groupNumber), camera);
+            }
+        }
+        
+        return m_cameras != null;
+    }
+    
+    @Override
+    public    Data getCamera() {
+        Data d = super.getCamera();
+        
+        if (_loadCameras()) {
+            int cameraNumber  = m_SIMPlugin.getIODriver().getVars().getInteger("CamCameraNumber");
+            int groupNumber   = m_SIMPlugin.getIODriver().getVars().getInteger("CamGroupNumber");
+            _camera camera = m_cameras_by_number.get(String.format("%d.%d",groupNumber,cameraNumber));
+            
+            if (camera == null)
+                camera = m_camera_groups_by_number.get(String.format("%d",groupNumber));
+            
+            if (camera != null)
+                d.setValue(camera.name);
+        }
+        
+        return d;
+    }
+    
+    @Override
+    public    Data getCameraGroup() {
+        Data d = super.getCameraGroup();
+        
+        if (_loadCameras()) {
+            int groupNumber   = m_SIMPlugin.getIODriver().getVars().getInteger("CamGroupNumber");
+            _camera camera = m_camera_groups_by_number.get(String.format("%d",groupNumber));
+            
+            if (camera != null)
+                d.setValue(camera.group);
+        }
+        
+        return d;
+    }
+    
+    @Override
+    public    Data getCameraFocus() {
+        Data d = super.getCamera();
+        
+        if (_loadCameras()) {
+            d.setValue(m_cameraFocusOn);
+        }
+        
+        return d;
+    }
+    
+    @Override
+    public    Data getCameras() {
+        Data d = super.getCameras();
+        
+        if (_loadCameras()) {
+            d.setValue(m_cameras_array);
+        }
+        
+        return d;
+    }
+
+    @Override
+    public    Data getCameras(String group) {
+        Data d = super.getCameras(group);
+        
+        if (_loadCameras()) {
+            ArrayList<String> cameras = new ArrayList<String>();
+            Iterator<Entry<String, _camera>> itr = m_cameras.entrySet().iterator();
+            
+            while (itr.hasNext()) {
+                _camera c = itr.next().getValue();
+                if (c.group.equalsIgnoreCase(group))
+                    cameras.add(c.name);
+            }
+            
+            
+            d.setValue(cameras);
+        }
+        
+        return d;
+    }
+    
+    @Override
+    public    Data getCameraGroups() {
+        Data d = super.getCameraGroups();
+        
+        if (_loadCameras()) {
+            d.setValue(m_camera_groups_array);
+        }
+        
+        return d;
     }
     
     iRacingCar m_defaultCar = null;
@@ -1009,46 +1171,107 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
-    public    Data setCamera(String carIdentifier, String group, String camera) {
-        Data d = super.setCamera(carIdentifier,group,camera);
+    public    Data setCamera(String cameraName,String focusOn,String carIdentifier) {
+        Data d = super.setCamera(cameraName,focusOn,carIdentifier);
         
-        if (m_SIMPlugin.isConnected()) {
-            iRacingCar car              = (iRacingCar) getCar(carIdentifier);
+        if (_loadCameras()) {
             
-            if (car != null) {
-                int CamCarIdx        = m_SIMPlugin.getIODriver().getVars().getInteger("CamCarIndex");
-                int CamCameraNumber  = m_SIMPlugin.getIODriver().getVars().getInteger("CamCameraNumber");
-                int CamGroupNumber   = m_SIMPlugin.getIODriver().getVars().getInteger("CamGroupNumber");
-                String currentGroup  = m_SIMPlugin.getIODriver().getSessionInfo().getString("CameraInfo","Groups",Integer.toString(CamGroupNumber-1),"GroupName");
-                String currentCamera = m_SIMPlugin.getIODriver().getSessionInfo().getString("CameraInfo","Groups",Integer.toString(CamGroupNumber-1),"Cameras",Integer.toString(CamCameraNumber-1),"CameraName");
-                String status        = car.getStatus().getString();
+            _camera camera  = m_cameras.get(cameraName.isEmpty() || cameraName.equalsIgnoreCase("CURRENT") ? getCamera().getString().toLowerCase() : cameraName.toLowerCase());
+            
+            if (camera == null)
+                camera  = m_camera_groups.get(cameraName.toLowerCase());
+            
+            String carNumber = "";
+            
+            if (camera != null) {
                 
-                if (status.equals(Car.Status.INVALID)) {
-                    Server.logger().info("Cannot change Camera to #"+car.getNumber().getString()+". Not on the track.");
-                }
-                else {
-                    d.setValue(currentGroup + "/" + currentCamera,"Camera",Data.State.NORMAL);
-                    
-                    String csMode = Integer.toString(carIdentifier.equalsIgnoreCase("LEADER") || carIdentifier.equalsIgnoreCase("LEADERCLASS") 
-                                  ? BroadcastMsg.csMode.csFocusAtLeader 
-                                  : BroadcastMsg.csMode.csFocusAtDriver + car.getNumberRaw());
-                    
-                    //check if the current camera is different from the requested.
-                    String newCamGroupNumber  = Integer.toString(CamGroupNumber);    //default to the current group
-                    String newCamCameraNumber = Integer.toString(CamCameraNumber);   //default to the current camera
-                    
-                    //TODO: lookup the group and camera numbers
-                    
-                    Server.logger().info("Changing Camera to #"+car.getNumber().getString()+"(raw="+csMode+",carIdx="+car.getId().getString()+",status="+status+") - "+d.getString());
+                String csMode  = null;
                 
-                    BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,newCamGroupNumber,newCamCameraNumber);
+                if (focusOn.equalsIgnoreCase("CRASHES")) {
+                    csMode = Integer.toString(BroadcastMsg.csMode.csFocusAtIncident);                    
                 }
+                else
+                if (focusOn.equalsIgnoreCase("DRIVER")) {
+                    iRacingCar car  = (iRacingCar) getCar(carIdentifier);
+                    if (car != null) {
+                        String status        = car.getStatus().getString();
+                      
+                        if (status.equals(Car.Status.INVALID)) {
+                            Server.logger().info("Cannot change Camera to #"+car.getNumber().getString()+". Not on the track.");
+                            return getCamera();
+                        }
+                        
+                        csMode = Integer.toString(BroadcastMsg.csMode.csFocusAtDriver + car.getNumberRaw());
+                        carNumber = "#"+car.getNumber().getString();
+                    }
+                    else {
+                        Server.logger().info("Cannot change Camera, no driver has focus.");
+                        return getCamera();
+                    }
+                }
+                else
+                if (focusOn.equalsIgnoreCase("EXCITING")) {
+                    csMode = Integer.toString(BroadcastMsg.csMode.csFocusAtExciting);
+                    
+                }
+                else {  //default will be to focus on the leader.
+                    focusOn = "LEADER";
+                    csMode = Integer.toString(BroadcastMsg.csMode.csFocusAtLeader);
+                }
+
+                //we have to keep track of this since it is not in the telemetry
+                m_cameraFocusOn = focusOn.toUpperCase();
+                
+                Server.logger().info(String.format("Switching Camera to %s,%s,%s",m_cameraFocusOn,carNumber,cameraName));
+                
+                BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,Integer.toString(camera.groupNumber),Integer.toString(camera.cameraNumber));
             }            
         }
         
         return d;
     }
 
+//    @Override
+//    public    Data setCamera(String carIdentifier, String group, String camera) {
+//        Data d = super.setCamera(carIdentifier,group,camera);
+//        
+//        if (m_SIMPlugin.isConnected()) {
+//            iRacingCar car              = (iRacingCar) getCar(carIdentifier);
+//            
+//            if (car != null) {
+//                int CamCarIdx        = m_SIMPlugin.getIODriver().getVars().getInteger("CamCarIndex");
+//                int CamCameraNumber  = m_SIMPlugin.getIODriver().getVars().getInteger("CamCameraNumber");
+//                int CamGroupNumber   = m_SIMPlugin.getIODriver().getVars().getInteger("CamGroupNumber");
+//                String currentGroup  = m_SIMPlugin.getIODriver().getSessionInfo().getString("CameraInfo","Groups",Integer.toString(CamGroupNumber-1),"GroupName");
+//                String currentCamera = m_SIMPlugin.getIODriver().getSessionInfo().getString("CameraInfo","Groups",Integer.toString(CamGroupNumber-1),"Cameras",Integer.toString(CamCameraNumber-1),"CameraName");
+//                String status        = car.getStatus().getString();
+//                
+//                if (status.equals(Car.Status.INVALID)) {
+//                    Server.logger().info("Cannot change Camera to #"+car.getNumber().getString()+". Not on the track.");
+//                }
+//                else {
+//                    d.setValue(currentGroup + "/" + currentCamera,"Camera",Data.State.NORMAL);
+//                    
+//                    String csMode = Integer.toString(carIdentifier.equalsIgnoreCase("LEADER") || carIdentifier.equalsIgnoreCase("LEADERCLASS") 
+//                                  ? BroadcastMsg.csMode.csFocusAtLeader 
+//                                  : BroadcastMsg.csMode.csFocusAtDriver + car.getNumberRaw());
+//                    
+//                    //check if the current camera is different from the requested.
+//                    String newCamGroupNumber  = Integer.toString(CamGroupNumber);    //default to the current group
+//                    String newCamCameraNumber = Integer.toString(CamCameraNumber);   //default to the current camera
+//                    
+//                    //TODO: lookup the group and camera numbers
+//                    
+//                    Server.logger().info("Changing Camera to #"+car.getNumber().getString()+"(raw="+csMode+",carIdx="+car.getId().getString()+",status="+status+") - "+d.getString());
+//                
+//                    BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,newCamGroupNumber,newCamCameraNumber);
+//                }
+//            }            
+//        }
+//        
+//        return d;
+//    }
+    
     @Override
     public    Data setCautionFlag() {
         Data d = super.setCautionFlag();

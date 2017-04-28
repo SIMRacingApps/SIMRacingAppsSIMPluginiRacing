@@ -13,8 +13,6 @@ import com.SIMRacingApps.SIMPlugins.iRacing.iRacingSIMPlugin;
  * @license Apache License 2.0
  */
 public class SessionDataCarsByCarNumber extends SessionData {
-    private static final long serialVersionUID = 3286797859044221296L;
-    
     SessionDataCars m_cars;
     iRacingSIMPlugin m_SIMPlugin;
     
