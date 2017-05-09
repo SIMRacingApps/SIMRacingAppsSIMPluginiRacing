@@ -205,7 +205,7 @@ public class iRacingSIMPlugin extends SIMPlugin {
                 
                 if (isConnected()) {
                     //test if iRacing has started a new session and create a new one here as well
-                    if (m_session.getTimeElapsed().getDouble() < m_sessionTime) {
+                    if (m_session.getTimeElapsed().getDouble() < m_sessionTime && !m_session.getIsReplay().getBoolean()) {
 //found that this condition can be caused when spectating a race and you rewind and look at the replay.
 //So, for now just log it as I don't think I really need this to create a new session.                        
 //                        m_session = new iRacingSession(this);

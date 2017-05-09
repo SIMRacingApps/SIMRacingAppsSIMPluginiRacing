@@ -158,6 +158,13 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 }
             }
             else
+            if (car.equalsIgnoreCase("CRASHES") || car.equalsIgnoreCase("EXCITING")) {
+                if (m_SIMPlugin.isConnected() && m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying")) {
+                    iRacingCar c = m_cars.getCar(m_SIMPlugin.getIODriver().getVars().getInteger("CamCarIdx"));
+                    idx = (c == null ? -1 : c.getId().getInteger());
+                }
+            }
+            else
             if (car.equalsIgnoreCase("PITSTALL") || car.equalsIgnoreCase("I-2")) {
                 return -2;
             }
@@ -279,29 +286,20 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         String name;
         String group;
         int groupNumber;
-        String camera;
-        int cameraNumber;
-        private _camera() {};
         
-        _camera(String group, int groupNumber, String camera, int cameraNumber) {
-            this.name = group + "." + camera;
+        _camera(String group, int groupNumber) {
+            this.name = group;
             this.group = group;
             this.groupNumber = groupNumber;
-            this.camera = camera;
-            this.cameraNumber = cameraNumber;
         }
     };
     
-    private Map<String,_camera> m_cameras = null;
     private Map<String,_camera> m_camera_groups = null;
-    private Map<String,_camera> m_cameras_by_number = null;
     private Map<String,_camera> m_camera_groups_by_number = null;
-    private ArrayList<String> m_cameras_array = null;
     private ArrayList<String> m_camera_groups_array = null;
     
     private boolean _loadCameras() {
-        if (m_SIMPlugin.isConnected() && m_cameras == null) {
-            m_cameras = new TreeMap<String,_camera>();
+        if (m_SIMPlugin.isConnected() && m_camera_groups == null) {
             m_camera_groups = new TreeMap<String,_camera>();
             
             @SuppressWarnings("unchecked")
@@ -311,30 +309,12 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 String groupName = (String) groups.get(groupIdx).get("GroupName");
                 int groupNumber  = (int) groups.get(groupIdx).get("GroupNum");
                 
-                @SuppressWarnings("unchecked")
-                ArrayList<Map<String,Object>> cameras = (ArrayList<Map<String,Object>>) groups.get(groupIdx).get("Cameras");
-                
-                for (int cameraIdx = 0; cameraIdx < cameras.size(); cameraIdx++) {
-                    String cameraName = (String) cameras.get(cameraIdx).get("CameraName");
-                    int cameraNumber  = (int) cameras.get(cameraIdx).get("CameraNum");
-
-                    _camera camera = new _camera(groupName,groupNumber,cameraName,cameraNumber);
-                    m_cameras.put(camera.name.toLowerCase(),camera);
-                    m_camera_groups.putIfAbsent(camera.group.toLowerCase(),camera);
-                }
+                _camera camera = new _camera(groupName,groupNumber);
+                m_camera_groups.putIfAbsent(camera.group.toLowerCase(),camera);
             }
             
             //now create the sorted arrays
-            Iterator<Entry<String, _camera>> itr = m_cameras.entrySet().iterator();
-            m_cameras_array = new ArrayList<String>();
-            m_cameras_by_number = new HashMap<String,_camera>();
-            while (itr.hasNext()) {
-                _camera camera = itr.next().getValue();
-                m_cameras_array.add(camera.name);
-                m_cameras_by_number.put(String.format("%d.%d",camera.groupNumber,camera.cameraNumber), camera);
-            }
-            
-            itr = m_camera_groups.entrySet().iterator();
+            Iterator<Entry<String, _camera>> itr = m_camera_groups.entrySet().iterator();
             m_camera_groups_array = new ArrayList<String>();
             m_camera_groups_by_number = new HashMap<String,_camera>();
             while (itr.hasNext()) {
@@ -344,7 +324,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             }
         }
         
-        return m_cameras != null;
+        return m_camera_groups != null;
     }
     
     @Override
@@ -352,30 +332,11 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         Data d = super.getCamera();
         
         if (_loadCameras()) {
-            int cameraNumber  = m_SIMPlugin.getIODriver().getVars().getInteger("CamCameraNumber");
-            int groupNumber   = m_SIMPlugin.getIODriver().getVars().getInteger("CamGroupNumber");
-            _camera camera = m_cameras_by_number.get(String.format("%d.%d",groupNumber,cameraNumber));
-            
-            if (camera == null)
-                camera = m_camera_groups_by_number.get(String.format("%d",groupNumber));
-            
-            if (camera != null)
-                d.setValue(camera.name);
-        }
-        
-        return d;
-    }
-    
-    @Override
-    public    Data getCameraGroup() {
-        Data d = super.getCameraGroup();
-        
-        if (_loadCameras()) {
             int groupNumber   = m_SIMPlugin.getIODriver().getVars().getInteger("CamGroupNumber");
             _camera camera = m_camera_groups_by_number.get(String.format("%d",groupNumber));
             
             if (camera != null)
-                d.setValue(camera.group);
+                d.setValue(camera.name);
         }
         
         return d;
@@ -397,44 +358,12 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         Data d = super.getCameras();
         
         if (_loadCameras()) {
-            d.setValue(m_cameras_array);
-        }
-        
-        return d;
-    }
-
-    @Override
-    public    Data getCameras(String group) {
-        Data d = super.getCameras(group);
-        
-        if (_loadCameras()) {
-            ArrayList<String> cameras = new ArrayList<String>();
-            Iterator<Entry<String, _camera>> itr = m_cameras.entrySet().iterator();
-            
-            while (itr.hasNext()) {
-                _camera c = itr.next().getValue();
-                if (c.group.equalsIgnoreCase(group))
-                    cameras.add(c.name);
-            }
-            
-            
-            d.setValue(cameras);
-        }
-        
-        return d;
-    }
-    
-    @Override
-    public    Data getCameraGroups() {
-        Data d = super.getCameraGroups();
-        
-        if (_loadCameras()) {
             d.setValue(m_camera_groups_array);
         }
         
         return d;
     }
-    
+
     iRacingCar m_defaultCar = null;
     
     @Override
@@ -1008,7 +937,337 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         }
         return d;    
     }   
-     
+
+    private String _getReplayText(int speed, boolean slowmotion, boolean isReplayPlaying) {
+        if (!isReplayPlaying) {
+            return("<>");
+        }
+        else
+        if (speed == 1) {
+            if (slowmotion)
+                return(">> 1/2x");
+            else {
+                int frameNum = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayFrameNumEnd");
+                if (frameNum == 1)
+                    return ">>>>>";
+                return(">");
+            }
+        }
+        else
+        if (speed == 2) {
+            return(">> 2x");
+        }
+        else
+        if (speed == 3) {
+            return(">> 1/4x");
+        }
+        else
+        if (speed == 4) {
+            return(">> 4x");
+        }
+        else
+        if (speed == 7) {
+            return(">> 1/8x");
+        }
+        else
+        if (speed == 8) {
+            return(">> 8x");
+        }
+        else
+        if (speed == 11) {
+            return(">> 1/12x");
+        }
+        else
+        if (speed == 12) {
+            return(">> 12x");
+        }
+        else
+        if (speed == 15) {
+            return(">> 1/16x");
+        }
+        else
+        if (speed == 16) {
+            return(">> 16x");
+        }
+        if (speed == -1) {
+            if (slowmotion)
+                return("<< 1/2x");
+            else {
+                return("<<");
+            }
+        }
+        else
+        if (speed == -2) {
+            return("<< 2x");
+        }
+        else
+        if (speed == -3) {
+            return("<< 1/4x");
+        }
+        else
+        if (speed == -4) {
+            return("<< 4x");
+        }
+        else
+        if (speed == -7) {
+            return("<< 1/8x");
+        }
+        else
+        if (speed == -8) {
+            return("<< 8x");
+        }
+        else
+        if (speed == -11) {
+            return("<< 1/12x");
+        }
+        else
+        if (speed == -12) {
+            return("<< 12x");
+        }
+        else
+        if (speed == -15) {
+            return("<< 1/16x");
+        }
+        else
+        if (speed == -16) {
+            return("<< 16x");
+        }
+        else
+        if (speed == 0) {
+            return("||");
+        }
+        return "";
+    }
+    
+    @Override
+    public Data getReplay() {
+        Data d = super.getReplay();
+        if (m_SIMPlugin.isConnected()) {
+            int speed = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySpeed");
+            boolean slowmotion = m_SIMPlugin.getIODriver().getVars().getBoolean("ReplayPlaySlowMotion");
+            boolean isReplayPlaying = m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying");
+
+            d.setValue(_getReplayText(speed,slowmotion,isReplayPlaying));
+            d.setState(Data.State.NORMAL);
+        }
+        return d;
+    }
+    
+    @Override
+    public Data setReplay(String command) {
+        Data d = super.setReplay(command);
+        if (m_SIMPlugin.isConnected()) {
+            int speed = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySpeed");
+            int slowmotion = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySlowMotion");
+            boolean isReplayPlaying = m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying");
+    
+            if (isReplayPlaying) {
+                if (command.equalsIgnoreCase("PLAY") || command.equalsIgnoreCase(">")) {
+                    speed = 1;
+                    slowmotion = 0;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("PAUSE") || command.equalsIgnoreCase("||")) {
+                    speed = 0;
+                    slowmotion = 0;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("SLOWMOTION") || command.equalsIgnoreCase("SM") || command.equalsIgnoreCase("|>")) {
+                    if (speed == 0)
+                        speed = 1;
+                    else
+                    if (speed == 1)
+                        speed = 3;
+                    else
+                    if (speed == 3)
+                        speed = 7;
+                    else
+                    if (speed == 7)
+                        speed = 11;
+                    else
+                    if (speed == 11)
+                        speed = 15;
+                    else
+                    if (speed == 15)
+                        speed = 15;
+                    else
+                    if (speed > 0)
+                        speed = 1;
+                    else
+                    if (speed == -1)
+                        speed = -3;
+                    else
+                    if (speed == -3)
+                        speed = -7;
+                    else
+                    if (speed == -7)
+                        speed = -11;
+                    else
+                    if (speed == -11)
+                        speed = -15;
+                    else
+                    if (speed == -15)
+                        speed = -15;
+                    else
+                    if (speed < 0)
+                        speed = -1;
+                    
+                    slowmotion = 1;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("REWIND") || command.equalsIgnoreCase("RW") || command.equalsIgnoreCase("<<") || command.equalsIgnoreCase("<")) {
+                    if (speed >= 0)
+                        speed = -1;
+                    else
+                    if (speed == -1 && slowmotion == 0)
+                        speed = -2;
+                    else
+                    if (speed == -2)
+                        speed = -4;
+                    else
+                    if (speed == -4)
+                        speed = -8;
+                    else
+                    if (speed == -8)
+                        speed = -12;
+                    else
+                    if (speed == -12)
+                        speed = -16;
+                    else
+                    if (speed == -16)
+                        speed = -16;
+                    else
+                    if (speed <= 0)
+                        speed = -1;
+                    
+                    slowmotion = 0;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("FASTFORWARD") || command.equalsIgnoreCase("FF") || command.equalsIgnoreCase(">>")) {
+                    if (speed <= 0)
+                        speed = 1;
+                    else
+                    if (speed == 1 && slowmotion == 0)
+                        speed = 2;
+                    else
+                    if (speed == 2)
+                        speed = 4;
+                    else
+                    if (speed == 4)
+                        speed = 8;
+                    else
+                    if (speed == 8)
+                        speed = 12;
+                    else
+                    if (speed == 12)
+                        speed = 16;
+                    else
+                    if (speed == 16)
+                        speed = 16;
+                    else
+                    if (speed >= 0)
+                        speed = 1;
+                    
+                    slowmotion = 0;
+                    d.setState(Data.State.NORMAL);
+                }
+                else {
+                    command = "invalid";
+                    d.setState(Data.State.ERROR);
+                }
+                
+                Server.logger().info(String.format("ReplaySetPlaySpeed(%s,speed=%s,slowmotion=%s",command,speed,slowmotion));
+                
+                BroadcastMsg.send(m_SIMPlugin.getIODriver(), "ReplaySetPlaySpeed",Integer.toString(speed),Integer.toString(slowmotion));
+                
+                d.setValue(_getReplayText(speed,slowmotion==1,isReplayPlaying));
+            }
+        }        
+        return d;
+    }
+
+    @Override
+    public Data setReplayPosition(String command) {
+        Data d = super.setReplayPosition(command);
+        if (m_SIMPlugin.isConnected()) {
+            //int speed = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySpeed");
+            //int slowmotion = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySlowMotion");
+            boolean isReplayPlaying = m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying");
+            int mode = -1;
+            
+            if (isReplayPlaying) {
+                if (command.equalsIgnoreCase("BEGINNING") || command.equalsIgnoreCase("START")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_ToStart;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("ENDING") || command.equalsIgnoreCase("END")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_ToEnd;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("NEXTFRAME") || command.equalsIgnoreCase("NEXT")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_NextFrame;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("PREVFRAME") || command.equalsIgnoreCase("PREV")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_PrevFrame;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("NEXTLAP")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_NextLap;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("PREVLAP")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_PrevLap;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("NEXTCRASH")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_NextIncident;
+                    d.setState(Data.State.NORMAL);
+                    setReferenceCar("CRASHES");
+                }
+                else
+                if (command.equalsIgnoreCase("PREVCRASH")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_PrevIncident;
+                    d.setState(Data.State.NORMAL);
+                    setReferenceCar("CRASHES");
+                }
+                else
+                if (command.equalsIgnoreCase("NEXTSESSION")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_NextSession;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("PREVSESSION")) {
+                    mode = BroadcastMsg.RpySrchMode.RpySrch_PrevSession;
+                    d.setState(Data.State.NORMAL);
+                }
+                else {
+                    command = "invalid";
+                    d.setState(Data.State.ERROR);
+                }
+                
+                if (mode > -1) {
+                    Server.logger().info(String.format("ReplaySearch(%s,mode=%d",command,mode));
+                
+                    BroadcastMsg.send(m_SIMPlugin.getIODriver(), "ReplaySearch",Integer.toString(mode));
+                }
+                
+                d.setValue(command.toUpperCase());
+            }
+        }        
+        return d;
+    }
+    
     @Override
     public Data getStartTime() {
         Data d = super.getStartTime();
@@ -1176,10 +1435,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         
         if (_loadCameras()) {
             
-            _camera camera  = m_cameras.get(cameraName.isEmpty() || cameraName.equalsIgnoreCase("CURRENT") ? getCamera().getString().toLowerCase() : cameraName.toLowerCase());
-            
-            if (camera == null)
-                camera  = m_camera_groups.get(cameraName.toLowerCase());
+            _camera camera  = m_camera_groups.get(cameraName.toLowerCase());
             
             String carNumber = "";
             
@@ -1189,6 +1445,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 
                 if (focusOn.equalsIgnoreCase("CRASHES")) {
                     csMode = Integer.toString(BroadcastMsg.csMode.csFocusAtIncident);                    
+                    //we have to keep track of this since it is not in the telemetry
+                    m_cameraFocusOn = focusOn.toUpperCase();
                 }
                 else
                 if (focusOn.equalsIgnoreCase("DRIVER")) {
@@ -1208,23 +1466,24 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                         Server.logger().info("Cannot change Camera, no driver has focus.");
                         return getCamera();
                     }
+                    //we have to keep track of this since it is not in the telemetry
+                    m_cameraFocusOn = focusOn.toUpperCase();
                 }
                 else
                 if (focusOn.equalsIgnoreCase("EXCITING")) {
                     csMode = Integer.toString(BroadcastMsg.csMode.csFocusAtExciting);
-                    
+                    //we have to keep track of this since it is not in the telemetry
+                    m_cameraFocusOn = focusOn.toUpperCase();
                 }
                 else {  //default will be to focus on the leader.
-                    focusOn = "LEADER";
                     csMode = Integer.toString(BroadcastMsg.csMode.csFocusAtLeader);
+                    //we have to keep track of this since it is not in the telemetry
+                    m_cameraFocusOn = "LEADER";
                 }
 
-                //we have to keep track of this since it is not in the telemetry
-                m_cameraFocusOn = focusOn.toUpperCase();
+                Server.logger().info(String.format("Switching Camera to %s,%s,%s (%d)",m_cameraFocusOn,carNumber,cameraName,camera.groupNumber));
                 
-                Server.logger().info(String.format("Switching Camera to %s,%s,%s",m_cameraFocusOn,carNumber,cameraName));
-                
-                BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,Integer.toString(camera.groupNumber),Integer.toString(camera.cameraNumber));
+                BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,Integer.toString(camera.groupNumber),"1");
             }            
         }
         
@@ -1405,6 +1664,10 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             }
             m_dataVersion = m_SIMPlugin.getIODriver().getHeader().getLatest_VarBufTick();
 
+//            if (m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying")) {
+//                m_SIMPlugin.getSession().setReferenceCar("I"+m_SIMPlugin.getIODriver().getVars().getString("CamCarIdx"));
+//            }
+            
             m_cars.onDataVersionChange();
             
         } //end of data version changed
