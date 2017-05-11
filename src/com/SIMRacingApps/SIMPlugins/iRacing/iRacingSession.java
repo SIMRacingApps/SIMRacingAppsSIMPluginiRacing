@@ -1453,11 +1453,13 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                     iRacingCar car  = (iRacingCar) getCar(carIdentifier);
                     if (car != null) {
                         String status        = car.getStatus().getString();
-                      
-                        if (status.equals(Car.Status.INVALID)) {
-                            Server.logger().info("Cannot change Camera to #"+car.getNumber().getString()+". Not on the track.");
-                            return getCamera();
-                        }
+ 
+//if you do this, you cannot change to drivers that have already left the session
+//TODO: How to tell the difference between loaded replay and in session replay                        
+//                        if (status.equals(Car.Status.INVALID)) {
+//                            Server.logger().info("Cannot change Camera to #"+car.getNumber().getString()+". Not on the track.");
+//                            return getCamera();
+//                        }
                         
                         csMode = Integer.toString(BroadcastMsg.csMode.csFocusAtDriver + car.getNumberRaw());
                         carNumber = "#"+car.getNumber().getString();
