@@ -226,7 +226,7 @@ public class SharedMemoryIODriver extends IODriver {
 // var2 can be a full 32 bits
 // void irsdk_broadcastMsg(irsdk_BroadcastMsg msg, int var1, int var2);
     private int MAKELONG( short lowWord, short highWord) {
-    	int l = (((int)highWord << 16) & 0xFFFF0000) + lowWord;
+    	int l = (((int)highWord << 16) & 0xFFFF0000) | lowWord;
     	return l;
     }
 
@@ -241,6 +241,7 @@ public class SharedMemoryIODriver extends IODriver {
         if(msg >= 0 && msg < BroadcastMsg.BroadcastLast)
         {
             //SendNotifyMessage(HWND_BROADCAST, msgId, MAKELONG(msg, var1), var2);
+            Server.logger().finest(String.format("SharedMemory.broadcastMsg(%d,%d,%d)",msg,var1,var2));
             Windows.sendNotifyMessage(m_msgId,MAKELONG(msg,var1),var2);
         }
     }

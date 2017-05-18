@@ -265,8 +265,21 @@ public class BroadcastMsg {
         if (msg.equalsIgnoreCase("ReplaySetPlaySpeed"))
             sMsg = BroadcastReplaySetPlaySpeed;
         else
-        if (msg.equalsIgnoreCase("ReplaySetPlayPosition"))
+        if (msg.equalsIgnoreCase("ReplaySetPlayPosition")) {
             sMsg = BroadcastReplaySetPlayPosition;
+            //if var3 is empty, help the caller by parsing for the high/low out of var2.
+            if (var3.isEmpty()) {
+                Integer frame = Integer.parseInt(var2);
+                String sFrame = String.format("%08x",frame);
+                String sHigh = sFrame.substring(0,4);
+                String sLow  = sFrame.substring(4,8);
+                Short low  = frame.shortValue();
+                frame = frame >> 16;
+                Short high = frame.shortValue();
+                var2 = Short.toString(low);
+                var3 = Short.toString(high);
+            }
+        }
         else
         if (msg.equalsIgnoreCase("ReplaySearch"))
             sMsg = BroadcastReplaySearch;

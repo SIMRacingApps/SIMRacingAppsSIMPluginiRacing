@@ -1197,58 +1197,112 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             //int speed = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySpeed");
             //int slowmotion = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySlowMotion");
             boolean isReplayPlaying = m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying");
+            int frame = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayFrameNum");
             int mode = -1;
+            String message = "";
             
             if (isReplayPlaying) {
                 if (command.equalsIgnoreCase("BEGINNING") || command.equalsIgnoreCase("START")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_ToStart;
                     d.setState(Data.State.NORMAL);
                 }
                 else
                 if (command.equalsIgnoreCase("ENDING") || command.equalsIgnoreCase("END")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_ToEnd;
                     d.setState(Data.State.NORMAL);
                 }
                 else
                 if (command.equalsIgnoreCase("NEXTFRAME") || command.equalsIgnoreCase("NEXT")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_NextFrame;
                     d.setState(Data.State.NORMAL);
                 }
                 else
                 if (command.equalsIgnoreCase("PREVFRAME") || command.equalsIgnoreCase("PREV")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_PrevFrame;
                     d.setState(Data.State.NORMAL);
                 }
                 else
                 if (command.equalsIgnoreCase("NEXTLAP")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_NextLap;
                     d.setState(Data.State.NORMAL);
                 }
                 else
                 if (command.equalsIgnoreCase("PREVLAP")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_PrevLap;
                     d.setState(Data.State.NORMAL);
                 }
                 else
                 if (command.equalsIgnoreCase("NEXTCRASH")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_NextIncident;
                     d.setState(Data.State.NORMAL);
                     setReferenceCar("CRASHES");
                 }
                 else
                 if (command.equalsIgnoreCase("PREVCRASH")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_PrevIncident;
                     d.setState(Data.State.NORMAL);
                     setReferenceCar("CRASHES");
                 }
                 else
                 if (command.equalsIgnoreCase("NEXTSESSION")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_NextSession;
                     d.setState(Data.State.NORMAL);
                 }
                 else
                 if (command.equalsIgnoreCase("PREVSESSION")) {
+                    message = "ReplaySearch";
                     mode = BroadcastMsg.RpySrchMode.RpySrch_PrevSession;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("FORWARD15")) {
+                    message = "ReplaySetPlayPosition";
+                    mode = BroadcastMsg.RpyPosMode.RpyPos_Current;
+                    frame = 60 * 15;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("BACKWARD15")) {
+                    message = "ReplaySetPlayPosition";
+                    mode = BroadcastMsg.RpyPosMode.RpyPos_Current;
+                    frame = 60 * -15;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("FORWARD30")) {
+                    message = "ReplaySetPlayPosition";
+                    mode = BroadcastMsg.RpyPosMode.RpyPos_Current;
+                    frame = 60 * 30;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("BACKWARD30")) {
+                    message = "ReplaySetPlayPosition";
+                    mode = BroadcastMsg.RpyPosMode.RpyPos_Current;
+                    frame = 60 * -30;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("FORWARD60")) {
+                    message = "ReplaySetPlayPosition";
+                    mode = BroadcastMsg.RpyPosMode.RpyPos_Current;
+                    frame = 60 * 60;
+                    d.setState(Data.State.NORMAL);
+                }
+                else
+                if (command.equalsIgnoreCase("BACKWARD60")) {
+                    message = "ReplaySetPlayPosition";
+                    mode = BroadcastMsg.RpyPosMode.RpyPos_Current;
+                    frame = 60 * -60;
                     d.setState(Data.State.NORMAL);
                 }
                 else {
@@ -1257,9 +1311,9 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 }
                 
                 if (mode > -1) {
-                    Server.logger().info(String.format("ReplaySearch(%s,mode=%d",command,mode));
+                    Server.logger().info(String.format("%s(%s,mode=%d,frame=%d",message,command,mode,frame));
                 
-                    BroadcastMsg.send(m_SIMPlugin.getIODriver(), "ReplaySearch",Integer.toString(mode));
+                    BroadcastMsg.send(m_SIMPlugin.getIODriver(), message,Integer.toString(mode),Integer.toString(frame));
                 }
                 
                 d.setValue(command.toUpperCase());
