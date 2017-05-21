@@ -1197,7 +1197,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             //int speed = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySpeed");
             //int slowmotion = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySlowMotion");
             boolean isReplayPlaying = m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying");
-            int frame = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayFrameNum");
+            int frame = 0; //m_SIMPlugin.getIODriver().getVars().getInteger("ReplayFrameNum");
             int mode = -1;
             String message = "";
             
