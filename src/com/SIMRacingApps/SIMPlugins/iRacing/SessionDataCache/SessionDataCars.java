@@ -168,6 +168,9 @@ public class SessionDataCars extends SessionData {
         double fastestTime  = 99999.0;
         double bestTime     = 99999.9;
         int minLaps         = 0;
+        int iRatingCount    = 0;
+        double iRatingExp   = 0.0;
+        double ln           = 1600.0 / Math.log(2);
         
         for (int driversIdx=0; driversIdx < m_maxCars; driversIdx++) {
             String sDriversIdx = Integer.toString(driversIdx);
@@ -195,8 +198,11 @@ public class SessionDataCars extends SessionData {
                 //now count the number of cars in the session and the strength of the field (SOF)
                 if (car.isValid() && !car.getIsEqual("PACECAR").getBoolean() && !car.getIsSpectator().getBoolean()) {
                     String iRating = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",sDriversIdx,"IRating");
-                    if (!iRating.isEmpty())
+                    if (!iRating.isEmpty()) {
                         m_SOF += Integer.parseInt(iRating);
+                        iRatingExp += Math.exp(-Double.parseDouble(iRating) / ln);
+                        iRatingCount++;
+                    }
                     m_numberOfCars++;
 
                     if (minLaps < car.getLap().getInteger())
@@ -206,8 +212,12 @@ public class SessionDataCars extends SessionData {
             }
         }
 
-        if (m_numberOfCars > 0)
-            m_SOF = m_SOF / m_numberOfCars;
+        if (iRatingCount > 0) {
+            //m_SOF = m_SOF / iRatingCount;
+            
+            //got this from the iRacing forum
+            m_SOF = (int)Math.round(ln * Math.log((double)iRatingCount / iRatingExp));
+        }
 
         //if it's a race
         if (m_SIMPlugin.getSession().getType().getString().equalsIgnoreCase(Session.Type.RACE))
