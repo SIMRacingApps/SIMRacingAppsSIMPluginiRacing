@@ -212,6 +212,8 @@ public class iRacingCar extends Car {
             //our position in the results array could change every update, so we have to scan the array for this car every time
             int index = -1;
             int resultsCount = 0;
+            int position = 0;
+            int positionClass = 0;
 
             try {
                 for (int i = 0;;i++) {
@@ -235,8 +237,8 @@ public class iRacingCar extends Car {
 
                 if (resultsCount > 0) {
                     if (index == -1) { //if we haven't posted a lap yet, zero out the position so qualifying doesn't bleed into the race.
-                        m_position    = 0;
-                        m_positionClass = 0;
+                        position    = 0;
+                        positionClass = 0;
                         m_lapTimeBest = 0.0;
                         m_lapBest     = 0;
                         m_lapsLed     = 0;
@@ -244,30 +246,30 @@ public class iRacingCar extends Car {
                     else {
                         String s;
                         if (m_position_2015 >= 0) {  //if new value is valid use it
-                            m_position = m_position_2015;
+                            position = m_position_2015;
                         }
                         else {
                             s = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_SIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"Position");
                             if (!s.isEmpty() && Integer.parseInt(s) > 0)
-                                m_position      = Integer.parseInt(s);
+                                position      = Integer.parseInt(s);
                         }
                         
                         if (m_positionClass_2015 >= 0 ) {  //if new value is valid use it
-                            m_positionClass = m_positionClass_2015;
+                            positionClass = m_positionClass_2015;
                         }
                         else {
                             s = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_SIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"ClassPosition");
                             if (!s.isEmpty() && Integer.parseInt(s) >= 0) {
                                 if (m_SIMPlugin.getIODriver().build_december_9_2014())
-                                    m_positionClass = Integer.parseInt(s) + 1;
+                                    positionClass = Integer.parseInt(s) + 1;
                                 else
                                 if (m_SIMPlugin.getIODriver().build_november_12_2014())
-                                    m_positionClass = Integer.parseInt(s);
+                                    positionClass = Integer.parseInt(s);
                                 else
-                                    m_positionClass = Integer.parseInt(s) + 1;
+                                    positionClass = Integer.parseInt(s) + 1;
                             }
                             else
-                                m_positionClass = m_position;
+                                positionClass = m_position;
                         }
 
                         if (m_lapCompleted_2015 >= 0)
@@ -286,12 +288,19 @@ public class iRacingCar extends Car {
                             }
                         }
                         
-                        //now save this last known position for this lap has history
-                        while (m_positions.size() < m_lapCompleted) {
-                            m_positions.add(m_position);
-                        }
-                        while (m_positionsClass.size() < m_lapCompleted) {
-                            m_positionsClass.add(m_positionClass);
+                        //when in a replay and you exit the car, the positions in the var
+                        //will zero out. When that happens, I will keep the previous values.
+                        if (position > 0) {
+                            m_position = position;
+                            m_positionClass = positionClass;
+                            
+                            //now save this last known position for this lap has history
+                            while (m_positions.size() < m_lapCompleted) {
+                                m_positions.add(m_position);
+                            }
+                            while (m_positionsClass.size() < m_lapCompleted) {
+                                m_positionsClass.add(m_positionClass);
+                            }
                         }
 
                         s = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_SIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"LapsLed");
