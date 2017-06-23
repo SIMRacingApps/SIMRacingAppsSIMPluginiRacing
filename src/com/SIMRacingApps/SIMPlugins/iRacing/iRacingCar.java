@@ -208,6 +208,7 @@ public class iRacingCar extends Car {
                 return;
 
             m_sessionVersion = m_SIMPlugin.getIODriver().getHeader().getSessionInfoUpdate();
+            boolean replayFromFile = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SimMode").equals("replay");
 
             //our position in the results array could change every update, so we have to scan the array for this car every time
             int index = -1;
@@ -245,7 +246,7 @@ public class iRacingCar extends Car {
                     }
                     else {
                         String s;
-                        if (m_position_2015 >= 0) {  //if new value is valid use it
+                        if (replayFromFile && m_position_2015 >= 0) {  //if new value is valid use it
                             position = m_position_2015;
                         }
                         else {
@@ -254,7 +255,7 @@ public class iRacingCar extends Car {
                                 position      = Integer.parseInt(s);
                         }
                         
-                        if (m_positionClass_2015 >= 0 ) {  //if new value is valid use it
+                        if (replayFromFile && m_positionClass_2015 >= 0 ) {  //if new value is valid use it
                             positionClass = m_positionClass_2015;
                         }
                         else {
@@ -272,7 +273,7 @@ public class iRacingCar extends Car {
                                 positionClass = m_position;
                         }
 
-                        if (m_lapCompleted_2015 >= 0)
+                        if (replayFromFile && m_lapCompleted_2015 >= 0)
                         {
                             m_lapCompleted = m_lapCompleted_2015;
                         }
