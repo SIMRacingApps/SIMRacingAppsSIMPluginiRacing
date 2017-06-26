@@ -70,6 +70,9 @@ public class SessionInfo {
             //some team names have a colon in them causing the parser to get confused. This adds quotes around them until iRacing fixes it.
             //if iRacing already has them quoted, then remove the double quotes
             m_sessionstring = m_sessionstring.replaceAll("TeamName:  ([0].*)", "TeamName: \"$1\"");
+            
+            //If cameras have been customized, they sometimes contain invalid characters to yaml
+            m_sessionstring = m_sessionstring.replaceAll("GroupName:  ([0].*)", "GroupName: \"$1\"");
 
 /* Testing the new Setup string David is going to be putting in here */
 /**
