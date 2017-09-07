@@ -381,50 +381,51 @@ public class iRacingCar extends Car {
         iRacingGauge fastRepair= (iRacingGauge) _getGauge(Gauge.Type.FASTREPAIRS);
 
         //test these as a group because if any are sent, we start with a #clear, otherwise nothing is sent
-        if (!tearoff._getUpdateSIM()
-        ||  !fuellevel._getUpdateSIM()
-        ||  !LF._getUpdateSIM()
-        ||  !LR._getUpdateSIM()
-        ||  !RF._getUpdateSIM()
-        ||  !RR._getUpdateSIM()
-        ||  !fastRepair._getUpdateSIM()
+        //NOTE: they can only be called once.
+        if (LF._getUpdateSIM()
+        ||  LR._getUpdateSIM()
+        ||  RF._getUpdateSIM()
+        ||  RR._getUpdateSIM()
+//        ||  fuellevel._getUpdateSIM()
+//        ||  tearoff._getUpdateSIM()
+//        ||  fastRepair._getUpdateSIM()
 //        ||  m_forceSetupCommands
            ) {
 
             BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Clear);
             Server.logger().info(String.format("_sendSetupCommands() Clear"));
 
-            if (fuellevel.getChangeFlag().getBoolean() && fuellevel.getValueNext().getDouble() > 0.0) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f/%s",fuellevel.getType().getString(),fuellevel.getValueNext().getDouble(),fuellevel.getValueNext().getUOM())));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel.getValueNext());
+//            if (fuellevel._getChangeFlagSIM() && fuellevel._getValueSIM() > 0) {
+//                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/%s",fuellevel.getType().getString(),fuellevel._getValueSIM(),"l")));
+//                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel._getValueSIM());
+//            }
+
+            if (LF.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f,%d/%s",LF.getType().getString(),LF.getValueNext().convertUOM("kpa").getDouble(),LF.getValueNext().convertUOM("kpa").getInteger(),"kpa")));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LF, LF.getValueNext().getInteger());
+            }
+            if (LR.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f,%d/%s",LR.getType().getString(),LR.getValueNext().convertUOM("kpa").getDouble(),LR.getValueNext().convertUOM("kpa").getInteger(),"kpa")));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LR, LR.getValueNext().convertUOM("kpa").getInteger());
+            }
+            if (RF.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f,%d/%s",RF.getType().getString(),RF.getValueNext().convertUOM("kpa").getDouble(),RF.getValueNext().convertUOM("kpa").getInteger(),"kpa")));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RF, RF.getValueNext().convertUOM("kpa").getInteger());
+            }
+            if (RR.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f,%d/%s",RR.getType().getString(),RR.getValueNext().convertUOM("kpa").getDouble(),RR.getValueNext().convertUOM("kpa").getInteger(),"kpa")));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RR, RR.getValueNext().convertUOM("kpa").getInteger());
             }
 
-            if (LF.getChangeFlag().getBoolean() && LF.getValueNext().getDouble() > 0.0) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f/%s",LF.getType().getString(),LF.getValueNext().getDouble(),LF.getValueNext().getUOM())));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LF, LF.getValueNext());
-            }
-            if (LR.getChangeFlag().getBoolean() && LR.getValueNext().getDouble() > 0.0) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f/%s",LR.getType().getString(),LR.getValueNext().getDouble(),LR.getValueNext().getUOM())));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LR, LR.getValueNext());
-            }
-            if (RF.getChangeFlag().getBoolean() && RF.getValueNext().getDouble() > 0.0) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f/%s",RF.getType().getString(),RF.getValueNext().getDouble(),RF.getValueNext().getUOM())));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RF, RF.getValueNext());
-            }
-            if (RR.getChangeFlag().getBoolean() && RR.getValueNext().getDouble() > 0.0) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f/%s",RR.getType().getString(),RR.getValueNext().getDouble(),RR.getValueNext().getUOM())));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RR, RR.getValueNext());
-            }
+//            if (tearoff._getChangeFlagSIM()) {
+//                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",tearoff.getType().getString())));
+//                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_WS);
+//            }
 
-            if (tearoff.getChangeFlag().getBoolean()) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",tearoff.getType().getString())));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_WS);
-            }
-
-            if (fastRepair.getChangeFlag().getBoolean()) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",fastRepair.getType().getString())));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_FR);
-            }
+//            if (fastRepair._getChangeFlagSIM()) {
+//                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",fastRepair.getType().getString())));
+//                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_FR);
+//            }
             
 //            m_forceSetupCommands = false;
             return true;
@@ -2395,13 +2396,6 @@ else
 //else
        m_lapCompletedPercent = lapCompletedPercent;
 
-       //update our gauges
-       Iterator<Entry<String,Gauge>> gauge_iter = m_gauges.entrySet().iterator();
-       while (gauge_iter.hasNext()) {
-           iRacingGauge gauge = (iRacingGauge)gauge_iter.next().getValue();
-           gauge.onDataVersionChange(currentLap,m_sessionTime, m_lapCompletedPercent, m_trackLength.getDouble());
-       }
-
        //help out our speed reader by sending this data to it every tick
 //       m_speedReader.onDataVersionChange(m_sessionTime, m_lapCompletedPercent, m_trackLength.getDouble());
        
@@ -2827,11 +2821,15 @@ else
             m_pitTimes.add(0.0);
             
         m_pitTimes.set(m_lapPitted-1, m_prevStatus.getTime(iRacingCar.Status.INPITSTALL,m_sessionTime) );
-        
-        //In the Sept 2015 build, flags and amounts in the pit black boxes were added.
-        //This code updates the gauges with that information, but only if we didn't just send the 
-        //commands to the SIM.
-        
+
+        //update our gauges
+        //NOTE: above the speedometer is used a lot, but it updates real-time and doesn't wait for this callback.
+        Iterator<Entry<String,Gauge>> gauge_iter = m_gauges.entrySet().iterator();
+        while (gauge_iter.hasNext()) {
+            iRacingGauge gauge = (iRacingGauge)gauge_iter.next().getValue();
+            gauge.onDataVersionChange(m_prevStatus,currentLap,m_sessionTime, m_lapCompletedPercent, m_trackLength.getDouble());
+        }
+
         if (_sendSetupCommands()) {
             m_resetTime = m_sessionTime;
 //            _setupBeforePitting(m_lapPitted);
