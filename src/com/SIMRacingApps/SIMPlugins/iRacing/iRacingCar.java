@@ -581,7 +581,7 @@ else
         // the last value is optional and sometimes missing. It is the tire rim color.
         // the color of the car is the 2nd number.
 
-        if (isValid() && !isPaceCar()) {
+        if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
             String design = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarDesignStr");
             String s[]    = design.split(",");
             if (s.length > 1)
@@ -596,7 +596,7 @@ else
 
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The color of the number is the 3rd number.
-        if (isValid() && !isPaceCar()) {
+        if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
             String design = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
             String s[]    = design.split(",");
             if (s.length > 2) {
@@ -616,7 +616,7 @@ else
 
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The color of the number's background is the 5th number.
-        if (isValid() && !isPaceCar()) {
+        if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
             String design = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
             String s[]    = design.split(",");
             if (s.length > 4) {
@@ -639,7 +639,7 @@ else
 
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The color of the number's outline is the 4th number.
-        if (isValid() && !isPaceCar()) {
+        if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
             String design = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
             String s[]    = design.split(",");
             if (s.length > 3) {
