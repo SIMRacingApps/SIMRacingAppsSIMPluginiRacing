@@ -10,6 +10,7 @@ import com.SIMRacingApps.Gauge;
 import com.SIMRacingApps.Track;
 import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 import com.SIMRacingApps.SIMPlugins.iRacing.VarHeaders.VarHeader;
+import com.SIMRacingApps.Util.State;
 
 /**
  * @author Jeffrey Gilliam
@@ -19,12 +20,12 @@ import com.SIMRacingApps.SIMPlugins.iRacing.VarHeaders.VarHeader;
  */
 public class iRacingGauge extends Gauge {
 
-    protected IODriver m_IODriver;
-    protected String m_varName;
-    protected VarHeader m_varHeader;
-    protected String m_iRacingUOM;
-    protected boolean m_updateSIM;
-    protected boolean m_isFixedSetup;
+    protected IODriver  m_IODriver;     //pointer to the driver
+    protected String    m_varName;      //the name of the var to read
+    protected VarHeader m_varHeader;    //the header for the var
+    protected String    m_iRacingUOM;   //the UOM of the var
+    protected boolean   m_updateSIM;    //set this to true to get the car to send the commands to update the SIM
+    protected boolean   m_isFixedSetup; //is this a fixed setup session
     
     /**
      * This is the generic var reader. It will utilize the car's id to read arrays.
@@ -49,7 +50,20 @@ public class iRacingGauge extends Gauge {
                 m_iRacingUOM = m_varHeader.Unit;
         }
 
-        m_updateSIM = false;
+        m_updateSIM     = false;
+        
+    }
+
+    @Override
+    public Data getValueCurrent(String UOM) { 
+        Data d = super.getValueCurrent(UOM);
+        d.set(_readVar());
+        return _getReturnValue(d,UOM);
+    }
+    
+    public void onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
+        //users can change this during a session, so keep it up to date here
+        m_measurementSystem = m_IODriver.getVars().getInteger("DisplayUnits") == 1 ? "METRIC" : "IMPERIAL";
         
         try {
             //Override the JSON file based on what iRacing says
@@ -57,50 +71,19 @@ public class iRacingGauge extends Gauge {
             String fixed = m_IODriver.getSessionInfo().getString("WeekendInfo","WeekendOptions","IsFixedSetup");
             
             m_isFixedSetup = (Integer.parseInt(fixed) == 1);
-//TODO: Create classes for gauges that are initially not fixed according to the JSON definition to use this setting to override it.            
-//            && (
-//                    m_varName.equals(Gauge.Type.TIREPRESSURELF)
-//               ||   m_varName.equals(Gauge.Type.TIREPRESSURELR)
-//               ||   m_varName.equals(Gauge.Type.TIREPRESSURERF)
-//               ||   m_varName.equals(Gauge.Type.TIREPRESSURERR)
-//                    //TODO: gauges we can't change via send keys (wedge,tape,brake bias), set to false as well
-//                    //NOTE: for now setting these to fixed will simply tell any clients they can't change the setup remotely
-//                    //      Therefore, the client can use this to disable/enable the feature.
-//                    //      It doesn't mean you can't change it through the SIM.
-////                    this._getGauge(Gauge.Type.RRWEDGEADJUSTMENT)  .setIsFixed(true);
-////                    this._getGauge(Gauge.Type.BRAKEBIASADJUSTMENT).setIsFixed(true);
-////                    this._getGauge(Gauge.Type.TAPE)               .setIsFixed(true);
-////                    this._getGauge(Gauge.Type.ABS)                .setIsFixed(true);
-////                    this._getGauge(Gauge.Type.TRACTIONCONTROL)    .setIsFixed(true);
-////                    this._getGauge(Gauge.Type.ANTIROLLFRONT)      .setIsFixed(true);
-////                    this._getGauge(Gauge.Type.ANTIROLLREAR)       .setIsFixed(true);
-////                    this._getGauge(Gauge.Type.FUELMIXTURE)        .setIsFixed(true);
-////                    this._getGauge(Gauge.Type.WEIGHTJACKERLEFT)   .setIsFixed(true);
-////                    this._getGauge(Gauge.Type.WEIGHTJACKERRIGHT)  .setIsFixed(true);
-//               )
-//            ) {
-//                _setIsFixed(true);
-//            }
         } catch (NumberFormatException e) {
             m_isFixedSetup = false;
         }
-    }
-
-    @Override
-    public Data getValueCurrent(String UOM) { 
-        Data d = super.getValueCurrent(UOM);
-        d = _readVar();
-        return _getReturnValue(d,UOM);
-    }
-    
-    public void onDataVersionChange(int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
-        //users can change this during a session, so keep it up to date here
-        m_measurementSystem = m_IODriver.getVars().getInteger("DisplayUnits") == 1 ? "METRIC" : "IMPERIAL";
     }   
     
     //returns true if the SIM needs to be updated with the requested changes.
     //only gauges that we can control should set this to true.
-    public boolean _getUpdateSIM() { return m_updateSIM; }
+    //once called, it resets back to false
+    public boolean _getUpdateSIM() { 
+        boolean b = m_updateSIM;
+        m_updateSIM = false;
+        return b;
+    }
     
     //utility method to read the var and return the value with UOM and States applied
     //only use the value if the state is NORMAL

@@ -11,9 +11,6 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 
 /**
  * This is the base class for all tire reads.
- * Tire children should return the cold tire reading as the current value.
- * Tire children should return the value as soon as the tire is taken off the car for history value.
- * Tire children should always return the setup value for the next value.
  * 
  * @author Jeffrey Gilliam
  * @copyright Copyright (C) 2017 Jeffrey Gilliam
@@ -39,26 +36,20 @@ public class Tire extends iRacingGauge {
 
     @Override 
     public Data getValueCurrent(String UOM) {
-        Data d = super.getValueCurrent();
+        Data d = super.getValueCurrent(UOM);
         d.setValue(m_valueCurrent.getDouble(),m_valueCurrent.getUOM(),m_valueCurrent.getState());
         return this._getReturnValue(d, UOM);
     }
     @Override 
     public Data getValueNext(String UOM) {
-        Data d = super.getValueNext();
+        Data d = super.getValueNext(UOM);
         d.setValue(m_valueNext.getDouble(),m_valueNext.getUOM(),m_valueNext.getState());
         return this._getReturnValue(d, UOM);
     }
     @Override 
     public Data getValueHistorical(String UOM) {
-        Data d = super.getValueHistorical();
+        Data d = super.getValueHistorical(UOM);
         d.setValue(m_valueHistorical.getDouble(),m_valueHistorical.getUOM(),m_valueHistorical.getState());
         return this._getReturnValue(d, UOM);
-    }
-
-    @Override
-    public Data setChangeFlag(boolean flag) { 
-        m_changeFlag = flag;
-        return getChangeFlag();
     }
 }
