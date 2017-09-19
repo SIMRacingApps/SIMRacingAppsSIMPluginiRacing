@@ -1,0 +1,39 @@
+/**
+ * 
+ */
+package com.SIMRacingApps.SIMPlugins.iRacing.Gauges;
+
+import java.util.Map;
+
+import com.SIMRacingApps.Data;
+import com.SIMRacingApps.Track;
+import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
+import com.SIMRacingApps.SIMPlugins.iRacing.iRacingGauge;
+import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
+
+/**
+ * Returns the Steering Angle.
+ * 
+ * @author Jeffrey Gilliam
+ * @copyright Copyright (C) 2017 Jeffrey Gilliam
+ * @since 1.4
+ * @license Apache License 2.0
+ */
+public class Steering extends iRacingGauge {
+
+    public Steering(String type, iRacingCar car, Track track,
+            IODriver IODriver, String varName, String defaultUOM,
+            Map<String, Map<String, Map<String, Object>>> simGauges) {
+        super(type, car, track, IODriver, varName, defaultUOM, simGauges);
+    }
+
+    @Override
+    public Data getValueCurrent(String UOM) { 
+        Data d = super.getValueCurrent(UOM);
+        
+        //iRacing values go counter clockwise, convert to clockwise
+        d.setValue((Math.PI * 2.0) - d.getDouble());
+        
+        return this._getReturnValue(d, UOM);
+    }
+}

@@ -1,66 +1,58 @@
-package com.SIMRacingApps.SIMPlugins.iRacing.VarData;
+/**
+ * 
+ */
+package com.SIMRacingApps.SIMPlugins.iRacing.Gauges;
+
+import java.util.Map;
 
 import com.SIMRacingApps.Data;
+import com.SIMRacingApps.Track;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
+import com.SIMRacingApps.SIMPlugins.iRacing.iRacingGauge;
 import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
+import com.SIMRacingApps.Util.State;
 
 /**
  * Returns the speed of a car provided by iRacing 
  * If the car is not ME, then we have to calculate it based on time and distance traveled.
+ * 
  * @author Jeffrey Gilliam
- * @copyright Copyright (C) 2015 - 2017 Jeffrey Gilliam
- * @since 1.0
+ * @copyright Copyright (C) 2017 Jeffrey Gilliam
+ * @since 1.4
  * @license Apache License 2.0
  */
-
-public class VarDataDoubleSpeed extends VarDataDouble {
+public class Speedometer extends iRacingGauge {
     private final double SPEED_FACTOR       = 1.0;
     private final int NUM_SPEED_SAMPLES     = 3;
     private double  m_speed                 = 0.0;
     private double  m_speed_sessionTime[]   = new double[NUM_SPEED_SAMPLES];
     private double  m_speed_percentage[]    = new double[NUM_SPEED_SAMPLES];
     private int     m_speed_index           = 0;
-    
-    /**
-     * Class constructor
-     * 
-     * @param IODriver The instance of the iRacing driver to use
-     * @param car      The car this instance refers to.
-     */
-    public VarDataDoubleSpeed(IODriver IODriver, iRacingCar car) {
-        super(IODriver,car,"Speed","km/h");
+
+    public Speedometer(String type, iRacingCar car, Track track,
+            IODriver IODriver, String varName, String defaultUOM,
+            Map<String, Map<String, Map<String, Object>>> simGauges) {
+        super(type, car, track, IODriver, varName, defaultUOM, simGauges);
     }
 
-    /**
-     * Returns the current speed calculated by the last call to onDataVersionChange().
-     * 
-     * @param name The name of the Data
-     */
     @Override
-    public Object getValue(String name) {
-        double d = 0.0;
-
+    public Data getValueCurrent(String UOM) { 
+        Data d = super.getValueCurrent(UOM);
+        
         if (m_car.isValid()) {
-            d = m_speed;
-            setState(Data.State.NORMAL);
+            d.setValue(m_speed,m_UOM,Data.State.NORMAL);
         }
         else {
-            setState(Data.State.OFF);
+            d.setState(Data.State.OFF);
         }
-
-        setValue(name,d);
-        return d;
+        
+        return this._getReturnValue(d, UOM);
     }
-
-    /**
-     * This method calculates the speed of the car.
-     * Each instance of this Class, must call this method every time the Data Version changes.
-     * 
-     * @param sessionTime         The time since the session started
-     * @param lapCompletedPercent The percentage completed so far for the current lap
-     * @param trackLength         The length of the track in the iRacing provided Unit of Measure
-     */
-    public void onDataVersionChange(double sessionTime,double lapCompletedPercent,double trackLength) {
+    
+    @Override
+    public void onDataVersionChange(State state,int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
+        super.onDataVersionChange(state, currentLap, sessionTime, lapCompletedPercent, trackLength);
+        
         if (m_car.isME()) {
             m_speed = m_IODriver.getVars().getDouble("Speed");
         }
