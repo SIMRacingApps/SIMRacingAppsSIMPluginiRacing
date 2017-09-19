@@ -18,7 +18,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 public class Tape extends iRacingGauge {
 
     public Tape(String type, iRacingCar car, Track track, IODriver IODriver) {
-        super(type, car, track, IODriver, "dpQtape","%",null);
+        super(type, car, track, IODriver, "dpQtape","%",null,null);
     }
 
     @Override

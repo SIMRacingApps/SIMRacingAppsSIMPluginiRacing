@@ -17,7 +17,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
  */
 public class WindshieldTearoff extends iRacingGauge {
     public WindshieldTearoff(String type, iRacingCar car, Track track, IODriver IODriver) {
-        super(type, car, track, IODriver, "WindshieldTearoff", "", null);
+        super(type, car, track, IODriver, "WindshieldTearoff", "", null, null);
     }
 
     @Override

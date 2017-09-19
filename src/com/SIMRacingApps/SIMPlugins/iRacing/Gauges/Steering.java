@@ -3,8 +3,6 @@
  */
 package com.SIMRacingApps.SIMPlugins.iRacing.Gauges;
 
-import java.util.Map;
-
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Track;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
@@ -22,9 +20,8 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 public class Steering extends iRacingGauge {
 
     public Steering(String type, iRacingCar car, Track track,
-            IODriver IODriver, String varName, String defaultUOM,
-            Map<String, Map<String, Map<String, Object>>> simGauges) {
-        super(type, car, track, IODriver, varName, defaultUOM, simGauges);
+            IODriver IODriver, String varName, String defaultUOM) {
+        super(type, car, track, IODriver, varName, defaultUOM, null, null);
     }
 
     @Override

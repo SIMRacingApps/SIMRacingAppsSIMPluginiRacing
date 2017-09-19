@@ -23,7 +23,7 @@ public class WaterTemp extends iRacingGauge {
     public WaterTemp(String type, iRacingCar car, Track track,
             IODriver IODriver, String varName, String defaultUOM,
             Map<String, Map<String, Map<String, Object>>> simGauges) {
-        super(type, car, track, IODriver, varName, defaultUOM, simGauges);
+        super(type, car, track, IODriver, varName, defaultUOM, simGauges, null);
         
         //The iRacing will let me know when the Water Temps are at the WARNING level,
         //using EngineWarnings.waterTempWarning, so remove the state.

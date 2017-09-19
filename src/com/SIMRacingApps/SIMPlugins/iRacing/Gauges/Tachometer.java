@@ -22,7 +22,7 @@ public class Tachometer extends iRacingGauge {
     public Tachometer(String type, iRacingCar car, Track track,
             IODriver IODriver, String varName, String defaultUOM,
             Map<String, Map<String, Map<String, Object>>> simGauges) {
-        super(type, car, track, IODriver, varName, defaultUOM, simGauges);
+        super(type, car, track, IODriver, varName, defaultUOM, simGauges, null);
     }
 
     @Override

@@ -21,7 +21,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 public class OilPressure extends iRacingGauge {
 
     public OilPressure(String type, iRacingCar car, Track track, IODriver IODriver) {
-        super(type, car, track, IODriver, "OilPress","kPa", null);
+        super(type, car, track, IODriver, "OilPress","kPa", null,null);
         
         //The iRacing will let me know when the Oil Pressure is at the WARNING level,
         //using EngineWarnings.OilPressWarning, so remove the state.

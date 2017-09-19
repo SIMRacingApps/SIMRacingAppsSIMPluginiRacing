@@ -26,7 +26,7 @@ public class Tire extends iRacingGauge {
     
     public Tire(String type, iRacingCar car, Track track, IODriver IODriver,
             String varName, String defaultUOM, String tire) {
-        super(type, car, track, IODriver, varName, defaultUOM, null);
+        super(type, car, track, IODriver, varName, defaultUOM, null, null);
         
         m_tire            = tire;
         m_valueCurrent    = new Data(m_varName,0.0,m_iRacingUOM);

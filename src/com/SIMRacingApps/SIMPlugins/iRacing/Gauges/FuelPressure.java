@@ -21,7 +21,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 public class FuelPressure extends iRacingGauge {
 
     public FuelPressure(String type, iRacingCar car, Track track, IODriver IODriver) {
-        super(type, car, track, IODriver, "FuelPress","kPa", null);
+        super(type, car, track, IODriver, "FuelPress","kPa", null,null);
         
         //The iRacing will let me know when the Fuel Pressure is at the WARNING level,
         //using EngineWarnings.FuelPressWarning, so remove the state.

@@ -38,8 +38,8 @@ public class iRacingGauge extends Gauge {
      * @param varName The name of the var
      * @param defaultUOM The UOM of the var in case iRacing doesn't define it.
      */
-    public iRacingGauge(String type, iRacingCar car, Track track, IODriver IODriver, String varName, String defaultUOM, Map<String, Map<String, Map<String, Object>>> simGauges) {
-        super(type, car, track, simGauges);
+    public iRacingGauge(String type, iRacingCar car, Track track, IODriver IODriver, String varName, String defaultUOM, Map<String, Map<String, Map<String, Object>>> simGaugesBefore, Map<String, Map<String, Map<String, Object>>> simGaugesAfter) {
+        super(type, car, track, simGaugesBefore, simGaugesAfter);
         
         m_IODriver = IODriver;
         m_varName = varName;

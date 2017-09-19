@@ -19,7 +19,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 public class FastRepairs extends iRacingGauge {
 
     public FastRepairs(String type, iRacingCar car, Track track, IODriver IODriver) {
-        super(type, car, track, IODriver, "FastRepairsRemaining" /*TODO: Just a guess, doesn't exist*/, "", null);
+        super(type, car, track, IODriver, "FastRepairsRemaining" /*TODO: Just a guess, doesn't exist*/, "", null,null);
     }
 
     @Override

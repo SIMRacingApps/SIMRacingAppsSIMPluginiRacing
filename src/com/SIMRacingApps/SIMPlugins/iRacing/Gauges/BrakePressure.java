@@ -20,7 +20,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 public class BrakePressure extends iRacingGauge {
 
     public BrakePressure(String type, iRacingCar car, Track track, IODriver IODriver) {
-        super(type, car, track, IODriver, "Brake","%",null);
+        super(type, car, track, IODriver, "Brake","%",null,null);
     }
 
     @Override public Data getValueCurrent(String UOM) {

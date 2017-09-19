@@ -20,7 +20,7 @@ public class FuelLevel extends iRacingGauge {
     double m_kgPerLiter;
     
     public FuelLevel(String type, iRacingCar car, Track track, IODriver IODriver, Integer driversIdx) {
-        super(type, car, track, IODriver, "FuelLevel", "l", null);
+        super(type, car, track, IODriver, "FuelLevel", "l", null,null);
         
         //save off the Kg per liter of fuel that  iRacing gives us to convert between volume and weight.
         m_kgPerLiter = Double.parseDouble(IODriver.getSessionInfo().getString("DriverInfo","DriverCarFuelKgPerLtr"));

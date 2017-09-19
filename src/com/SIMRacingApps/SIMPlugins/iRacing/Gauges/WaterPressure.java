@@ -19,7 +19,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 public class WaterPressure extends iRacingGauge {
 
     public WaterPressure(String type, iRacingCar car, Track track, IODriver IODriver) {
-        super(type, car, track, IODriver, "WaterPress","kPa",null);
+        super(type, car, track, IODriver, "WaterPress","kPa",null, null);
     }
 
     @Override

@@ -105,7 +105,7 @@ public class iRacingCar extends Car {
     }
 
     public iRacingCar(iRacingSIMPlugin SIMPlugin, Integer id, String name, Integer driversIdx) {
-        super(SIMPlugin, id, name);
+        super(SIMPlugin, id, name, "com/SIMRacingApps/SIMPlugins/iRacing/Cars/"+name.replaceAll("[ ]", "_")+".json");
         m_iRacingSIMPlugin = SIMPlugin;
         m_driversIdx = driversIdx;
         _initialize();
@@ -2982,67 +2982,67 @@ else
         catch (NumberFormatException e) {}
         
         if (isME()) {
-            _setGauge(new iRacingGauge(Gauge.Type.ABS,                          this, track, IODriver, "dcABS", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.ANTIROLLFRONT,                this, track, IODriver, "dcAntiRollFront", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.ANTIROLLREAR,                 this, track, IODriver, "dcAntiRollRear", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.BRAKE,                        this, track, IODriver, "Brake", "%", null));
-            _setGauge(new iRacingGauge(Gauge.Type.BRAKEBIASADJUSTMENT,          this, track, IODriver, "dcBrakeBias", "%", null));
+            _setGauge(new iRacingGauge(Gauge.Type.ABS,                          this, track, IODriver, "dcABS", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.ANTIROLLFRONT,                this, track, IODriver, "dcAntiRollFront", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.ANTIROLLREAR,                 this, track, IODriver, "dcAntiRollRear", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.BRAKE,                        this, track, IODriver, "Brake", "%", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.BRAKEBIASADJUSTMENT,          this, track, IODriver, "dcBrakeBias", "%", null, null));
             _setGauge(new BrakePressure(Gauge.Type.BRAKEPRESSURE,               this, track, IODriver));
-            _setGauge(new iRacingGauge(Gauge.Type.CLUTCH,                       this, track, IODriver, "Clutch", "%", null));
-            _setGauge(new iRacingGauge(Gauge.Type.DIFFENTRY,                    this, track, IODriver, "dcDiffEntry", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.DIFFEXIT,                     this, track, IODriver, "dcDiffExit", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.DIFFMIDDLE,                   this, track, IODriver, "dcDiffMiddle", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.ENGINEBRAKING,                this, track, IODriver, "dcEngineBraking", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.ENGINEPOWER,                  this, track, IODriver, "dcEnginePower", "", null));
+            _setGauge(new iRacingGauge(Gauge.Type.CLUTCH,                       this, track, IODriver, "Clutch", "%", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.DIFFENTRY,                    this, track, IODriver, "dcDiffEntry", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.DIFFEXIT,                     this, track, IODriver, "dcDiffExit", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.DIFFMIDDLE,                   this, track, IODriver, "dcDiffMiddle", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.ENGINEBRAKING,                this, track, IODriver, "dcEngineBraking", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.ENGINEPOWER,                  this, track, IODriver, "dcEnginePower", "", null, null));
             _setGauge(new FastRepairs(Gauge.Type.FASTREPAIRS,                   this, track, IODriver));
-            _setGauge(new iRacingGauge(Gauge.Type.FRONTFLAP,                    this, track, IODriver, "dpFNOMKnobSetting", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                    this, track, IODriver, "", "", null));
+            _setGauge(new iRacingGauge(Gauge.Type.FRONTFLAP,                    this, track, IODriver, "dpFNOMKnobSetting", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                    this, track, IODriver, "", "", null, null));
             if (IODriver.getVarHeaders().getVarHeader("dpFWingAngle") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpFWingAngle", "deg", null));
+                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpFWingAngle", "deg", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpFWingSetting") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpFWingSetting", "", null));
+                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpFWingSetting", "", null, null));
             }
             else {
-                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpFWingIndex", "deg", null));
+                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpFWingIndex", "deg", null, null));
             }
             _setGauge(new FuelLevel(Gauge.Type.FUELLEVEL,                       this, track, IODriver, m_driversIdx));
-            _setGauge(new iRacingGauge(Gauge.Type.FUELMIXTURE,                  this, track, IODriver, "dcFuelMixture", "", null));
+            _setGauge(new iRacingGauge(Gauge.Type.FUELMIXTURE,                  this, track, IODriver, "dcFuelMixture", "", null, null));
             _setGauge(new FuelPressure(Gauge.Type.FUELPRESSURE,                 this, track, IODriver));
-            _setGauge(new iRacingGauge(Gauge.Type.GEAR,                         this, track, IODriver, "Gear", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.LRWEDGEADJUSTMENT,            this, track, IODriver, "dpLrWedgeAdj", "mm", null));
-            _setGauge(new iRacingGauge(Gauge.Type.OILLEVEL,                     this, track, IODriver, "OilLevel", "l", null));
+            _setGauge(new iRacingGauge(Gauge.Type.GEAR,                         this, track, IODriver, "Gear", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.LRWEDGEADJUSTMENT,            this, track, IODriver, "dpLrWedgeAdj", "mm", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.OILLEVEL,                     this, track, IODriver, "OilLevel", "l", null, null));
             _setGauge(new OilPressure(Gauge.Type.OILPRESSURE,                   this, track, IODriver));
-            _setGauge(new iRacingGauge(Gauge.Type.OILTEMP,                      this, track, IODriver, "OilTemp", "C", null));
-            _setGauge(new iRacingGauge(Gauge.Type.POWERSTEERINGASSIST,          this, track, IODriver, "dpPSSetting", "", null));
+            _setGauge(new iRacingGauge(Gauge.Type.OILTEMP,                      this, track, IODriver, "OilTemp", "C", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.POWERSTEERINGASSIST,          this, track, IODriver, "dpPSSetting", "", null, null));
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dcWingRear") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dcWingRear", "mm", null));
+                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dcWingRear", "mm", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRWingAngle") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dcRWingAngle", "deg", null));
+                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dcRWingAngle", "deg", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRWingSetting") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dpRWingSetting", "", null));
+                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dpRWingSetting", "", null, null));
             }
             else {
-                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dcRWingIndex", "deg", null));
+                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dcRWingIndex", "deg", null, null));
             }
             //check to see if the new value exists, otherwise use old value for recorded files.
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRrWedgeAdj") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.RRWEDGEADJUSTMENT,        this, track, IODriver, "dpRrWedgeAdj", "mm", null));
+                _setGauge(new iRacingGauge(Gauge.Type.RRWEDGEADJUSTMENT,        this, track, IODriver, "dpRrWedgeAdj", "mm", null, null));
             }
             else {
-                _setGauge(new iRacingGauge(Gauge.Type.RRWEDGEADJUSTMENT,        this, track, IODriver, "dpWedgeAdj", "mm", null));
+                _setGauge(new iRacingGauge(Gauge.Type.RRWEDGEADJUSTMENT,        this, track, IODriver, "dpWedgeAdj", "mm", null, null));
             }
-            _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h", null));
-            _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "SteeringWheelAngle", "rad", null));
+            _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h"));
+            _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "SteeringWheelAngle", "rad"));
             _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "RPM", "rev/min", simGauges));
             _setGauge(new Tape(Gauge.Type.TAPE,                                 this, track, IODriver));
-            _setGauge(new iRacingGauge(Gauge.Type.THROTTLE,                     this, track, IODriver, "Throttle", "%", null));
-            _setGauge(new iRacingGauge(Gauge.Type.THROTTLESHAPE,                this, track, IODriver, "dcThrottleShape", "", null));
+            _setGauge(new iRacingGauge(Gauge.Type.THROTTLE,                     this, track, IODriver, "Throttle", "%", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.THROTTLESHAPE,                this, track, IODriver, "dcThrottleShape", "", null, null));
             
             _setGauge(new TirePressure(Gauge.Type.TIREPRESSURELF,               this, track, IODriver, "LF"));
             _setGauge(new TirePressure(Gauge.Type.TIREPRESSURERF,               this, track, IODriver, "RF"));
@@ -3075,22 +3075,22 @@ else
             _setGauge(new TireWear(Gauge.Type.TIREWEARRRM,                      this, track, IODriver, "RR", "M"));
             _setGauge(new TireWear(Gauge.Type.TIREWEARRRR,                      this, track, IODriver, "RR", "R"));
             
-            _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROL,              this, track, IODriver, "dcTractionControl", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.VOLTAGE,                      this, track, IODriver, "Voltage", "v", null));
-            _setGauge(new iRacingGauge(Gauge.Type.WATERLEVEL,                   this, track, IODriver, "WaterLevel", "l", null));
+            _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROL,              this, track, IODriver, "dcTractionControl", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.VOLTAGE,                      this, track, IODriver, "Voltage", "v", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.WATERLEVEL,                   this, track, IODriver, "WaterLevel", "l", null, null));
             _setGauge(new WaterPressure(Gauge.Type.WATERPRESSURE,               this, track, IODriver));
-            _setGauge(new iRacingGauge(Gauge.Type.WATERTEMP,                    this, track, IODriver, "WaterTemp", "C", null));
-            _setGauge(new iRacingGauge(Gauge.Type.WEIGHTJACKERLEFT,             this, track, IODriver, "dcWeightJackerLeft", "", null));
-            _setGauge(new iRacingGauge(Gauge.Type.WEIGHTJACKERRIGHT,            this, track, IODriver, "dcWeightJackerRight", "", null));
+            _setGauge(new iRacingGauge(Gauge.Type.WATERTEMP,                    this, track, IODriver, "WaterTemp", "C", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.WEIGHTJACKERLEFT,             this, track, IODriver, "dcWeightJackerLeft", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.WEIGHTJACKERRIGHT,            this, track, IODriver, "dcWeightJackerRight", "", null, null));
             _setGauge(new WindshieldTearoff(Gauge.Type.WINDSHIELDTEAROFF,       this, track, IODriver));
             
 //            dumpGauges();
         }
         else {
-            //not ME
-            _setGauge(new iRacingGauge(Gauge.Type.GEAR,                         this, track, IODriver, "CarIdxGear", "", null));
-            _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h", null));
-            _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "CarIdxSteer", "rad", null));
+            //not ME, these are the only active gauges for the other cars.
+            _setGauge(new iRacingGauge(Gauge.Type.GEAR,                         this, track, IODriver, "CarIdxGear", "", null, null));
+            _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h"));
+            _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "CarIdxSteer", "rad"));
             _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "CarIdxRPM", "rev/min", simGauges));
         }
     }

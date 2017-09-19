@@ -30,9 +30,8 @@ public class Speedometer extends iRacingGauge {
     private int     m_speed_index           = 0;
 
     public Speedometer(String type, iRacingCar car, Track track,
-            IODriver IODriver, String varName, String defaultUOM,
-            Map<String, Map<String, Map<String, Object>>> simGauges) {
-        super(type, car, track, IODriver, varName, defaultUOM, simGauges);
+            IODriver IODriver, String varName, String defaultUOM) {
+        super(type, car, track, IODriver, varName, defaultUOM, null, null);
     }
 
     @Override
