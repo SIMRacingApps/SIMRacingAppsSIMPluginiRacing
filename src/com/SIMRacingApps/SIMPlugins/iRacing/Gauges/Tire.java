@@ -14,7 +14,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
  * 
  * @author Jeffrey Gilliam
  * @copyright Copyright (C) 2017 Jeffrey Gilliam
- * @since 1.4
+ * @since 1.5
  * @license Apache License 2.0
  */
 public class Tire extends iRacingGauge {
@@ -23,6 +23,7 @@ public class Tire extends iRacingGauge {
     Data m_valueCurrent;
     Data m_valueNext;
     Data m_valueHistorical;
+    int m_lapsHistorical;
     
     public Tire(String type, iRacingCar car, Track track, IODriver IODriver,
             String varName, String defaultUOM, String tire) {
@@ -32,6 +33,7 @@ public class Tire extends iRacingGauge {
         m_valueCurrent    = new Data(m_varName,0.0,m_iRacingUOM);
         m_valueNext       = new Data(m_varName,0.0,m_iRacingUOM);
         m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM);
+        m_lapsHistorical  = 0;
     }
 
     @Override 
@@ -51,5 +53,12 @@ public class Tire extends iRacingGauge {
         Data d = super.getValueHistorical(UOM);
         d.setValue(m_valueHistorical.getDouble(),m_valueHistorical.getUOM(),m_valueHistorical.getState());
         return this._getReturnValue(d, UOM);
+    }
+    
+    @Override
+    public Data getLapsHistorical() {
+        Data d = super.getLapsHistorical();
+        d.setValue(m_lapsHistorical);
+        return d;
     }
 }

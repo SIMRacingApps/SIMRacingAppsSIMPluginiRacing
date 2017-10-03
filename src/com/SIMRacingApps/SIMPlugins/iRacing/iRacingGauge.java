@@ -15,18 +15,21 @@ import com.SIMRacingApps.Util.State;
 /**
  * @author Jeffrey Gilliam
  * @copyright Copyright (C) 2017 Jeffrey Gilliam
- * @since 1.4
+ * @since 1.5
  * @license Apache License 2.0
  */
 public class iRacingGauge extends Gauge {
 
-    protected IODriver  m_IODriver;     //pointer to the driver
-    protected String    m_varName;      //the name of the var to read
-    protected VarHeader m_varHeader;    //the header for the var
-    protected String    m_iRacingUOM;   //the UOM of the var
-    protected boolean   m_updateSIM;    //set this to true to get the car to send the commands to update the SIM
-    protected boolean   m_isFixedSetup; //is this a fixed setup session
+    private   double    m_updateSIMTimestamp;   //set this to the session time to send to the SIM. Doubles as the change flag
+    private   int       m_updateSIMValue;       //the value to update the SIM with. Can only send integers
     
+    protected IODriver  m_IODriver;             //pointer to the driver
+    protected String    m_varName;              //the name of the var to read
+    protected VarHeader m_varHeader;            //the header for the var
+    protected String    m_iRacingUOM;           //the UOM of the var
+    protected int       m_currentLap;           //tracks the current lap
+    protected double    m_sessionTime;          //tracks the current session time
+
     /**
      * This is the generic var reader. It will utilize the car's id to read arrays.
      * Any special needs readers will inherit from this class and override.
@@ -50,8 +53,8 @@ public class iRacingGauge extends Gauge {
                 m_iRacingUOM = m_varHeader.Unit;
         }
 
-        m_updateSIM     = false;
-        
+        m_updateSIMTimestamp     = 0.0;
+        m_currentLap    = 1;
     }
 
     @Override
@@ -61,54 +64,79 @@ public class iRacingGauge extends Gauge {
         return _getReturnValue(d,UOM);
     }
     
+    @Override
+    public Data getLaps() {
+        return getLaps(m_currentLap);
+    }
+    
     public void onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
         //users can change this during a session, so keep it up to date here
         m_measurementSystem = m_IODriver.getVars().getInteger("DisplayUnits") == 1 ? "METRIC" : "IMPERIAL";
+        
+        m_currentLap = currentLap;
+        m_sessionTime = sessionTime;
         
         try {
             //Override the JSON file based on what iRacing says
             //if we are in fixed mode, set the gauges that cannot be changed to true.
             String fixed = m_IODriver.getSessionInfo().getString("WeekendInfo","WeekendOptions","IsFixedSetup");
             
-            m_isFixedSetup = (Integer.parseInt(fixed) == 1);
+            m_isFixed = (Integer.parseInt(fixed) == 1);
         } catch (NumberFormatException e) {
-            m_isFixedSetup = false;
+            m_isFixed = false;
         }
     }   
     
-    //returns true if the SIM needs to be updated with the requested changes.
-    //only gauges that we can control should set this to true.
-    //once called, it resets back to false
-    public boolean _getUpdateSIM() { 
-        boolean b = m_updateSIM;
-        m_updateSIM = false;
-        return b;
+    //returns the time this gauge value or change flag was set
+    //only gauges that we can control the SIM should set this.
+    public double _getSIMCommandTimestamp() { 
+        return m_updateSIMTimestamp;
+    }
+    public int _getSIMCommandValue() { 
+        return m_updateSIMValue;
+    }
+    
+    //call this if a command is pending to be sent to the SIM
+    //flag is to check or uncheck the change
+    //the value needs to be in the m_iRacingUOM unit of measure
+    public void _setSIMCommandTimestamp(boolean flag,double value) {
+        m_updateSIMTimestamp = flag ? m_sessionTime : -m_sessionTime;
+        m_updateSIMValue = (int)Math.round(value);
+    }
+    
+    //call this once the commands have been sent to the SIM
+    public void _clearSIMCommandTimestamp() {
+        m_updateSIMTimestamp = 0;
+    }
+    
+    public void _resetDetected() {
+        m_changeFlag = true;
     }
     
     //utility method to read the var and return the value with UOM and States applied
     //only use the value if the state is NORMAL
-    protected Data _readVar() {
-        Data d = new Data(m_varName);
+    protected Data _readVar(String varName) {
+        Data d = new Data(varName);
         double value = d.getDouble();
         
         if (m_varHeader == null)
             d.setState(Data.State.NOTAVAILABLE);
         else
         if (m_car.isValid()) {
-            if (!m_varName.isEmpty()){
+            if (!varName.isEmpty()){
                 try {
                     //if this var is an array, use the id as the index
                     if (m_varHeader.Count > 1)
-                        value = m_IODriver.getVars().getDouble(m_varName,m_car.getId().getInteger());
+                        value = m_IODriver.getVars().getDouble(varName,m_car.getId().getInteger());
                     else
-                        value = m_IODriver.getVars().getDouble(m_varName);
+                        value = m_IODriver.getVars().getDouble(varName);
                     
                     if (Double.isNaN(value))
                         d.setState(Data.State.OFF);
                     else {
                         //Now normalize all the values that are percentages to be times 100
                         //except brake bias which already is normalized.
-                        if (m_iRacingUOM.equals("%") && !m_varName.equals("dcBrakeBias"))
+                        if (m_iRacingUOM.equals("%") && !varName.equals("dcBrakeBias"))
                             value *= 100.0;
                         
                         d.setValue(value,m_iRacingUOM,Data.State.NORMAL);
@@ -117,7 +145,7 @@ public class iRacingGauge extends Gauge {
                 } catch (IndexOutOfBoundsException e) {
                     //set the value to the var name and return it as an error state
                     //can happen if the id is -1
-                    d.setValue(m_varName);
+                    d.setValue(varName);
                     d.setState(Data.State.ERROR);
                     return d;
                 }
@@ -129,4 +157,6 @@ public class iRacingGauge extends Gauge {
         
         return d;
     }
+    
+    protected Data _readVar() { return _readVar(m_varName); }
 }

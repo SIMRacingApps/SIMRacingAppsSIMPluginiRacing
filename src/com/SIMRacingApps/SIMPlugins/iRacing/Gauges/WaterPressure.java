@@ -13,7 +13,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 /**
  * @author Jeffrey Gilliam
  * @copyright Copyright (C) 2017 Jeffrey Gilliam
- * @since 1.4
+ * @since 1.5
  * @license Apache License 2.0
  */
 public class WaterPressure extends iRacingGauge {

@@ -4,11 +4,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.MatchResult;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Session;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingSIMPlugin;

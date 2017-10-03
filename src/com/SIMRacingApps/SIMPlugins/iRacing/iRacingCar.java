@@ -38,6 +38,7 @@ public class iRacingCar extends Car {
     private final double RESET_PIT_DELAY   = 0.3;  //seconds to wait after leaving pit road to send pit commands
     private final double INVALID_INPITSTALL= 1.0;  //seconds to wait before declaring invalid while in pit stall
 //    private final double AUTO_RESET_DELAY  = 5.0;  //seconds to wait after leaving pits to change any pit commands because we have to wait on iRacing to do it first.
+    private final double SIM_COMMANDS_DELAY= 0.5;  //seconds to delay after sending commands to before sending another command
 
     protected String m_trackType           = "";
     protected int    m_ME                  = -1;
@@ -50,7 +51,9 @@ public class iRacingCar extends Car {
     protected int    m_sessionVersion      = -1;
     protected boolean m_initialReset       = false;
     protected double m_resetTime           = 0.0; 
+    protected boolean m_isNewCar           = false;
     protected boolean m_enableSIMSetupCommands = false;
+    protected double m_sentSetupCommandsTimestamp = 0.0;
 //    protected boolean m_forceSetupCommands  = false;
     protected boolean m_stoppedInPitStall   = false;
     
@@ -64,7 +67,7 @@ public class iRacingCar extends Car {
     private State   m_prevStatus            = new State(Car.Status.INVALID,0.0);
     private State   m_surfacelocation       = new State("",0.0);
     private int     m_discontinuality       = -1;  //start out -1, so the first time we enter the track it's not counted.
-    private double  m_fuelLevel             = 0.0;
+    private double  m_fuelLevel             = -1.0;
 //    private double  m_fuelLevelPercent      = 0.0;
     private double  m_fuelAtStartFinish     = -1.0;
     private ArrayList<Boolean> m_invalidLaps= new ArrayList<Boolean>();   //indexed by lap completed, zero based (e.g. Lap 1 = index 0)
@@ -367,7 +370,8 @@ public class iRacingCar extends Car {
         || !m_enableSIMSetupCommands
         || m_surfacelocation.getState().equals(TrackSurface.NotInWorld)
         || !m_iRacingSIMPlugin.getIODriver().getVars().getBoolean("IsOnTrack")
-        //TODO: test pit commands if your a Crew Chief for another driver.
+        || (m_sentSetupCommandsTimestamp + SIM_COMMANDS_DELAY > m_sessionTime) //give results time to come back before sending more
+        //TODO: test pit commands if you're a Crew Chief for another driver.
         )
             return false;
 
@@ -380,17 +384,20 @@ public class iRacingCar extends Car {
         iRacingGauge RR        = (iRacingGauge) _getGauge(Gauge.Type.TIREPRESSURERR);
         iRacingGauge fastRepair= (iRacingGauge) _getGauge(Gauge.Type.FASTREPAIRS);
 
+        //get the latest timestamp of the supported gauges
+        double timestamp = Math.abs(LF._getSIMCommandTimestamp());
+        timestamp = Math.max(timestamp, Math.abs(LR._getSIMCommandTimestamp()));
+        timestamp = Math.max(timestamp, Math.abs(RF._getSIMCommandTimestamp()));
+        timestamp = Math.max(timestamp, Math.abs(RR._getSIMCommandTimestamp()));
+        timestamp = Math.max(timestamp, Math.abs(fuellevel._getSIMCommandTimestamp()));
+        timestamp = Math.max(timestamp, Math.abs(tearoff._getSIMCommandTimestamp()));
+        timestamp = Math.max(timestamp, Math.abs(fastRepair._getSIMCommandTimestamp()));
+        
         //test these as a group because if any are sent, we start with a #clear, otherwise nothing is sent
-        //NOTE: they can only be called once.
-        if (LF._getUpdateSIM()
-        ||  LR._getUpdateSIM()
-        ||  RF._getUpdateSIM()
-        ||  RR._getUpdateSIM()
-//        ||  fuellevel._getUpdateSIM()
-//        ||  tearoff._getUpdateSIM()
-//        ||  fastRepair._getUpdateSIM()
-//        ||  m_forceSetupCommands
-           ) {
+        //give time for all the commands to come in before sending them
+        if (timestamp != 0.0 
+        && (timestamp + SIM_COMMANDS_DELAY <= m_sessionTime)
+        ) {
 
             BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Clear);
             Server.logger().info(String.format("_sendSetupCommands() Clear"));
@@ -400,21 +407,56 @@ public class iRacingCar extends Car {
 //                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel._getValueSIM());
 //            }
 
-            if (LF.getChangeFlag().getBoolean()) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f,%d/%s",LF.getType().getString(),LF.getValueNext().convertUOM("kpa").getDouble(),LF.getValueNext().convertUOM("kpa").getInteger(),"kpa")));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LF, LF.getValueNext().getInteger());
+            //as of Sept. 2017 build, iRacing makes you change both tires on the same side at the same time
+            //found it will the both on, when only one is set, but it will not turn both off
+            //This just helps inforce that.
+            if (RF._getSIMCommandTimestamp() != 0.0 && RR._getSIMCommandTimestamp() == 0.0)
+                RR._setSIMCommandTimestamp(RF._getSIMCommandTimestamp() > 0.0 ? true : false, RR.getValueNext().convertUOM("kPa").getDouble());
+            if (RR._getSIMCommandTimestamp() != 0.0 && RF._getSIMCommandTimestamp() == 0.0)
+                RF._setSIMCommandTimestamp(RR._getSIMCommandTimestamp() > 0.0 ? true : false, RF.getValueNext().convertUOM("kPa").getDouble());
+            if (LF._getSIMCommandTimestamp() != 0.0 && LR._getSIMCommandTimestamp() == 0.0)
+                LR._setSIMCommandTimestamp(LF._getSIMCommandTimestamp() > 0.0 ? true : false, LR.getValueNext().convertUOM("kPa").getDouble());
+            if (LR._getSIMCommandTimestamp() != 0.0 && LF._getSIMCommandTimestamp() == 0.0)
+                LF._setSIMCommandTimestamp(LR._getSIMCommandTimestamp() > 0.0 ? true : false, LF.getValueNext().convertUOM("kPa").getDouble());
+            
+            if (RF._getSIMCommandTimestamp() > 0.0) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RF.getType().getString(),RF._getSIMCommandValue())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RF, RF._getSIMCommandValue());
             }
-            if (LR.getChangeFlag().getBoolean()) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f,%d/%s",LR.getType().getString(),LR.getValueNext().convertUOM("kpa").getDouble(),LR.getValueNext().convertUOM("kpa").getInteger(),"kpa")));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LR, LR.getValueNext().convertUOM("kpa").getInteger());
-            }
-            if (RF.getChangeFlag().getBoolean()) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f,%d/%s",RF.getType().getString(),RF.getValueNext().convertUOM("kpa").getDouble(),RF.getValueNext().convertUOM("kpa").getInteger(),"kpa")));
+            else //keep existing setting
+            if (RF._getSIMCommandTimestamp() == 0.0 && RF.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RF.getType().getString(),RF.getValueNext().convertUOM("kpa").getInteger())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RF, RF.getValueNext().convertUOM("kpa").getInteger());
             }
-            if (RR.getChangeFlag().getBoolean()) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%f,%d/%s",RR.getType().getString(),RR.getValueNext().convertUOM("kpa").getDouble(),RR.getValueNext().convertUOM("kpa").getInteger(),"kpa")));
+            
+            if (RR._getSIMCommandTimestamp() > 0.0) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RR.getType().getString(),RR._getSIMCommandValue())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RR, RR._getSIMCommandValue());
+            }
+            else //keep existing setting
+            if (RR._getSIMCommandTimestamp() == 0.0 && RR.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RR.getType().getString(),RR.getValueNext().convertUOM("kpa").getInteger())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RR, RR.getValueNext().convertUOM("kpa").getInteger());
+            }
+
+            if (LF._getSIMCommandTimestamp() > 0.0) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",LF.getType().getString(),LF._getSIMCommandValue())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LF, LF._getSIMCommandValue());
+            }
+            else //keep existing setting
+            if (LF._getSIMCommandTimestamp() == 0.0 && LF.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",LF.getType().getString(),LF.getValueNext().convertUOM("kpa").getInteger())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LF, LF.getValueNext().convertUOM("kpa").getInteger());
+            }
+
+            if (LR._getSIMCommandTimestamp() > 0.0) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",LR.getType().getString(),LR._getSIMCommandValue())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LR, LR._getSIMCommandValue());
+            }
+            else //keep existing setting
+            if (LR._getSIMCommandTimestamp() == 0.0 && LR.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",LR.getType().getString(),LR.getValueNext().convertUOM("kpa").getInteger())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LR, LR.getValueNext().convertUOM("kpa").getInteger());
             }
 
 //            if (tearoff._getChangeFlagSIM()) {
@@ -428,6 +470,15 @@ public class iRacingCar extends Car {
 //            }
             
 //            m_forceSetupCommands = false;
+            LF._clearSIMCommandTimestamp();
+            LR._clearSIMCommandTimestamp();
+            RF._clearSIMCommandTimestamp();
+            RR._clearSIMCommandTimestamp();
+            fuellevel._clearSIMCommandTimestamp();
+            tearoff._clearSIMCommandTimestamp();
+            fastRepair._clearSIMCommandTimestamp();
+            
+            m_sentSetupCommandsTimestamp = m_sessionTime; 
             return true;
         }
         return false;
@@ -2022,6 +2073,19 @@ else
         return d;
     }
 
+    private void _resetDetected() {
+        ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURERF))._resetDetected();
+        ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURERR))._resetDetected();
+        ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURELF))._resetDetected();
+        ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURELR))._resetDetected();
+        ((iRacingGauge)_getGauge(Gauge.Type.FUELLEVEL))._resetDetected();
+        ((iRacingGauge)_getGauge(Gauge.Type.WINDSHIELDTEAROFF))._resetDetected();
+        ((iRacingGauge)_getGauge(Gauge.Type.FASTREPAIRS))._resetDetected();
+        
+        //TODO: add all the SIM only Gauges that are changed on pit,
+        //such as, Tape, Wedge, Wings, etc.
+    }
+    
     //This gets called every tick from the iRacingSIMPlugin loop.
     //Be careful not to put too much in here that will slow it down
     //read any values from the Session String in _initiallize() unless you think they will change. Then I would defer that read to the function that needs it.
@@ -2037,7 +2101,6 @@ else
         double fuelLevel               = 0.0;
         int    prevSessionFlags        = m_sessionFlags;
         boolean isReset                = false;
-        boolean isNewCar               = false; //TODO: Need to know if reset is available in RACE and did it just occur.
         boolean isDriving              = isME() && m_iRacingSIMPlugin.getIODriver().getVars().getBoolean("IsOnTrack");   //This should be set when you are in the car and isME() is true.
         
         m_sessionFlags= m_iRacingSIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
@@ -2144,11 +2207,24 @@ else
                     m_pitLocation = Double.parseDouble(s);
 //            }
             //see below for setting the pit location for other cars when they eventually stop in their pit stall. 
+                
+            //if the fuel level increases and it wasn't checked, then we must have 
+            //either reset or clicked new car
+            if (prevFuelLevel > -1.0
+            &&  fuelLevel > (prevFuelLevel + 0.001)
+            && ((m_iRacingSIMPlugin.getIODriver().getVars().getBitfield("PitSvFlags") & PitSvFlags.FuelFill) == 0)
+            ) {
+                m_isNewCar = true;
+            }
         }
 
         int trackSurface = TrackSurface.getTrackSurface(m_iRacingSIMPlugin.getIODriver(),m_id,isME());
         surfacelocation.setState(trackSurface,m_sessionTime);
         
+        if (isME() && m_iRacingSIMPlugin.getIODriver().getVars().getBoolean("IsInGarage") /*&& m_lapCompletedPercent == -1.0*/) {
+            nextStatus.setState(iRacingCar.Status.INGARAGE,m_sessionTime);
+        }
+        else
         if (surfacelocation.equals(TrackSurface.InPitStall)) {
             nextStatus.setState(iRacingCar.Status.INPITSTALL,m_sessionTime);
             m_timeBeforeNextStateChange = m_sessionTime + INVALID_INPITSTALL;
@@ -2184,10 +2260,6 @@ else
         else
         if (surfacelocation.equals(TrackSurface.OffTrack)) {
             nextStatus.setState(iRacingCar.Status.OFFTRACK,m_sessionTime);
-        }
-        else
-        if (isME() && m_iRacingSIMPlugin.getIODriver().getVars().getBoolean("IsInGarage") /*&& m_lapCompletedPercent == -1.0*/) {
-            nextStatus.setState(iRacingCar.Status.INGARAGE,m_sessionTime);
         }
 
         //iRacing has a bug where it outputs lap 2 at the start of the race while the green flag is out
@@ -2263,7 +2335,7 @@ else
             &&  nextStatus.equals(iRacingCar.Status.INVALID)
             ) {
                 nextStatus.setState(iRacingCar.Status.INGARAGE,m_sessionTime);  //TODO: Need OUTOFCAR status
-                isNewCar = true;
+                m_isNewCar = true;
             }
 //            else
 //            //if we were in the pit stall and we blinked, 
@@ -2341,7 +2413,7 @@ else
         }
 
         //exit if we can't get a reading of where we are on the current lap
-        if (lapCompletedPercent == -1.0 && nextStatus.equals(Car.Status.INVALID)) {
+        if (lapCompletedPercent == -1.0 /*&& nextStatus.equals(Car.Status.INVALID)*/) {
             m_prevStatus.setState(nextStatus);
             return false;
         }
@@ -2363,16 +2435,19 @@ else
         }
 
         //exit if we can't get a reading of the current lap
-        if (currentLap == -1 && nextStatus.equals(Car.Status.INVALID)) {                 
+        if (currentLap == -1) {
+            
+            if (nextStatus.equals(Car.Status.INVALID)) {                 
 
-            //If in the pit stall, wait at least 1 second before allowing the state to change to invalid
-            //This will allow the car to have a short blink and not affect the time in the stall
-            //This will prevent blinkers from distorting their pit time. 
-            //If really leaving, you will stay invalid for more than a second
-            if (m_prevStatus.equals(Car.Status.INPITSTALL) 
-            &&  m_prevStatus.getTime(Car.Status.INPITSTALL, m_sessionTime) > INVALID_INPITSTALL
-            ) {
-                m_prevStatus.setState(nextStatus);
+                //If in the pit stall, wait at least 1 second before allowing the state to change to invalid
+                //This will allow the car to have a short blink and not affect the time in the stall
+                //This will prevent blinkers from distorting their pit time. 
+                //If really leaving, you will stay invalid for more than a second
+                if (m_prevStatus.equals(Car.Status.INPITSTALL) 
+                &&  m_prevStatus.getTime(Car.Status.INPITSTALL, m_sessionTime) > INVALID_INPITSTALL
+                ) {
+                    m_prevStatus.setState(nextStatus);
+                }
             }
             
             return false;
@@ -2552,7 +2627,7 @@ else
             }
         }
 
-        if (isME() && isNewCar) {
+        if (isME() && m_isNewCar) {
 //            //try and detect if a new car was given where you have full fuel, new tires
 //            //not the type of reset where you get your repairs. I don't think that gives you fuel. It might give you tires
 //            //Just need to know if you have new tires, so we can record the temps and wear in the history.
@@ -2580,7 +2655,7 @@ else
         //Was not blinking
         //TODO: detect RESET activated, Hosted or CarbCup. build_2014_10_21 introduced ability to go to pits on practice without resetting.
         if (!nextStatus.equals(iRacingCar.Status.INVALID)
-        && (   isNewCar
+        && (   m_isNewCar
             || !m_initialReset
             || (  //entered pit stall from INVALID, means reset from somewhere on the track
                    (nextStatus.equals(iRacingCar.Status.ENTERINGPITSTALL) || nextStatus.equals(iRacingCar.Status.INPITSTALL))
@@ -2609,7 +2684,7 @@ else
         ) {
             //just entered pits from the outside world, what do we want to do? Reset?
             if (isME())
-                Server.logger().info(String.format("#%-3s (id=%d) Reset detected from(%s) to (%s) during (%s) autoResetPitBox(%d), autoResetFastRepair(%d), calling _setupReset(Lap=%d), VarBufTick=%d",
+                Server.logger().info(String.format("#%-3s (id=%d) Reset detected from(%s) to (%s) during (%s) autoResetPitBox(%d), autoResetFastRepair(%d), Lap=%d, VarBufTick=%d",
                     m_number, m_id,
                     m_prevStatus.getState(),
                     nextStatus.getState(),
@@ -2619,6 +2694,8 @@ else
                     m_lapPitted,
                     m_iRacingSIMPlugin.getIODriver().getHeader().getLatest_VarBufTick()));
 
+            this._resetDetected();
+            
 //            _setupReset(m_lapPitted, m_iRacingSIMPlugin.getIODriver().getAutoResetPitBox(),m_iRacingSIMPlugin.getIODriver().getAutoResetFastRepair());
 
 //as of the March 30, 2016 patch, this option is now available with app.ini[Pit Service]autoResetFastRepair            
@@ -2647,10 +2724,10 @@ else
 
         //if we just entered the pit stall
         if ((nextStatus.equals(iRacingCar.Status.ENTERINGPITSTALL) && !m_prevStatus.equals(iRacingCar.Status.ENTERINGPITSTALL))
-        || isNewCar
+        || m_isNewCar
         ) {
             if (isME())
-                Server.logger().info(String.format("#%-3s (id=%d) Entering Pit Stall from(%s) during(%s) speed(%f), calling _setupBeforePitting(Lap=%d), VarBufTick=%d",
+                Server.logger().info(String.format("#%-3s (id=%d) Entering Pit Stall from(%s) during(%s) speed(%f), Lap=%d, VarBufTick=%d",
                     m_number,m_id,
                     m_prevStatus.getState(),
                     m_sessionType,
@@ -2859,6 +2936,7 @@ else
             m_power = power;
         }
         
+        m_isNewCar = false;
         return isValid();
     }
 
@@ -2929,7 +3007,7 @@ else
         Track track = m_iRacingSIMPlugin.getSession().getTrack();
         IODriver IODriver = m_iRacingSIMPlugin.getIODriver();
         
-        Map<String,Map<String,Map<String,Object>>> simGauges = new HashMap<String, Map<String, Map<String, Object>>>();
+        Map<String,Map<String,Map<String,Object>>> simGaugesBefore = new HashMap<String, Map<String, Map<String, Object>>>();
         
         try {
             //The shift points in some cars are wrong. Therefore get the SIM value as the default and the JSON file can override them.
@@ -2953,8 +3031,8 @@ else
             
             Map<String,Map<String,Object>> Tach_tracks = new HashMap<String,Map<String,Object>>();
             Map<String,Object> Tach_states = new HashMap<String,Object>();
-            Map<String,Double> Tach_state = new HashMap<String,Double>();
             
+            Map<String,Double> Tach_state = new HashMap<String,Double>();
             Tach_state.put("Start", DriverCarSLFirstRPM);
             Tach_state.put("End",   DriverCarSLShiftRPM);
             Tach_states.put("SHIFTLIGHTS", Tach_state);
@@ -2973,10 +3051,13 @@ else
             Tach_state.put("Start", DriverCarRedLine);
             Tach_state.put("End",   Double.MAX_VALUE);
             Tach_states.put("CRITICAL", Tach_state);
+
+            Map<String,Object> default_track = new HashMap<String,Object>();
+            default_track.put("States", Tach_states);
             
-            Tach_tracks.put("default", Tach_states);
+            Tach_tracks.put("default", default_track);
             
-            simGauges.put(Gauge.Type.TACHOMETER, Tach_tracks);
+            simGaugesBefore.put(Gauge.Type.TACHOMETER, Tach_tracks);
 
         }
         catch (NumberFormatException e) {}
@@ -3039,16 +3120,11 @@ else
             }
             _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h"));
             _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "SteeringWheelAngle", "rad"));
-            _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "RPM", "rev/min", simGauges));
+            _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "RPM", "rev/min", simGaugesBefore));
             _setGauge(new Tape(Gauge.Type.TAPE,                                 this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.THROTTLE,                     this, track, IODriver, "Throttle", "%", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.THROTTLESHAPE,                this, track, IODriver, "dcThrottleShape", "", null, null));
             
-            _setGauge(new TirePressure(Gauge.Type.TIREPRESSURELF,               this, track, IODriver, "LF"));
-            _setGauge(new TirePressure(Gauge.Type.TIREPRESSURERF,               this, track, IODriver, "RF"));
-            _setGauge(new TirePressure(Gauge.Type.TIREPRESSURELR,               this, track, IODriver, "LR"));
-            _setGauge(new TirePressure(Gauge.Type.TIREPRESSURERR,               this, track, IODriver, "RR"));
-
             _setGauge(new TireTemp(Gauge.Type.TIRETEMPLFL,                      this, track, IODriver, "LF", "L"));
             _setGauge(new TireTemp(Gauge.Type.TIRETEMPLFM,                      this, track, IODriver, "LF", "M"));
             _setGauge(new TireTemp(Gauge.Type.TIRETEMPLFR,                      this, track, IODriver, "LF", "R"));
@@ -3075,6 +3151,39 @@ else
             _setGauge(new TireWear(Gauge.Type.TIREWEARRRM,                      this, track, IODriver, "RR", "M"));
             _setGauge(new TireWear(Gauge.Type.TIREWEARRRR,                      this, track, IODriver, "RR", "R"));
             
+            _setGauge(new TirePressure(Gauge.Type.TIREPRESSURELF,               this, track, IODriver, "LF",
+                 (TireTemp)_getGauge(Gauge.Type.TIRETEMPLFL),
+                 (TireTemp)_getGauge(Gauge.Type.TIRETEMPLFM),
+                 (TireTemp)_getGauge(Gauge.Type.TIRETEMPLFR),
+                 (TireWear)_getGauge(Gauge.Type.TIREWEARLFL),
+                 (TireWear)_getGauge(Gauge.Type.TIREWEARLFM),
+                 (TireWear)_getGauge(Gauge.Type.TIREWEARLFR)
+            ));
+            _setGauge(new TirePressure(Gauge.Type.TIREPRESSURERF,               this, track, IODriver, "RF",
+                    (TireTemp)_getGauge(Gauge.Type.TIRETEMPRFL),
+                    (TireTemp)_getGauge(Gauge.Type.TIRETEMPRFM),
+                    (TireTemp)_getGauge(Gauge.Type.TIRETEMPRFR),
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARRFL),
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARRFM),
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARRFR)
+            ));
+            _setGauge(new TirePressure(Gauge.Type.TIREPRESSURELR,               this, track, IODriver, "LR",
+                    (TireTemp)_getGauge(Gauge.Type.TIRETEMPLRL),
+                    (TireTemp)_getGauge(Gauge.Type.TIRETEMPLRM),
+                    (TireTemp)_getGauge(Gauge.Type.TIRETEMPLRR),
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARLRL),
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARLRM),
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARLRR)
+            ));
+            _setGauge(new TirePressure(Gauge.Type.TIREPRESSURERR,               this, track, IODriver, "RR",
+                    (TireTemp)_getGauge(Gauge.Type.TIRETEMPRRL),
+                    (TireTemp)_getGauge(Gauge.Type.TIRETEMPRRM),
+                    (TireTemp)_getGauge(Gauge.Type.TIRETEMPRRR),
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARRRL),
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARRRM),
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARRRR)
+            ));
+
             _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROL,              this, track, IODriver, "dcTractionControl", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.VOLTAGE,                      this, track, IODriver, "Voltage", "v", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.WATERLEVEL,                   this, track, IODriver, "WaterLevel", "l", null, null));
@@ -3091,7 +3200,9 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.GEAR,                         this, track, IODriver, "CarIdxGear", "", null, null));
             _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h"));
             _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "CarIdxSteer", "rad"));
-            _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "CarIdxRPM", "rev/min", simGauges));
+            _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "CarIdxRPM", "rev/min", simGaugesBefore));
         }
+        
+        _postInitialization();
     }
 }

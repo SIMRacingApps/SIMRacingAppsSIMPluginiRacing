@@ -3,8 +3,6 @@
  */
 package com.SIMRacingApps.SIMPlugins.iRacing.Gauges;
 
-import java.util.Map;
-
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Track;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
@@ -18,7 +16,7 @@ import com.SIMRacingApps.Util.State;
  * 
  * @author Jeffrey Gilliam
  * @copyright Copyright (C) 2017 Jeffrey Gilliam
- * @since 1.4
+ * @since 1.5
  * @license Apache License 2.0
  */
 public class Speedometer extends iRacingGauge {
@@ -32,6 +30,30 @@ public class Speedometer extends iRacingGauge {
     public Speedometer(String type, iRacingCar car, Track track,
             IODriver IODriver, String varName, String defaultUOM) {
         super(type, car, track, IODriver, varName, defaultUOM, null, null);
+        
+        //Add these states for the Speedometer which has to be calculated from pit road speed limit.
+        //Therefore, it cannot be set statically in the .json files.
+        //convert the track UOM to the gauges UOM
+        //I used to floor it and round it, but that produced problems with accuracy.
+        //This code cannot make any assumptions about the error the track code may return.
+        //In my test file, the speed limit is a published 45mph, but the track code returns 44.7.
+        //My point is, the track code should round it up or floor it, not this code.
+        double PitRoadSpeedLimit = track.getPitSpeedLimit(this.m_UOM).getDouble();
+
+        //double WayOverPitSpeed     = 1.10;
+        double WayOverPitSpeed     = (PitRoadSpeedLimit + (this.m_UOM.equals("mph") ? 15.0 : 25.0)) / PitRoadSpeedLimit;
+        double OverPitSpeed        = (PitRoadSpeedLimit + 0.8) / PitRoadSpeedLimit;
+        double PitSpeed            = (PitRoadSpeedLimit - 0.5) / PitRoadSpeedLimit;
+        
+        //these percentages correspond to the percentages used by the shift lights
+        //This is really not a good way to do this
+        //TODO: Redesign how this range is calculated to independent of the shift lights code in the client.
+        double ApproachingPitSpeed = PitSpeed - (7*.012) - (7*.006);
+
+        _addStateRange("WAYOVERLIMIT", 		PitRoadSpeedLimit * WayOverPitSpeed, 	Double.MAX_VALUE,                   this.m_UOM);
+        _addStateRange("OVERLIMIT", 		PitRoadSpeedLimit * OverPitSpeed, 	 	PitRoadSpeedLimit * WayOverPitSpeed,this.m_UOM);
+        _addStateRange("LIMIT", 			PitRoadSpeedLimit * PitSpeed,        	PitRoadSpeedLimit * OverPitSpeed,   this.m_UOM);
+        _addStateRange("APPROACHINGLIMIT", 	PitRoadSpeedLimit * ApproachingPitSpeed,PitRoadSpeedLimit * PitSpeed,       this.m_UOM);
     }
 
     @Override
@@ -39,7 +61,7 @@ public class Speedometer extends iRacingGauge {
         Data d = super.getValueCurrent(UOM);
         
         if (m_car.isValid()) {
-            d.setValue(m_speed,m_UOM,Data.State.NORMAL);
+            d.setValue(m_speed,m_iRacingUOM,Data.State.NORMAL);
         }
         else {
             d.setState(Data.State.OFF);
