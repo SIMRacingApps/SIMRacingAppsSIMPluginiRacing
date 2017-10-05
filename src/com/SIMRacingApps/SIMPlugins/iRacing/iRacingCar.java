@@ -402,11 +402,16 @@ public class iRacingCar extends Car {
             BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Clear);
             Server.logger().info(String.format("_sendSetupCommands() Clear"));
 
-//            if (fuellevel._getChangeFlagSIM() && fuellevel._getValueSIM() > 0) {
-//                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/%s",fuellevel.getType().getString(),fuellevel._getValueSIM(),"l")));
-//                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel._getValueSIM());
-//            }
-
+            if (fuellevel._getSIMCommandTimestamp() > 0.0 && fuellevel._getSIMCommandValue() > 0.0) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/l",fuellevel.getType().getString(),fuellevel._getSIMCommandValue())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel._getSIMCommandValue());
+            }
+            else //keep existing setting
+            if (fuellevel._getSIMCommandTimestamp() == 0.0 && fuellevel.getChangeFlag().getBoolean() && fuellevel.getValueNext().convertUOM("l").getInteger() > 0) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RF.getType().getString(),fuellevel.getValueNext().convertUOM("l").getInteger())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel.getValueNext().convertUOM("l").getInteger());
+            }
+            
             //as of Sept. 2017 build, iRacing makes you change both tires on the same side at the same time
             //found it will the both on, when only one is set, but it will not turn both off
             //This just helps inforce that.
@@ -2084,6 +2089,8 @@ else
         
         //TODO: add all the SIM only Gauges that are changed on pit,
         //such as, Tape, Wedge, Wings, etc.
+        //I could loop through the gauges and look at the onResetChange flag,
+        //but I have to hard code them to use the Changeable class. I want them to match
     }
     
     //This gets called every tick from the iRacingSIMPlugin loop.

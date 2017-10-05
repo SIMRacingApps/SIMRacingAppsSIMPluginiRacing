@@ -85,7 +85,9 @@ public class TirePressure extends Tire {
             }
         }
 
-        setChangeFlag(true);
+        //if command is not already pending and the flag is not already set, set it
+        if (this._getSIMCommandTimestamp() == 0.0 && !m_changeFlag)
+            _setSIMCommandTimestamp(true,m_valueNext.convertUOM(m_iRacingUOM).getDouble());
         
         return this._getReturnValue(r, UOM);   
     }
@@ -104,7 +106,9 @@ public class TirePressure extends Tire {
             }
         }
         
-        setChangeFlag(true);
+        //if command is not already pending and the flag is not already set, set it
+        if (this._getSIMCommandTimestamp() == 0.0 && !m_changeFlag)
+            _setSIMCommandTimestamp(true,m_valueNext.convertUOM(m_iRacingUOM).getDouble());
         
         return this._getReturnValue(r, UOM);   
     }
@@ -123,7 +127,9 @@ public class TirePressure extends Tire {
             }
         }
         
-        setChangeFlag(true);
+        //if command is not already pending and the flag is not already set, set it
+        if (this._getSIMCommandTimestamp() == 0.0 && !m_changeFlag)
+            _setSIMCommandTimestamp(true,m_valueNext.convertUOM(m_iRacingUOM).getDouble());
         
         return this._getReturnValue(r, UOM);   
     }
@@ -167,9 +173,16 @@ public class TirePressure extends Tire {
                     || status.getState().equals(Car.Status.INPITSTALL)
                    )
                 ) {
-                    Server.logger().info(String.format("TirePressure%s: Change detected, saving valueCurrent = %f %s, %f psi",m_tire,m_valueCurrent.getDouble(),m_valueCurrent.getUOM(),m_valueCurrent.convertUOM("psi").getDouble()));
                     //don't record anything if you haven't run a lap
                     if (m_lapChanged != currentLap) {
+                        Server.logger().info(String.format(
+                                "TirePressure%s: Change detected, saving valueCurrent = %f %s, %f psi",
+                                m_tire,
+                                m_valueCurrent.getDouble(),
+                                m_valueCurrent.getUOM(),
+                                m_valueCurrent.convertUOM("psi").getDouble()
+                        ));
+                        
                         m_valueHistorical = new Data(m_valueCurrent);   //save the previous current value as historical
                         m_lapsHistorical  = this.getLaps(currentLap).getInteger();
                         m_lapChanged      = currentLap;                 //save the lap
