@@ -87,13 +87,12 @@ public class FuelLevel extends iRacingGauge {
     
     @Override
     public Data setChangeFlag(boolean flag) {
-        if (flag && this._getSIMCommandTimestamp() <= 0.0) {
-            _setSIMCommandTimestamp(flag,m_valueNext.convertUOM(m_iRacingUOM).getDouble());
-        }
-        else
-        if (!flag && this._getSIMCommandTimestamp() >= 0.0) {
-            _setSIMCommandTimestamp(flag,m_valueNext.convertUOM(m_iRacingUOM).getDouble());
-        }
+        if (
+            (flag && this._getSIMCommandTimestamp() <= 0.0)
+         || (!flag && this._getSIMCommandTimestamp() >= 0.0)
+         ) {
+             _setSIMCommandTimestamp(flag,m_valueNext.convertUOM(m_iRacingUOM).getDouble());
+         }
         return getChangeFlag();
     }
     
@@ -200,18 +199,13 @@ public class FuelLevel extends iRacingGauge {
     public void onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
         super.onDataVersionChange(status, currentLap, sessionTime, lapCompletedPercent, trackLength);
 
-        //track the value in the tank just as we enter the pit
-        if (status.getState().equals(Car.Status.ENTERINGPITSTALL) 
-        && !m_prevStatus.getState().equals(Car.Status.ENTERINGPITSTALL)
+        //track the value in the tank before entering the pit
+        if (!status.getState().equals(Car.Status.ENTERINGPITSTALL)
+        &&  !status.getState().equals(Car.Status.INPITSTALL)
+        &&  !status.getState().equals(Car.Status.INGARAGE)
+        &&  !status.getState().equals(Car.Status.INVALID)
         ) {
             m_valueBeforePitting = _readVar();
-            Server.logger().info(String.format(
-                    "FuelLevel: Entering Pit, fuel level is = %f %s, %f %s",
-                    m_valueBeforePitting.getDouble(),
-                    m_valueBeforePitting.getUOM(),
-                    m_valueBeforePitting.convertUOM(this.m_measurementSystem).getDouble(),
-                    m_valueBeforePitting.convertUOM(this.m_measurementSystem).getUOM()
-            ));
         }
         
         //can only read the pit values for ME and only when not in the garage
@@ -229,7 +223,7 @@ public class FuelLevel extends iRacingGauge {
                 boolean changeFlag = ((m_IODriver.getVars().getBitfield("PitSvFlags") & PitSvFlags.FuelFill) != 0);
                 Data    varValue   = _readVar("PitSvFuel");
                 
-                //If the tire was changed because we requested to be changed
+                //If fuel was added because we requested it to be
                 //and the flags changed while in the pit stall
                 //before we read the var value, see if the tire was changed
                 //then save off the value that was on the car
@@ -242,7 +236,11 @@ public class FuelLevel extends iRacingGauge {
                     //don't record anything if you haven't run a lap
                     if (m_lapChanged != currentLap) {
                         Server.logger().info(String.format(
-                                "FuelLevel: Change detected, saving historical value = %f %s, %f %s",
+                                "FuelLevel: %f %s, %f %s, saving historical value = %f %s, %f %s",
+                                _readVar().getDouble(),
+                                _readVar().getUOM(),
+                                _readVar().convertUOM(this.m_measurementSystem).getDouble(),
+                                _readVar().convertUOM(this.m_measurementSystem).getUOM(),
                                 m_valueBeforePitting.getDouble(),
                                 m_valueBeforePitting.getUOM(),
                                 m_valueBeforePitting.convertUOM(this.m_measurementSystem).getDouble(),

@@ -464,15 +464,15 @@ public class iRacingCar extends Car {
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LR, LR.getValueNext().convertUOM("kpa").getInteger());
             }
 
-//            if (tearoff._getChangeFlagSIM()) {
-//                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",tearoff.getType().getString())));
-//                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_WS);
-//            }
+            if (tearoff._getSIMCommandTimestamp() > 0.0) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",tearoff.getType().getString())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_WS);
+            }
 
-//            if (fastRepair._getChangeFlagSIM()) {
-//                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",fastRepair.getType().getString())));
-//                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_FR);
-//            }
+            if (fastRepair._getSIMCommandTimestamp() > 0.0) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",fastRepair.getType().getString())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_FR);
+            }
             
 //            m_forceSetupCommands = false;
             LF._clearSIMCommandTimestamp();

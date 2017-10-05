@@ -60,11 +60,10 @@ public class TirePressure extends Tire {
 
     @Override
     public Data setChangeFlag(boolean flag) {
-        if (flag && this._getSIMCommandTimestamp() <= 0.0) {
-            _setSIMCommandTimestamp(flag,m_valueNext.convertUOM(m_iRacingUOM).getDouble());
-        }
-        else
-        if (!flag && this._getSIMCommandTimestamp() >= 0.0) {
+        if (
+           (flag && this._getSIMCommandTimestamp() <= 0.0)
+        || (!flag && this._getSIMCommandTimestamp() >= 0.0)
+        ) {
             _setSIMCommandTimestamp(flag,m_valueNext.convertUOM(m_iRacingUOM).getDouble());
         }
         return getChangeFlag();
