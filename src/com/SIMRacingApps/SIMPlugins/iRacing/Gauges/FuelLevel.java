@@ -173,7 +173,9 @@ public class FuelLevel extends iRacingGauge {
     @Override
     public Data getCapacityIncrement(String UOM) { return this._getReturnValue(__addConversions(super.getCapacityIncrement(UOM)),UOM); }
     @Override
-    public Data getValueCurrent(String UOM)      { return this._getReturnValue(__addConversions(super.getValueCurrent(UOM)),UOM); }
+    public Data getValueCurrent(String UOM)      { 
+        return this._getReturnValue(__addConversions(super.getValueCurrent(UOM)),UOM); 
+    }
 
     @Override 
     public Data getValueNext(String UOM) {
