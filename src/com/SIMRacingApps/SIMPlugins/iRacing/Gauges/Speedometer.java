@@ -50,10 +50,10 @@ public class Speedometer extends iRacingGauge {
         //TODO: Redesign how this range is calculated to independent of the shift lights code in the client.
         double ApproachingPitSpeed = PitSpeed - (7*.012) - (7*.006);
 
-        _addStateRange("WAYOVERLIMIT", 		PitRoadSpeedLimit * WayOverPitSpeed, 	Double.MAX_VALUE,                   this.m_UOM);
-        _addStateRange("OVERLIMIT", 		PitRoadSpeedLimit * OverPitSpeed, 	 	PitRoadSpeedLimit * WayOverPitSpeed,this.m_UOM);
-        _addStateRange("LIMIT", 			PitRoadSpeedLimit * PitSpeed,        	PitRoadSpeedLimit * OverPitSpeed,   this.m_UOM);
-        _addStateRange("APPROACHINGLIMIT", 	PitRoadSpeedLimit * ApproachingPitSpeed,PitRoadSpeedLimit * PitSpeed,       this.m_UOM);
+        _addStateRange("","WAYOVERLIMIT", 		PitRoadSpeedLimit * WayOverPitSpeed, 	Double.MAX_VALUE,                   this.m_UOM);
+        _addStateRange("","OVERLIMIT", 		PitRoadSpeedLimit * OverPitSpeed, 	 	PitRoadSpeedLimit * WayOverPitSpeed,this.m_UOM);
+        _addStateRange("","LIMIT", 			PitRoadSpeedLimit * PitSpeed,        	PitRoadSpeedLimit * OverPitSpeed,   this.m_UOM);
+        _addStateRange("","APPROACHINGLIMIT", 	PitRoadSpeedLimit * ApproachingPitSpeed,PitRoadSpeedLimit * PitSpeed,       this.m_UOM);
     }
 
     @Override
@@ -71,8 +71,8 @@ public class Speedometer extends iRacingGauge {
     }
     
     @Override
-    public void onDataVersionChange(State state,int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
-        super.onDataVersionChange(state, currentLap, sessionTime, lapCompletedPercent, trackLength);
+    public void _onDataVersionChange(State state,int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
+        super._onDataVersionChange(state, currentLap, sessionTime, lapCompletedPercent, trackLength);
         
         if (m_car.isME()) {
             m_speed = m_IODriver.getVars().getDouble("Speed");

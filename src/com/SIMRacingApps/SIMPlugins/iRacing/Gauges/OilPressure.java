@@ -23,7 +23,7 @@ public class OilPressure extends iRacingGauge {
         
         //The iRacing will let me know when the Oil Pressure is at the WARNING level,
         //using EngineWarnings.OilPressWarning, so remove the state.
-        _removeStateRange("WARNING");
+        _removeStateRange("","WARNING");
         
     }
 

@@ -23,7 +23,7 @@ public class FuelPressure extends iRacingGauge {
         
         //The iRacing will let me know when the Fuel Pressure is at the WARNING level,
         //using EngineWarnings.FuelPressWarning, so remove the state.
-        _removeStateRange("WARNING");
+        _removeStateRange("","WARNING");
         
     }
 

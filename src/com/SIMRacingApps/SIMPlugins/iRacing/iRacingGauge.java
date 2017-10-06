@@ -40,21 +40,31 @@ public class iRacingGauge extends Gauge {
      * @param IODriver The iRacing driver to use
      * @param varName The name of the var
      * @param defaultUOM The UOM of the var in case iRacing doesn't define it.
+     * @param simGaugesBefore A map that contains gauge data from the SIM to be applied first. The files can then override those values if needed.
+     * @param simGaugesAfter A map that contains gauge data from the SIM to be applied after the files are processed to override any values in them.
      */
-    public iRacingGauge(String type, iRacingCar car, Track track, IODriver IODriver, String varName, String defaultUOM, Map<String, Map<String, Map<String, Object>>> simGaugesBefore, Map<String, Map<String, Map<String, Object>>> simGaugesAfter) {
+    public iRacingGauge(String type, iRacingCar car, Track track, IODriver IODriver, String varName, String defaultUOM, 
+            Map<String, Map<String, Map<String, Object>>> simGaugesBefore, 
+            Map<String, Map<String, Map<String, Object>>> simGaugesAfter
+    ) {
         super(type, car, track, simGaugesBefore, simGaugesAfter);
         
-        m_IODriver = IODriver;
-        m_varName = varName;
-        m_varHeader = IODriver.getVarHeaders().getVarHeader(varName);
-        m_iRacingUOM = defaultUOM;
-        if (m_varHeader != null) {
-            if (!m_varHeader.Unit.isEmpty())
-                m_iRacingUOM = m_varHeader.Unit;
+        m_IODriver              = IODriver;
+        m_varName               = varName;
+        m_varHeader             = IODriver.getVarHeaders().getVarHeader(varName);
+        m_iRacingUOM            = m_varHeader != null && !m_varHeader.Unit.isEmpty() ? m_varHeader.Unit : defaultUOM;
+        m_updateSIMTimestamp    = 0.0;
+        m_currentLap            = 1;
+        
+        try {
+            //Override the JSON file based on what iRacing says
+            //if we are in fixed mode, set the gauges that cannot be changed to true.
+            String fixed = m_IODriver.getSessionInfo().getString("WeekendInfo","WeekendOptions","IsFixedSetup");
+            
+            m_isFixed = (Integer.parseInt(fixed) == 1);
+        } catch (NumberFormatException e) {
+            m_isFixed = false;
         }
-
-        m_updateSIMTimestamp     = 0.0;
-        m_currentLap    = 1;
     }
 
     @Override
@@ -69,22 +79,11 @@ public class iRacingGauge extends Gauge {
         return getLaps(m_currentLap);
     }
     
-    public void onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
+    public void _onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
         //users can change this during a session, so keep it up to date here
         m_measurementSystem = m_IODriver.getVars().getInteger("DisplayUnits") == 1 ? "METRIC" : "IMPERIAL";
-        
-        m_currentLap = currentLap;
-        m_sessionTime = sessionTime;
-        
-        try {
-            //Override the JSON file based on what iRacing says
-            //if we are in fixed mode, set the gauges that cannot be changed to true.
-            String fixed = m_IODriver.getSessionInfo().getString("WeekendInfo","WeekendOptions","IsFixedSetup");
-            
-            m_isFixed = (Integer.parseInt(fixed) == 1);
-        } catch (NumberFormatException e) {
-            m_isFixed = false;
-        }
+        m_currentLap        = currentLap;
+        m_sessionTime       = sessionTime;
     }   
     
     //returns the time this gauge value or change flag was set
@@ -135,9 +134,13 @@ public class iRacingGauge extends Gauge {
                         d.setState(Data.State.OFF);
                     else {
                         //Now normalize all the values that are percentages to be times 100
-                        //except brake bias which already is normalized.
-                        if (m_iRacingUOM.equals("%") && !varName.equals("dcBrakeBias"))
+                        //except those that are already normalized.
+                        if (m_iRacingUOM.equals("%") 
+                        && !varName.equals("dpQtape")
+                        && !varName.equals("dcBrakeBias")
+                        ) {
                             value *= 100.0;
+                        }
                         
                         d.setValue(value,m_iRacingUOM,Data.State.NORMAL);
                     }

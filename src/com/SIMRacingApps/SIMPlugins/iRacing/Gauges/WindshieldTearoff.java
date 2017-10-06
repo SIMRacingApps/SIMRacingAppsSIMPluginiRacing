@@ -59,8 +59,8 @@ public class WindshieldTearoff extends iRacingGauge {
     }
     
     @Override
-    public void onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
-        super.onDataVersionChange(status, currentLap, sessionTime, lapCompletedPercent, trackLength);
+    public void _onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
+        super._onDataVersionChange(status, currentLap, sessionTime, lapCompletedPercent, trackLength);
 
         //can only read the pit values for ME and only when not in the garage
         //do not process if there are pending changes to be sent to the SIM

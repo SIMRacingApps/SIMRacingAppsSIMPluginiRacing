@@ -6,6 +6,7 @@ package com.SIMRacingApps.SIMPlugins.iRacing.Gauges;
 import java.util.Map;
 
 import com.SIMRacingApps.Data;
+import com.SIMRacingApps.Gauge;
 import com.SIMRacingApps.Track;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingGauge;
@@ -19,6 +20,9 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
  */
 public class Tachometer extends iRacingGauge {
 
+    String m_gear = "";
+    String m_power = "";
+    
     public Tachometer(String type, iRacingCar car, Track track,
             IODriver IODriver, String varName, String defaultUOM,
             Map<String, Map<String, Map<String, Object>>> simGauges) {
@@ -33,6 +37,9 @@ public class Tachometer extends iRacingGauge {
         if (d.getDouble() < 300.0)
             d.setValue(0.0);
         
-        return this._getReturnValue(d, UOM);
+        return this._getReturnValue(d, UOM,
+                m_car._getGauge(Gauge.Type.GEAR).getValueCurrent().getString(),
+                m_car._getGauge(Gauge.Type.ENGINEPOWER).getValueCurrent().getString()
+        );
     }
 }

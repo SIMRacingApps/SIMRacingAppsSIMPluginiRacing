@@ -32,13 +32,13 @@ import com.SIMRacingApps.Util.State;
 
 public class iRacingCar extends Car {
     
-    private final double ENTER_PIT_DELAY   = 2.0;  //seconds to wait when entering pits before we're sure they stopped and did not over shoot the pit stall
+    private final double ENTER_PIT_DELAY   = Server.getArg("pit-entering-delay",2.0);  //seconds to wait when entering pits before we're sure they stopped and did not over shoot the pit stall
                                                    //this was set to 2.0, but the Dallara was sending the tire readings before that
-    private final double EXIT_PIT_DELAY    = 1.0;  //seconds to wait to confirm we have exited the pits long enough before resetting the pit black boxes and updating the historical values.
+    private final double EXIT_PIT_DELAY    = Server.getArg("pit-exiting-delay",1.0);  //seconds to wait to confirm we have exited the pits long enough before resetting the pit black boxes and updating the historical values.
     private final double RESET_PIT_DELAY   = 0.3;  //seconds to wait after leaving pit road to send pit commands
-    private final double INVALID_INPITSTALL= 1.0;  //seconds to wait before declaring invalid while in pit stall
+    private final double INVALID_INPITSTALL= Server.getArg("pit-invalid-duration",1.0);  //seconds to wait before declaring invalid while in pit stall
 //    private final double AUTO_RESET_DELAY  = 5.0;  //seconds to wait after leaving pits to change any pit commands because we have to wait on iRacing to do it first.
-    private final double SIM_COMMANDS_DELAY= 0.5;  //seconds to delay after sending commands to before sending another command
+    private final double SIM_COMMANDS_DELAY= Server.getArg("pit-service-delay",0.5);  //seconds to delay after sending commands to before sending another command
 
     protected String m_trackType           = "";
     protected int    m_ME                  = -1;
@@ -88,8 +88,6 @@ public class iRacingCar extends Car {
     private double  m_pitLocation           = -1.0;
     private double  m_mergePointReference   = 0.0;
     private double  m_mergePoint            = 0.0;
-    private String  m_gear                  = "";   //keep track of what gear we are in to detect when we change gears
-    private String  m_power                 = "";   //keep track of what power we are in
     private int     m_lastKnownRadio        = 0;
     private int     m_lastKnownFrequency    = 0;    //Keep track of the last frequency they transmitted on.
     private int     m_lastKnownIncidents    = 0;
@@ -2079,18 +2077,20 @@ else
     }
 
     private void _resetDetected() {
-        ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURERF))._resetDetected();
-        ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURERR))._resetDetected();
-        ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURELF))._resetDetected();
-        ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURELR))._resetDetected();
-        ((iRacingGauge)_getGauge(Gauge.Type.FUELLEVEL))._resetDetected();
-        ((iRacingGauge)_getGauge(Gauge.Type.WINDSHIELDTEAROFF))._resetDetected();
-        ((iRacingGauge)_getGauge(Gauge.Type.FASTREPAIRS))._resetDetected();
-        
-        //TODO: add all the SIM only Gauges that are changed on pit,
-        //such as, Tape, Wedge, Wings, etc.
-        //I could loop through the gauges and look at the onResetChange flag,
-        //but I have to hard code them to use the Changeable class. I want them to match
+        if (isME()) {
+            ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURERF))._resetDetected();
+            ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURERR))._resetDetected();
+            ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURELF))._resetDetected();
+            ((iRacingGauge)_getGauge(Gauge.Type.TIREPRESSURELR))._resetDetected();
+            ((iRacingGauge)_getGauge(Gauge.Type.FUELLEVEL))._resetDetected();
+            ((iRacingGauge)_getGauge(Gauge.Type.WINDSHIELDTEAROFF))._resetDetected();
+            ((iRacingGauge)_getGauge(Gauge.Type.FASTREPAIRS))._resetDetected();
+            
+            //TODO: add all the SIM only Gauges that are changed on pit,
+            //such as, Tape, Wedge, Wings, etc.
+            //I could loop through the gauges and look at the onResetChange flag,
+            //but I have to hard code them to use the Changeable class. I want them to match
+        }
     }
     
     //This gets called every tick from the iRacingSIMPlugin loop.
@@ -2108,7 +2108,7 @@ else
         double fuelLevel               = 0.0;
         int    prevSessionFlags        = m_sessionFlags;
         boolean isReset                = false;
-        boolean isDriving              = isME() && m_iRacingSIMPlugin.getIODriver().getVars().getBoolean("IsOnTrack");   //This should be set when you are in the car and isME() is true.
+//        boolean isDriving              = isME() && m_iRacingSIMPlugin.getIODriver().getVars().getBoolean("IsOnTrack");   //This should be set when you are in the car and isME() is true.
         
         m_sessionFlags= m_iRacingSIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
         if (m_sessionFlags == -1)
@@ -2217,7 +2217,8 @@ else
                 
             //if the fuel level increases and it wasn't checked, then we must have 
             //either reset or clicked new car
-            if (prevFuelLevel > -1.0
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PitSvFlags") != null
+            &&  prevFuelLevel > -1.0
             &&  fuelLevel > (prevFuelLevel + 0.001)
             && ((m_iRacingSIMPlugin.getIODriver().getVars().getBitfield("PitSvFlags") & PitSvFlags.FuelFill) == 0)
             ) {
@@ -2302,15 +2303,34 @@ else
 
             //if they were already entering, have they stopped in the pit stall
             if (m_prevStatus.equals(iRacingCar.Status.ENTERINGPITSTALL)) {
-                //TODO: don't let it change to INPITSALL until we know they are stopped. isME().speed can be used, but other cars?
-                //for now just use a delay so ME and other cars will be consistent.
-                if (m_prevStatus.getTime(iRacingCar.Status.ENTERINGPITSTALL,m_sessionTime) < ENTER_PIT_DELAY
-                &&  !m_prevStatus.equalsPrevious(iRacingCar.Status.INVALID)
+                
+                //The lap completed percentage is not reliable since each tick may not change it
+                //especially for other cars because of netcode delays.
+                //So we will do it anyway and also use the brake for the driver as iRacing sets it to 100% in the pits.
+                double stoppedFactor = Server.getArg("pit-stopped-factor",100000.0);
+                double brake = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("Brake");
+                boolean stopped = isME()
+                                ? ((m_prevStatus.getTime(iRacingCar.Status.ENTERINGPITSTALL,m_sessionTime) < ENTER_PIT_DELAY)
+                                   &&
+                                   (Math.round(prevLapCompletedPercent * stoppedFactor) == Math.round(lapCompletedPercent * stoppedFactor))
+                                   && 
+                                   brake == 1.0
+                                  )
+                                : ((m_prevStatus.getTime(iRacingCar.Status.ENTERINGPITSTALL,m_sessionTime) < ENTER_PIT_DELAY)
+                                    &&
+                                   (Math.round(prevLapCompletedPercent * stoppedFactor) == Math.round(lapCompletedPercent * stoppedFactor))
+                                  );
+                        
+                //don't let it change to INPITSALL until we know they are stopped. isME().speed can be used, but other cars?
+                if (!stopped
+//                &&  !m_prevStatus.equalsPrevious(iRacingCar.Status.INVALID)
                 ) {
                     //keep them in the Entering state until they are stopped.
                     nextStatus.setState(iRacingCar.Status.ENTERINGPITSTALL,m_sessionTime);
                 }
                 else {
+                    Server.logger().finest(String.format("PrevPct=%.15f, Pct=%.15f, Brake=%f", prevLapCompletedPercent,lapCompletedPercent,brake));
+                    
                     //add the delay back in
                     //tweaked a little to compensate for entry and exit time
                     nextStatus = new State(iRacingCar.Status.INPITSTALL,m_sessionTime);
@@ -2356,7 +2376,6 @@ else
             else
             //if we just left the pit stall, set the state to Exiting
             if (m_prevStatus.equals(iRacingCar.Status.INPITSTALL)
-               //TODO: or over a certain speed, indicating they are leaving the stall. isME().speed can be used, but other cars?
             ) {
                 nextStatus.setState(iRacingCar.Status.EXITINGPITSTALL,m_sessionTime);
             }
@@ -2907,11 +2926,10 @@ else
         m_pitTimes.set(m_lapPitted-1, m_prevStatus.getTime(iRacingCar.Status.INPITSTALL,m_sessionTime) );
 
         //update our gauges
-        //NOTE: above the speedometer is used a lot, but it updates real-time and doesn't wait for this callback.
         Iterator<Entry<String,Gauge>> gauge_iter = m_gauges.entrySet().iterator();
         while (gauge_iter.hasNext()) {
             iRacingGauge gauge = (iRacingGauge)gauge_iter.next().getValue();
-            gauge.onDataVersionChange(m_prevStatus,currentLap,m_sessionTime, m_lapCompletedPercent, m_trackLength.getDouble());
+            gauge._onDataVersionChange(m_prevStatus,currentLap,m_sessionTime, m_lapCompletedPercent, m_trackLength.getDouble());
         }
 
         if (_sendSetupCommands()) {
@@ -2920,28 +2938,28 @@ else
         }
         
         //Now copy the states from the gear specific tach to the main tach based on the gear the car is in
-        String gear  = this._getGauge(Gauge.Type.GEAR).getValueCurrent().getString();
-        String power = String.format("%.0f",this._getGauge(Gauge.Type.ENGINEPOWER).getValueCurrent().getDouble());
-        if (!m_gear.equals(gear) || !m_power.equals(power)) {
-            
-            //see if a tach gauge exists for the gear we are in
-            String gaugeName = String.format("%s-%s-%s", Gauge.Type.TACHOMETER, gear, power);
-            if (m_gauges.containsKey(gaugeName.toLowerCase())) {
-                Gauge tachByGearByPower = this._getGauge(gaugeName);
-                Gauge tach = this._getGauge(Gauge.Type.TACHOMETER);
-                tach._addStateRange(tachByGearByPower);
-            }
-            else {
-                gaugeName = String.format("%s-%s", Gauge.Type.TACHOMETER, gear);
-                if (m_gauges.containsKey(gaugeName.toLowerCase())) {
-                    Gauge tachByGear        = this._getGauge(gaugeName);
-                    Gauge tach = this._getGauge(Gauge.Type.TACHOMETER);
-                    tach._addStateRange(tachByGear);
-                }
-            }
-            m_gear = gear;
-            m_power = power;
-        }
+//        String gear  = this._getGauge(Gauge.Type.GEAR).getValueCurrent().getString();
+//        String power = String.format("%.0f",this._getGauge(Gauge.Type.ENGINEPOWER).getValueCurrent().getDouble());
+//        if (!m_gear.equals(gear) || !m_power.equals(power)) {
+//            
+//            //see if a tach gauge exists for the gear we are in
+//            String gaugeName = String.format("%s-%s-%s", Gauge.Type.TACHOMETER, gear, power);
+//            if (m_gauges.containsKey(gaugeName.toLowerCase())) {
+//                Gauge tachByGearByPower = this._getGauge(gaugeName);
+//                Gauge tach = this._getGauge(Gauge.Type.TACHOMETER);
+//                tach._addStateRange(tachByGearByPower);
+//            }
+//            else {
+//                gaugeName = String.format("%s-%s", Gauge.Type.TACHOMETER, gear);
+//                if (m_gauges.containsKey(gaugeName.toLowerCase())) {
+//                    Gauge tachByGear        = this._getGauge(gaugeName);
+//                    Gauge tach = this._getGauge(Gauge.Type.TACHOMETER);
+//                    tach._addStateRange(tachByGear);
+//                }
+//            }
+//            m_gear = gear;
+//            m_power = power;
+//        }
         
         m_isNewCar = false;
         return isValid();
@@ -3099,31 +3117,31 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.FUELMIXTURE,                  this, track, IODriver, "dcFuelMixture", "", null, null));
             _setGauge(new FuelPressure(Gauge.Type.FUELPRESSURE,                 this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.GEAR,                         this, track, IODriver, "Gear", "", null, null));
-            _setGauge(new iRacingGauge(Gauge.Type.LRWEDGEADJUSTMENT,            this, track, IODriver, "dpLrWedgeAdj", "mm", null, null));
+            _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,             this, track, IODriver, "dpLrWedgeAdj", "mm", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.OILLEVEL,                     this, track, IODriver, "OilLevel", "l", null, null));
             _setGauge(new OilPressure(Gauge.Type.OILPRESSURE,                   this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.OILTEMP,                      this, track, IODriver, "OilTemp", "C", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.POWERSTEERINGASSIST,          this, track, IODriver, "dpPSSetting", "", null, null));
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dcWingRear") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dcWingRear", "mm", null, null));
+                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dcWingRear", "mm", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRWingAngle") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dcRWingAngle", "deg", null, null));
+                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dcRWingAngle", "deg", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRWingSetting") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dpRWingSetting", "", null, null));
+                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dpRWingSetting", "", null, null));
             }
             else {
-                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                 this, track, IODriver, "dcRWingIndex", "deg", null, null));
+                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dcRWingIndex", "deg", null, null));
             }
             //check to see if the new value exists, otherwise use old value for recorded files.
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRrWedgeAdj") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.RRWEDGEADJUSTMENT,        this, track, IODriver, "dpRrWedgeAdj", "mm", null, null));
+                _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpRrWedgeAdj", "mm", null, null));
             }
             else {
-                _setGauge(new iRacingGauge(Gauge.Type.RRWEDGEADJUSTMENT,        this, track, IODriver, "dpWedgeAdj", "mm", null, null));
+                _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpWedgeAdj", "mm", null, null));
             }
             _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h"));
             _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "SteeringWheelAngle", "rad"));

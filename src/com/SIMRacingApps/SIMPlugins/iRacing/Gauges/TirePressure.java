@@ -134,8 +134,8 @@ public class TirePressure extends Tire {
     }
     
     @Override
-    public void onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
-        super.onDataVersionChange(status, currentLap, sessionTime, lapCompletedPercent, trackLength);
+    public void _onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
+        super._onDataVersionChange(status, currentLap, sessionTime, lapCompletedPercent, trackLength);
         
         //can only read the pit values for ME and only when not in the garage
         //do not process if there are pending changes to be sent to the SIM
@@ -156,7 +156,8 @@ public class TirePressure extends Tire {
                 //otherwise, it should not change until the tire is changed
                 //TODO: check if dropped in from Garage, if changes made in Garage are picked up.
                 //      could be dropped on pit lane, or on track when qualifying or racing.
-                if ((m_valueCurrent.getDouble() == 0.0 && !varValue.getState().equals(Data.State.OFF))
+                if (m_valueCurrent.getState().equals(Data.State.OFF) 
+                && !varValue.getState().equals(Data.State.OFF)
                 ) {
                     m_valueCurrent.set(_readVar(m_tire + "coldPressure"));
                     Server.logger().info(String.format("TirePressure%s: New Car, initializing valueCurrent = %f %s, %f psi",m_tire,m_valueCurrent.getDouble(),m_valueCurrent.getUOM(),m_valueCurrent.convertUOM("psi").getDouble()));

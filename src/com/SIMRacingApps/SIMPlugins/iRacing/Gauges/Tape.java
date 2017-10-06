@@ -6,7 +6,6 @@ package com.SIMRacingApps.SIMPlugins.iRacing.Gauges;
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Track;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
-import com.SIMRacingApps.SIMPlugins.iRacing.iRacingGauge;
 import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 
 /**
@@ -15,7 +14,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
  * @since 1.5
  * @license Apache License 2.0
  */
-public class Tape extends iRacingGauge {
+public class Tape extends Changeables {
 
     public Tape(String type, iRacingCar car, Track track, IODriver IODriver) {
         super(type, car, track, IODriver, "dpQtape","%",null,null);
@@ -30,16 +29,17 @@ public class Tape extends iRacingGauge {
                 //prior to april 22, 2014 the tape was simply values from 0 to 10
                 //after that, 0 - 100
                 if (!m_IODriver.build_april_22_2014())
-                    d.setValue( d.getDouble() / 10.0 );
-                else
-                    d.setValue( d.getDouble() / 100.0 );
+                    d.setValue( d.getDouble() * 10.0 );
+//                    d.setValue( d.getDouble() / 10.0 );
+//                else
+//                    d.setValue( d.getDouble() / 100.0 );
             }
-            else
-            if (m_reader.equals("DataVarTapePct")) {
-                //This is when iRacing says the unit is %, but returns it all ready normalized
-                //Since we normalize it in the super(), then we have to un-double normalize it.
-                d.setValue( d.getDouble() / 100.0 );
-            }
+//            else
+//            if (m_reader.equals("DataVarTapePct")) {
+//                //This is when iRacing says the unit is %, but returns it all ready normalized
+//                //Since we normalize it in the super(), then we have to un-double normalize it.
+//                d.setValue( d.getDouble() / 100.0 );
+//            }
             else
             if (m_reader.equals("DataVarTape4")) {
                 if (d.getDouble() == 400.0 || d.getDouble() == 4.0)

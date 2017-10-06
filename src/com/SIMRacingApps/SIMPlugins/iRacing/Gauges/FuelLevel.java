@@ -196,8 +196,8 @@ public class FuelLevel extends iRacingGauge {
     }
 
     @Override
-    public void onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
-        super.onDataVersionChange(status, currentLap, sessionTime, lapCompletedPercent, trackLength);
+    public void _onDataVersionChange(State status, int currentLap,double sessionTime,double lapCompletedPercent,double trackLength) {
+        super._onDataVersionChange(status, currentLap, sessionTime, lapCompletedPercent, trackLength);
 
         //track the value in the tank before entering the pit
         if (!status.getState().equals(Car.Status.ENTERINGPITSTALL)

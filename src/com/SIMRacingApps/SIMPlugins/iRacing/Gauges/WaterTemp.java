@@ -27,7 +27,7 @@ public class WaterTemp extends iRacingGauge {
         
         //The iRacing will let me know when the Water Temps are at the WARNING level,
         //using EngineWarnings.waterTempWarning, so remove the state.
-        _removeStateRange("WARNING");
+        _removeStateRange("","WARNING");
         
     }
 
