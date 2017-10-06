@@ -67,6 +67,12 @@ public class iRacingGauge extends Gauge {
         }
     }
 
+    public Data getValueCurrent(String UOM,String gear,String power) { 
+        Data d = super.getValueCurrent(UOM);
+        d.set(_readVar());
+        return _getReturnValue(d,UOM,gear,power);
+    }
+    
     @Override
     public Data getValueCurrent(String UOM) { 
         Data d = super.getValueCurrent(UOM);

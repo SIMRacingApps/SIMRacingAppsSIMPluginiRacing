@@ -2937,30 +2937,6 @@ else
 //            _setupBeforePitting(m_lapPitted);
         }
         
-        //Now copy the states from the gear specific tach to the main tach based on the gear the car is in
-//        String gear  = this._getGauge(Gauge.Type.GEAR).getValueCurrent().getString();
-//        String power = String.format("%.0f",this._getGauge(Gauge.Type.ENGINEPOWER).getValueCurrent().getDouble());
-//        if (!m_gear.equals(gear) || !m_power.equals(power)) {
-//            
-//            //see if a tach gauge exists for the gear we are in
-//            String gaugeName = String.format("%s-%s-%s", Gauge.Type.TACHOMETER, gear, power);
-//            if (m_gauges.containsKey(gaugeName.toLowerCase())) {
-//                Gauge tachByGearByPower = this._getGauge(gaugeName);
-//                Gauge tach = this._getGauge(Gauge.Type.TACHOMETER);
-//                tach._addStateRange(tachByGearByPower);
-//            }
-//            else {
-//                gaugeName = String.format("%s-%s", Gauge.Type.TACHOMETER, gear);
-//                if (m_gauges.containsKey(gaugeName.toLowerCase())) {
-//                    Gauge tachByGear        = this._getGauge(gaugeName);
-//                    Gauge tach = this._getGauge(Gauge.Type.TACHOMETER);
-//                    tach._addStateRange(tachByGear);
-//                }
-//            }
-//            m_gear = gear;
-//            m_power = power;
-//        }
-        
         m_isNewCar = false;
         return isValid();
     }
@@ -3101,17 +3077,16 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.ENGINEBRAKING,                this, track, IODriver, "dcEngineBraking", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.ENGINEPOWER,                  this, track, IODriver, "dcEnginePower", "", null, null));
             _setGauge(new FastRepairs(Gauge.Type.FASTREPAIRS,                   this, track, IODriver));
-            _setGauge(new iRacingGauge(Gauge.Type.FRONTFLAP,                    this, track, IODriver, "dpFNOMKnobSetting", "", null, null));
-            _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                    this, track, IODriver, "", "", null, null));
+            _setGauge(new Changeables(Gauge.Type.FRONTFLAP,                     this, track, IODriver, "dpFNOMKnobSetting", "", null, null));
             if (IODriver.getVarHeaders().getVarHeader("dpFWingAngle") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpFWingAngle", "deg", null, null));
+                _setGauge(new Changeables(Gauge.Type.FRONTWING,                 this, track, IODriver, "dpFWingAngle", "deg", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpFWingSetting") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpFWingSetting", "", null, null));
+                _setGauge(new Changeables(Gauge.Type.FRONTWING,                 this, track, IODriver, "dpFWingSetting", "", null, null));
             }
             else {
-                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpFWingIndex", "deg", null, null));
+                _setGauge(new Changeables(Gauge.Type.FRONTWING,                 this, track, IODriver, "dpFWingIndex", "deg", null, null));
             }
             _setGauge(new FuelLevel(Gauge.Type.FUELLEVEL,                       this, track, IODriver, m_driversIdx));
             _setGauge(new iRacingGauge(Gauge.Type.FUELMIXTURE,                  this, track, IODriver, "dcFuelMixture", "", null, null));
