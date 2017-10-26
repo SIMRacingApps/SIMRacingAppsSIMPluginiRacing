@@ -65,6 +65,7 @@ public class WindshieldTearoff extends iRacingGauge {
         //can only read the pit values for ME and only when not in the garage
         //do not process if there are pending changes to be sent to the SIM
         if (m_car.isME() 
+        &&  m_car.isValid()
         && !m_car.getStatus().equals(Car.Status.INGARAGE)
 //        && !((iRacingCar)m_car)._setupCommandsPending()
         && this._getSIMCommandTimestamp() == 0.0 //there's no pending command for this gauge
@@ -80,6 +81,7 @@ public class WindshieldTearoff extends iRacingGauge {
                 //and the flags changed while in the pit stall
                 if (m_changeFlag 
                 && !changeFlag
+                && currentLap > 0
                 && (   status.getState().equals(Car.Status.ENTERINGPITSTALL) 
                     || status.getState().equals(Car.Status.INPITSTALL)
                    )

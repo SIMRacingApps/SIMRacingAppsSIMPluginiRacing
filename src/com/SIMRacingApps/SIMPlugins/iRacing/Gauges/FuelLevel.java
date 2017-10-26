@@ -38,8 +38,8 @@ public class FuelLevel extends iRacingGauge {
     public FuelLevel(String type, iRacingCar car, Track track, IODriver IODriver, Integer driversIdx) {
         super(type, car, track, IODriver, "FuelLevel", "l", null,null);
         
-        m_valueNext       = new Data(m_varName,0.0,m_iRacingUOM);
-        m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM);
+        m_valueNext       = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
+        m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
         m_lapsHistorical  = 0;
         
         //save off the Kg per liter of fuel that  iRacing gives us to convert between volume and weight.
@@ -231,6 +231,7 @@ public class FuelLevel extends iRacingGauge {
                 //then save off the value that was on the car
                 if (m_changeFlag 
                 && !changeFlag
+                && currentLap > 0
                 && (   status.getState().equals(Car.Status.ENTERINGPITSTALL) 
                     || status.getState().equals(Car.Status.INPITSTALL)
                    )

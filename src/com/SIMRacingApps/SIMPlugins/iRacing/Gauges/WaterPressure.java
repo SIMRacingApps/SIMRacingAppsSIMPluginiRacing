@@ -28,7 +28,7 @@ public class WaterPressure extends iRacingGauge {
         
         if (m_car.isValid()) {
             //if WaterPress is not defined by iRacing yet, use Water Level to simulate it
-            if (m_varHeader == null) {
+            if (d.getState().equals(Data.State.NOTAVAILABLE)) {
                 if (m_IODriver.getVars().getDouble("OilPress") <= 0.09) {    //use Oil Pressure to see if the car is running
                     d.setValue(0.0);
                 }
@@ -44,8 +44,11 @@ public class WaterPressure extends iRacingGauge {
                     if (d.getDouble() < 0.0)
                         d.setValue(0.0);
                 }
+                if (m_IODriver.getVars().getDouble("Voltage") == 0.0)
+                    d.setState(Data.State.OFF);
+                else
+                    d.setState(Data.State.NORMAL);
             }
-            d.setState(Data.State.NORMAL);
         }
         else {
             d.setState(Data.State.OFF);

@@ -30,9 +30,9 @@ public class Tire extends iRacingGauge {
         super(type, car, track, IODriver, varName, defaultUOM, null, null);
         
         m_tire            = tire;
-        m_valueCurrent    = new Data(m_varName,0.0,m_iRacingUOM);
-        m_valueNext       = new Data(m_varName,0.0,m_iRacingUOM);
-        m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM);
+        m_valueCurrent    = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
+        m_valueNext       = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
+        m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
         m_lapsHistorical  = 0;
     }
 

@@ -156,56 +156,59 @@ public class TirePressure extends Tire {
                 //otherwise, it should not change until the tire is changed
                 //TODO: check if dropped in from Garage, if changes made in Garage are picked up.
                 //      could be dropped on pit lane, or on track when qualifying or racing.
-                if (m_valueCurrent.getState().equals(Data.State.OFF) 
-                && !varValue.getState().equals(Data.State.OFF)
+                if (!m_valueCurrent.getState().equals(Data.State.NORMAL) 
+                &&  varValue.getState().equals(Data.State.NORMAL)
                 ) {
                     m_valueCurrent.set(_readVar(m_tire + "coldPressure"));
                     Server.logger().info(String.format("TirePressure%s: New Car, initializing valueCurrent = %f %s, %f psi",m_tire,m_valueCurrent.getDouble(),m_valueCurrent.getUOM(),m_valueCurrent.convertUOM("psi").getDouble()));
                 }
 
-                //If the tire was changed because we requested to be changed
-                //and the flags changed while in the pit stall
-                //before we read the var value, see if the tire was changed
-                //then save off the value that was on the car
-                if (m_changeFlag 
-                && !changeFlag
-                && (   status.getState().equals(Car.Status.ENTERINGPITSTALL) 
-                    || status.getState().equals(Car.Status.INPITSTALL)
-                   )
-                ) {
-                    //don't record anything if you haven't run a lap
-                    if (m_lapChanged != currentLap) {
-                        Server.logger().info(String.format(
-                                "TirePressure%s: Change detected, saving valueCurrent = %f %s, %f psi",
-                                m_tire,
-                                m_valueCurrent.getDouble(),
-                                m_valueCurrent.getUOM(),
-                                m_valueCurrent.convertUOM("psi").getDouble()
-                        ));
-                        
-                        m_valueHistorical = new Data(m_valueCurrent);   //save the previous current value as historical
-                        m_lapsHistorical  = this.getLaps(currentLap).getInteger();
-                        m_lapChanged      = currentLap;                 //save the lap
-                        m_usedCount++;                                  //count the uses
-                        m_tireTempL._tireChanged(this);
-                        m_tireTempM._tireChanged(this);
-                        m_tireTempR._tireChanged(this);
-                        m_tireWearL._tireChanged(this);
-                        m_tireWearM._tireChanged(this);
-                        m_tireWearR._tireChanged(this);
-                    }
-                    
-                    m_valueCurrent    = new Data(varValue);             //save the current tire pressure
+                if (varValue.getState().equals(Data.State.NORMAL)) {
+	                //If the tire was changed because we requested to be changed
+	                //and the flags changed while in the pit stall
+	                //before we read the var value, see if the tire was changed
+	                //then save off the value that was on the car
+	                if (m_changeFlag 
+	                && !changeFlag
+	                && currentLap > 0
+	                && (   status.getState().equals(Car.Status.ENTERINGPITSTALL) 
+	                    || status.getState().equals(Car.Status.INPITSTALL)
+	                   )
+	                ) {
+	                    //don't record anything if you haven't run a lap
+	                    if (m_lapChanged != currentLap) {
+	                        Server.logger().info(String.format(
+	                                "TirePressure%s: Change detected, saving valueCurrent = %f %s, %f psi",
+	                                m_tire,
+	                                m_valueCurrent.getDouble(),
+	                                m_valueCurrent.getUOM(),
+	                                m_valueCurrent.convertUOM("psi").getDouble()
+	                        ));
+	                        
+	                        m_valueHistorical = new Data(m_valueCurrent);   //save the previous current value as historical
+	                        m_lapsHistorical  = this.getLaps(currentLap).getInteger();
+	                        m_lapChanged      = currentLap;                 //save the lap
+	                        m_usedCount++;                                  //count the uses
+	                        m_tireTempL._tireChanged(this);
+	                        m_tireTempM._tireChanged(this);
+	                        m_tireTempR._tireChanged(this);
+	                        m_tireWearL._tireChanged(this);
+	                        m_tireWearM._tireChanged(this);
+	                        m_tireWearR._tireChanged(this);
+	                    }
+	                    
+	                    m_valueCurrent    = new Data(varValue);             //save the current tire pressure
+	                }
+	
+	                //read the var and set the Next Value to it for the clients to display
+	                m_valueNext.set(varValue);
+	                
+	                //if the next value is different from the current value
+	                //mark it dirty to be applied to next pit stop
+	                this._setIsDirty(this._roundToIncrement(m_valueCurrent.convertUOM(m_UOM).getDouble(),m_UOM) != this._roundToIncrement(m_valueNext.convertUOM(m_UOM).getDouble(),m_UOM));            
+	
+	                m_changeFlag = changeFlag;
                 }
-
-                //read the var and set the Next Value to it for the clients to display
-                m_valueNext.set(varValue);
-                
-                //if the next value is different from the current value
-                //mark it dirty to be applied to next pit stop
-                this._setIsDirty(this._roundToIncrement(m_valueCurrent.convertUOM(m_UOM).getDouble(),m_UOM) != this._roundToIncrement(m_valueNext.convertUOM(m_UOM).getDouble(),m_UOM));            
-
-                m_changeFlag = changeFlag;
             }
             else {
                 //TODO: Do I retrofit the old logic here somehow just to support my recorded files?

@@ -31,11 +31,16 @@ public class OilPressure extends iRacingGauge {
     public Data getValueCurrent(String UOM) {
         Data d = super.getValueCurrent(UOM);
         
-        int warnings     = m_IODriver.getVars().getInteger("EngineWarnings");
-        if ((warnings & EngineWarnings.oilPressureWarning) > 0) {
-            d.setState(Data.State.WARNING);
-            d.setStatePercent(100.0);
+        if (!d.getState().equalsIgnoreCase(Data.State.NOTAVAILABLE)
+        &&  !d.getState().equalsIgnoreCase(Data.State.OFF)
+        ) {
+	        int warnings     = m_IODriver.getVars().getInteger("EngineWarnings");
+	        if ((warnings & EngineWarnings.oilPressureWarning) > 0) {
+	            d.setState(Data.State.WARNING);
+	            d.setStatePercent(100.0);
+	        }
         }
-        return this._getReturnValue(d, UOM);
+        
+        return d;
     }
 }

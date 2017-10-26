@@ -31,8 +31,8 @@ public class FastRepairs extends iRacingGauge {
 
         m_prevStatus     = new State(Car.Status.OFFTRACK,0.0);
         m_lapsHistorical = 0;
-        m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM);
-        m_valueBeforePitting = new Data(m_varName,0.0,m_iRacingUOM);
+        m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
+        m_valueBeforePitting = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
         m_usedCount = 0;    //don't count these until they are used
     }
 
@@ -40,11 +40,9 @@ public class FastRepairs extends iRacingGauge {
     public Data getValueCurrent(String UOM) {
         Data d = super.getValueCurrent(UOM);
 
-        if (m_car.isValid()) {
-            //if iRacing hasn't defined this yet, then return 0.
-            if (d.getState().equals(Data.State.NOTAVAILABLE))
-                d.setValue(0.0,"",Data.State.NORMAL);
-        }
+        //if iRacing hasn't defined this yet, then return 0.
+        if (d.getState().equals(Data.State.NOTAVAILABLE))
+            d.setValue(0.0,"",Data.State.NORMAL);
         
         return this._getReturnValue(d, UOM);
     }
@@ -112,6 +110,7 @@ public class FastRepairs extends iRacingGauge {
                 //and the flags changed while in the pit stall
                 if (m_changeFlag 
                 && !changeFlag
+                && currentLap > 0
                 && (   status.getState().equals(Car.Status.ENTERINGPITSTALL) 
                     || status.getState().equals(Car.Status.INPITSTALL)
                    )

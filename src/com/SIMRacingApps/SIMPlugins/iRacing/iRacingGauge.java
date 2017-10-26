@@ -121,11 +121,15 @@ public class iRacingGauge extends Gauge {
     //utility method to read the var and return the value with UOM and States applied
     //only use the value if the state is NORMAL
     protected Data _readVar(String varName) {
-        Data d = new Data(varName);
+        Data d = new Data(varName,0.0,"",Data.State.NOTAVAILABLE);
         double value = d.getDouble();
+        double voltage = m_IODriver.getVars().getDouble("Voltage");
         
-        if (m_varHeader == null)
+        //need to report NOTAVAILABLE if the SIM is not running or 
+        //this car doesn't have this gauge
+        if (m_varHeader == null || !m_IODriver.isConnected()) {
             d.setState(Data.State.NOTAVAILABLE);
+        }
         else
         if (m_car.isValid()) {
             if (!varName.isEmpty()){
@@ -139,10 +143,34 @@ public class iRacingGauge extends Gauge {
                     if (Double.isNaN(value))
                         d.setState(Data.State.OFF);
                     else {
+                        if (varName.equals("dpQtape")) {
+                            if (m_reader.equals("DataVarTape")) {
+                                //prior to april 22, 2014 the tape was simply values from 0 to 10
+                                //after that, 0 - 100
+                                if (!m_IODriver.build_april_22_2014())
+                                    value *= 10.0;
+                            }
+                            else
+                            if (m_reader.equals("DataVarTape4")) {
+                                if (value == 400.0 || value == 4.0)
+                                    value = 100.0;
+                                else
+                                if (value == 300.0 || value == 3.0)
+                                    value = 75.0;
+                                else
+                                if (value == 200.0 || value == 2.0)
+                                    value = 50.0;
+                                else
+                                if (value == 100.0 || value == 1.0)
+                                    value = 25.0;
+                                else
+                                    value = 0.0;
+                            }
+                        }
+                        else
                         //Now normalize all the values that are percentages to be times 100
                         //except those that are already normalized.
                         if (m_iRacingUOM.equals("%") 
-                        && !varName.equals("dpQtape")
                         && !varName.equals("dcBrakeBias")
                         ) {
                             value *= 100.0;
@@ -162,6 +190,15 @@ public class iRacingGauge extends Gauge {
         }
         else {
             d.setState(Data.State.OFF);
+        }
+        
+        if (varName.equals("Gear") && d.getDouble() == 0.0)
+            d.setValue("N");
+        else
+        //Turn the gauge off if the car is turned off
+        if (!d.getState().equals(Data.State.NOTAVAILABLE) && voltage == 0.0) {
+            d.setState(Data.State.OFF);
+            d.setStatePercent(0.0);
         }
         
         return d;

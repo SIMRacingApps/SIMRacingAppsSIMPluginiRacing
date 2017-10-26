@@ -36,9 +36,9 @@ public class Changeables extends iRacingGauge {
             Map<String, Map<String, Map<String, Object>>> simGaugesBefore, 
             Map<String, Map<String, Map<String, Object>>> simGaugesAfter) {
         super(type, car, track, IODriver, varName, defaultUOM, simGaugesBefore, simGaugesAfter);
-        m_valueCurrent    = new Data(m_varName,0.0,m_iRacingUOM);
-        m_valueNext       = new Data(m_varName,0.0,m_iRacingUOM);
-        m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM);
+        m_valueCurrent    = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
+        m_valueNext       = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
+        m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
         m_lapsHistorical  = 0;
     }
 
@@ -64,7 +64,7 @@ public class Changeables extends iRacingGauge {
     @Override
     public Data getLapsHistorical() {
         Data d = super.getLapsHistorical();
-        d.setValue(m_lapsHistorical);
+        d.setValue(m_lapsHistorical,"lap",Data.State.NORMAL);
         return d;
     }
     
@@ -85,8 +85,9 @@ public class Changeables extends iRacingGauge {
             //otherwise, it should not change until the tire is changed
             //TODO: check if dropped in from Garage, if changes made in Garage are picked up.
             //      could be dropped on pit lane, or on track when qualifying or racing.
-            if (m_valueCurrent.getState().equals(Data.State.OFF) 
+            if ((m_valueCurrent.getState().equals(Data.State.OFF) || m_valueCurrent.getState().equals(Data.State.NOTAVAILABLE)) 
             && !varValue.getState().equals(Data.State.OFF)
+            && !varValue.getState().equals(Data.State.NOTAVAILABLE)
             ) {
                 m_valueCurrent.set(varValue);
                 Server.logger().info(String.format(
@@ -98,44 +99,48 @@ public class Changeables extends iRacingGauge {
                         m_valueCurrent.convertUOM(this.m_measurementSystem).getUOM()
                  ));
             }
-
             
-            //Detect we pitted. Assume all tracked PitSvFlags are off and we cannot use them
-            //So, best I can do is assume of you in there long enough, it applied the changes
-            boolean pitted = m_car.getPitTime().getDouble() >= Server.getArg("pit-service-min", 1.0)
-                          && m_car.getLap(Car.LapType.PITTED).getInteger() == currentLap;  
-            
-            //If the gauge was changed because we pitted and we had a pending change queued up
-            if (m_changeFlag 
-            && pitted
-            && (   status.getState().equals(Car.Status.INPITSTALL)
-                || status.getState().equals(Car.Status.EXITINGPITSTALL)
-               )
+            if (!varValue.getState().equalsIgnoreCase(Data.State.NOTAVAILABLE)
+            &&  !varValue.getState().equalsIgnoreCase(Data.State.OFF)
             ) {
-                //don't record anything if you haven't run a lap
-                if (m_lapChanged != currentLap) {
-                    Server.logger().info(String.format(
-                            "%s: Change applied %f %s, %f %s, saving valueCurrent = %f %s, %f %s",
-                            m_type,
-                            varValue.getDouble(),
-                            varValue.getUOM(),
-                            varValue.convertUOM(this.m_measurementSystem).getDouble(),
-                            varValue.convertUOM(this.m_measurementSystem).getUOM(),
-                            m_valueCurrent.getDouble(),
-                            m_valueCurrent.getUOM(),
-                            m_valueCurrent.convertUOM(this.m_measurementSystem).getDouble(),
-                            m_valueCurrent.convertUOM(this.m_measurementSystem).getUOM()
-                    ));
-                    
-                    m_valueHistorical = new Data(m_valueCurrent);   //save the previous current value as historical
-                    m_lapsHistorical  = this.getLaps(currentLap).getInteger();
-                    m_lapChanged      = currentLap;                 //save the lap
-                    m_usedCount++;                                  //count the uses
-                }
-                
-                m_valueCurrent    = new Data(varValue);             //save the current tire pressure
-            }
-
+	            //Detect we pitted. Assume all tracked PitSvFlags are off and we cannot use them
+	            //So, best I can do is assume of you in there long enough, it applied the changes
+	            boolean pitted = m_car.getPitTime().getDouble() >= Server.getArg("pit-service-min", 1.0)
+	                          && m_car.getLap(Car.LapType.PITTED).getInteger() == currentLap;  
+	            
+	            //If the gauge was changed because we pitted and we had a pending change queued up
+	            if (m_changeFlag 
+	            && pitted
+                && currentLap > 0
+	            && (   status.getState().equals(Car.Status.INPITSTALL)
+	                || status.getState().equals(Car.Status.EXITINGPITSTALL)
+	               )
+	            ) {
+	                //don't record anything if you haven't run a lap
+	                if (m_lapChanged != currentLap) {
+	                    Server.logger().info(String.format(
+	                            "%s: Change applied %f %s, %f %s, saving valueCurrent = %f %s, %f %s",
+	                            m_type,
+	                            varValue.getDouble(),
+	                            varValue.getUOM(),
+	                            varValue.convertUOM(this.m_measurementSystem).getDouble(),
+	                            varValue.convertUOM(this.m_measurementSystem).getUOM(),
+	                            m_valueCurrent.getDouble(),
+	                            m_valueCurrent.getUOM(),
+	                            m_valueCurrent.convertUOM(this.m_measurementSystem).getDouble(),
+	                            m_valueCurrent.convertUOM(this.m_measurementSystem).getUOM()
+	                    ));
+	                    
+	                    m_valueHistorical = new Data(m_valueCurrent);   //save the previous current value as historical
+	                    m_lapsHistorical  = this.getLaps(currentLap).getInteger();
+	                    m_lapChanged      = currentLap;                 //save the lap
+	                    m_usedCount++;                                  //count the uses
+	                }
+	                
+	                m_valueCurrent    = new Data(varValue);             //save the current tire pressure
+	            }
+            }	
+            
             //read the var and set the Next Value to it for the clients to display
             m_valueNext.set(varValue);
             

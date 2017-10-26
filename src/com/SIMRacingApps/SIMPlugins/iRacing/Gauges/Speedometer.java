@@ -22,7 +22,7 @@ import com.SIMRacingApps.Util.State;
 public class Speedometer extends iRacingGauge {
     private final double SPEED_FACTOR       = 1.0;
     private final int NUM_SPEED_SAMPLES     = 3;
-    private double  m_speed                 = 0.0;
+    private Data    m_speed                 = new Data("Speed",0.0,"km/h");
     private double  m_speed_sessionTime[]   = new double[NUM_SPEED_SAMPLES];
     private double  m_speed_percentage[]    = new double[NUM_SPEED_SAMPLES];
     private int     m_speed_index           = 0;
@@ -51,8 +51,8 @@ public class Speedometer extends iRacingGauge {
         double ApproachingPitSpeed = PitSpeed - (7*.012) - (7*.006);
 
         _addStateRange("","WAYOVERLIMIT", 		PitRoadSpeedLimit * WayOverPitSpeed, 	Double.MAX_VALUE,                   this.m_UOM);
-        _addStateRange("","OVERLIMIT", 		PitRoadSpeedLimit * OverPitSpeed, 	 	PitRoadSpeedLimit * WayOverPitSpeed,this.m_UOM);
-        _addStateRange("","LIMIT", 			PitRoadSpeedLimit * PitSpeed,        	PitRoadSpeedLimit * OverPitSpeed,   this.m_UOM);
+        _addStateRange("","OVERLIMIT", 		    PitRoadSpeedLimit * OverPitSpeed, 	 	PitRoadSpeedLimit * WayOverPitSpeed,this.m_UOM);
+        _addStateRange("","LIMIT", 			    PitRoadSpeedLimit * PitSpeed,        	PitRoadSpeedLimit * OverPitSpeed,   this.m_UOM);
         _addStateRange("","APPROACHINGLIMIT", 	PitRoadSpeedLimit * ApproachingPitSpeed,PitRoadSpeedLimit * PitSpeed,       this.m_UOM);
     }
 
@@ -60,12 +60,7 @@ public class Speedometer extends iRacingGauge {
     public Data getValueCurrent(String UOM) { 
         Data d = super.getValueCurrent(UOM);
         
-        if (m_car.isValid()) {
-            d.setValue(m_speed,m_iRacingUOM,Data.State.NORMAL);
-        }
-        else {
-            d.setState(Data.State.OFF);
-        }
+        d.set(m_speed);
         
         return this._getReturnValue(d, UOM);
     }
@@ -75,40 +70,42 @@ public class Speedometer extends iRacingGauge {
         super._onDataVersionChange(state, currentLap, sessionTime, lapCompletedPercent, trackLength);
         
         if (m_car.isME()) {
-            m_speed = m_IODriver.getVars().getDouble("Speed");
+            m_speed = _readVar("Speed");
         }
         else {
-            m_speed = 0.0;
-    
-            //for the other cars, take samples and calculate the amount of time between the them and use that against the track length
-            m_speed_sessionTime[m_speed_index] = sessionTime;
-            m_speed_percentage[m_speed_index]  = lapCompletedPercent;
-            int index                          = m_speed_index;
-            m_speed_index                      = (m_speed_index + 1) % NUM_SPEED_SAMPLES;
-    
-            //if we have enough samples
-            if (m_speed_sessionTime[index] > 0.0 && m_speed_sessionTime[m_speed_index] > 0.0) {
-                double start        = m_speed_percentage[m_speed_index];
-                double distanceTime = sessionTime - m_speed_sessionTime[m_speed_index];
-    
-                if (distanceTime > 0.0) {
-                    double distancePercent;
-                    //if start is ahead of current compensate
-                    if (start > lapCompletedPercent) {
-                        distancePercent = lapCompletedPercent + (1.0 - start);
-                    }
-                    else {
-                        distancePercent = lapCompletedPercent - start;
-                    }
-    
-                    double meters = (trackLength * 1000 * distancePercent);
-                    m_speed       = meters / distanceTime;
-                    if (m_speed > 500.0 || m_speed < 1.0)
-                        m_speed = 0.0;
-                    else
-                        m_speed *= SPEED_FACTOR; 
-                }
-            }
+        	if (m_car.isValid()) {
+	            m_speed.setValue(0.0,"km/h",Data.State.NORMAL);	            
+	    
+	            //for the other cars, take samples and calculate the amount of time between the them and use that against the track length
+	            m_speed_sessionTime[m_speed_index] = sessionTime;
+	            m_speed_percentage[m_speed_index]  = lapCompletedPercent;
+	            int index                          = m_speed_index;
+	            m_speed_index                      = (m_speed_index + 1) % NUM_SPEED_SAMPLES;
+	    
+	            //if we have enough samples
+	            if (m_speed_sessionTime[index] > 0.0 && m_speed_sessionTime[m_speed_index] > 0.0) {
+	                double start        = m_speed_percentage[m_speed_index];
+	                double distanceTime = sessionTime - m_speed_sessionTime[m_speed_index];
+	    
+	                if (distanceTime > 0.0) {
+	                    double distancePercent;
+	                    //if start is ahead of current compensate
+	                    if (start > lapCompletedPercent) {
+	                        distancePercent = lapCompletedPercent + (1.0 - start);
+	                    }
+	                    else {
+	                        distancePercent = lapCompletedPercent - start;
+	                    }
+	    
+	                    double meters = (trackLength * 1000 * distancePercent);
+	                    m_speed.setValue(meters / distanceTime);
+	                    if (m_speed.getDouble() > 500.0 || m_speed.getDouble() < 1.0)
+	                        m_speed.setValue(0.0);
+	                    else
+	                        m_speed.setValue( m_speed.getDouble() * SPEED_FACTOR ); 
+	                }
+	            }
+        	}
         }
     }    
 }

@@ -32,7 +32,7 @@ import com.SIMRacingApps.Util.State;
 
 public class iRacingCar extends Car {
     
-    private final double ENTER_PIT_DELAY   = Server.getArg("pit-entering-delay",2.0);  //seconds to wait when entering pits before we're sure they stopped and did not over shoot the pit stall
+    private final double ENTER_PIT_DELAY   = Server.getArg("pit-entering-delay",1.0);  //seconds to wait when entering pits before we're sure they stopped and did not over shoot the pit stall
                                                    //this was set to 2.0, but the Dallara was sending the tire readings before that
     private final double EXIT_PIT_DELAY    = Server.getArg("pit-exiting-delay",1.0);  //seconds to wait to confirm we have exited the pits long enough before resetting the pit black boxes and updating the historical values.
     private final double RESET_PIT_DELAY   = 0.3;  //seconds to wait after leaving pit road to send pit commands
@@ -187,6 +187,7 @@ public class iRacingCar extends Car {
         private int     m_lapsLed               = 0;    public int getLapsLed()        { _refresh(); return m_lapsLed; }
         private int     m_incidents             = 0;    public int getIncidents()      { _refresh(); return m_incidents; }
         
+        private String  m_sessionNum                 = "";
         private ArrayList<Double>  m_lapTimes        = new ArrayList<Double>();  public ArrayList<Double>  getLapTimes()       { _refresh(); return m_lapTimes; } //indexed by lap completed, zero based (e.g. Lap 1 = index 0)
         private ArrayList<Integer> m_positions       = new ArrayList<Integer>(); public ArrayList<Integer> getPositions()      { _refresh(); return m_positions; } //indexed by lap completed, zero based (e.g. Lap 1 = index 0)
         private ArrayList<Integer> m_positionsClass  = new ArrayList<Integer>(); public ArrayList<Integer> getPositionsClass() { _refresh(); return m_positionsClass; } //indexed by lap completed, zero based (e.g. Lap 1 = index 0)
@@ -219,10 +220,11 @@ public class iRacingCar extends Car {
             int resultsCount = 0;
             int position = 0;
             int positionClass = 0;
+            String sessionNum = m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum");
 
             try {
                 for (int i = 0;;i++) {
-                    String sCarIdx = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(i),"CarIdx");
+                    String sCarIdx = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(i),"CarIdx");
 
                     if (sCarIdx.isEmpty()) {
                         break;
@@ -241,6 +243,25 @@ public class iRacingCar extends Car {
                 //String sessionType = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",Integer.toString(m_iRacingSIMPlugin.getIODriver().getVars().getInteger("SessionNum")),"SessionType").toUpperCase();
 
                 if (resultsCount > 0) {
+                    
+                    //if this is a new session, then zero out the arrays so data will not carry over
+                    if (!m_sessionNum.equals(sessionNum)) {
+                        m_sessionNum = sessionNum;
+                        
+                        m_position        = 0;
+                        m_positionClass   = 0;
+                        m_lapTimeLast     = 0.0;
+                        m_lapTimeBest     = 0.0;
+                        m_lapBest         = 0;
+                        m_lapCompleted    = 0;
+                        m_lapsLed         = 0;
+                        m_incidents       = 0;
+                        m_lapTimes        = new ArrayList<Double>();
+                        m_positions       = new ArrayList<Integer>();
+                        m_positionsClass  = new ArrayList<Integer>();
+                    }                  
+                    
+                    
                     if (index == -1) { //if we haven't posted a lap yet, zero out the position so qualifying doesn't bleed into the race.
                         position    = 0;
                         positionClass = 0;
@@ -254,7 +275,7 @@ public class iRacingCar extends Car {
                             position = m_position_2015;
                         }
                         else {
-                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"Position");
+                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"Position");
                             if (!s.isEmpty() && Integer.parseInt(s) > 0)
                                 position      = Integer.parseInt(s);
                         }
@@ -263,7 +284,7 @@ public class iRacingCar extends Car {
                             positionClass = m_positionClass_2015;
                         }
                         else {
-                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"ClassPosition");
+                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"ClassPosition");
                             if (!s.isEmpty() && Integer.parseInt(s) >= 0) {
                                 if (m_iRacingSIMPlugin.getIODriver().build_december_9_2014())
                                     positionClass = Integer.parseInt(s) + 1;
@@ -282,7 +303,7 @@ public class iRacingCar extends Car {
                             m_lapCompleted = m_lapCompleted_2015;
                         }
                         else {
-                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"LapsComplete");
+                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"LapsComplete");
                             if (!s.isEmpty() && Integer.parseInt(s) > 0.0) {
                                 //do this for when we've just entered the session and we don't know the laps completed.
                                 if (m_lapCompleted < Integer.parseInt(s)) {
@@ -308,19 +329,19 @@ public class iRacingCar extends Car {
                             }
                         }
 
-                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"LapsLed");
+                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"LapsLed");
                         if (!s.isEmpty() && Integer.parseInt(s) > 0.0) {
                             //do this for when we've just entered the session and we don't know the laps completed.
                             if (m_lapsLed < Integer.parseInt(s))
                                 m_lapsLed = Integer.parseInt(s);
                         }
                         
-                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"Incidents");
+                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"Incidents");
                         if (!s.isEmpty() && Integer.parseInt(s) >= 0) {
                             m_incidents = Integer.parseInt(s);
                         }
 
-                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"LastTime");
+                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"LastTime");
                         if (!s.isEmpty() /* && Double.parseDouble(s) > 0.0 *can get zero if meatball is out*/) {
                             m_lapTimeLast = Double.parseDouble(s);
                             
@@ -336,10 +357,10 @@ public class iRacingCar extends Car {
                                 m_lapTimes.set(m_lapCompleted - 1,m_lapTimeLast);    //keep updating the last lap in case iRacing changes it at a different tick than the lap counter
                         }
 
-                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"FastestTime");
+                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"FastestTime");
                         if (!s.isEmpty() && Double.parseDouble(s) > 0.0) {
                             m_lapTimeBest   = Double.parseDouble(s);
-                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",m_iRacingSIMPlugin.getIODriver().getVars().getString("SessionNum"),"ResultsPositions",Integer.toString(index),"FastestLap");
+                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"FastestLap");
                             if (!s.isEmpty())
                                 m_lapBest       = Integer.parseInt(s);
                         }
@@ -396,18 +417,21 @@ public class iRacingCar extends Car {
         if (timestamp != 0.0 
         && (timestamp + SIM_COMMANDS_DELAY <= m_sessionTime)
         ) {
-
+            boolean removeTearoff = tearoff._getSIMCommandTimestamp() > 0.0;
+            
             BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Clear);
             Server.logger().info(String.format("_sendSetupCommands() Clear"));
 
             if (fuellevel._getSIMCommandTimestamp() > 0.0 && fuellevel._getSIMCommandValue() > 0.0) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/l",fuellevel.getType().getString(),fuellevel._getSIMCommandValue())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel._getSIMCommandValue());
+                removeTearoff = true;
             }
             else //keep existing setting
             if (fuellevel._getSIMCommandTimestamp() == 0.0 && fuellevel.getChangeFlag().getBoolean() && fuellevel.getValueNext().convertUOM("l").getInteger() > 0) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RF.getType().getString(),fuellevel.getValueNext().convertUOM("l").getInteger())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel.getValueNext().convertUOM("l").getInteger());
+                removeTearoff = true;
             }
             
             //as of Sept. 2017 build, iRacing makes you change both tires on the same side at the same time
@@ -425,53 +449,62 @@ public class iRacingCar extends Car {
             if (RF._getSIMCommandTimestamp() > 0.0) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RF.getType().getString(),RF._getSIMCommandValue())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RF, RF._getSIMCommandValue());
+                removeTearoff = true;
             }
             else //keep existing setting
             if (RF._getSIMCommandTimestamp() == 0.0 && RF.getChangeFlag().getBoolean()) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RF.getType().getString(),RF.getValueNext().convertUOM("kpa").getInteger())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RF, RF.getValueNext().convertUOM("kpa").getInteger());
+                removeTearoff = true;
             }
             
             if (RR._getSIMCommandTimestamp() > 0.0) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RR.getType().getString(),RR._getSIMCommandValue())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RR, RR._getSIMCommandValue());
+                removeTearoff = true;
             }
             else //keep existing setting
             if (RR._getSIMCommandTimestamp() == 0.0 && RR.getChangeFlag().getBoolean()) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RR.getType().getString(),RR.getValueNext().convertUOM("kpa").getInteger())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_RR, RR.getValueNext().convertUOM("kpa").getInteger());
+                removeTearoff = true;
             }
 
             if (LF._getSIMCommandTimestamp() > 0.0) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",LF.getType().getString(),LF._getSIMCommandValue())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LF, LF._getSIMCommandValue());
+                removeTearoff = true;
             }
             else //keep existing setting
             if (LF._getSIMCommandTimestamp() == 0.0 && LF.getChangeFlag().getBoolean()) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",LF.getType().getString(),LF.getValueNext().convertUOM("kpa").getInteger())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LF, LF.getValueNext().convertUOM("kpa").getInteger());
+                removeTearoff = true;
             }
 
             if (LR._getSIMCommandTimestamp() > 0.0) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",LR.getType().getString(),LR._getSIMCommandValue())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LR, LR._getSIMCommandValue());
+                removeTearoff = true;
             }
             else //keep existing setting
             if (LR._getSIMCommandTimestamp() == 0.0 && LR.getChangeFlag().getBoolean()) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",LR.getType().getString(),LR.getValueNext().convertUOM("kpa").getInteger())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_LR, LR.getValueNext().convertUOM("kpa").getInteger());
-            }
-
-            if (tearoff._getSIMCommandTimestamp() > 0.0) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",tearoff.getType().getString())));
-                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_WS);
+                removeTearoff = true;
             }
 
             if (fastRepair._getSIMCommandTimestamp() > 0.0) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",fastRepair.getType().getString())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_FR);
+                removeTearoff = true;
             }
             
+            if (removeTearoff) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",tearoff.getType().getString())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_WS);
+            }
+
 //            m_forceSetupCommands = false;
             LF._clearSIMCommandTimestamp();
             LR._clearSIMCommandTimestamp();
@@ -535,6 +568,7 @@ public class iRacingCar extends Car {
      */
     public Data getClassColor() {
         Data d = super.getClassColor();
+        d.setState(Data.State.OFF);
 
         if (isValid()) {
             String color = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarClassColor");
@@ -561,6 +595,7 @@ else
      */
     public Data getClassName() {
         Data d = super.getClassName();
+        d.setState(Data.State.OFF);
 
         if (isValid()) {
             String name = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarClassShortName");
@@ -576,6 +611,7 @@ else
      */
     public Data getColor() {
         Data d = super.getColor();
+        d.setState(Data.State.OFF);
 
         // CarDesignStr: 0,000000,55040d,ffffff,ed2129
         // the last value is optional and sometimes missing. It is the tire rim color.
@@ -593,6 +629,7 @@ else
     @Override
     public Data getColorNumber() {
         Data d = super.getColorNumber();
+        d.setState(Data.State.OFF);
 
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The color of the number is the 3rd number.
@@ -613,6 +650,7 @@ else
     @Override
     public Data getColorNumberBackground() {
         Data d = super.getColorNumberBackground();
+        d.setState(Data.State.OFF);
 
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The color of the number's background is the 5th number.
@@ -636,6 +674,7 @@ else
     @Override
     public Data getColorNumberOutline() {
         Data d = super.getColorNumberOutline();
+        d.setState(Data.State.OFF);
 
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The color of the number's outline is the 4th number.
@@ -652,6 +691,7 @@ else
     @Override
     public Data getDescription() {
         Data d = super.getDescription();
+        d.setState(Data.State.OFF);
 
         if (isValid()) {
             String desc = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarScreenName");
@@ -673,6 +713,7 @@ else
     @Override
     public Data getDriverClubName() {
         Data d = super.getDriverClubName();
+        d.setState(Data.State.OFF);
 
         if (isValid()) {
             d.setValue( m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"ClubName"),"",Data.State.NORMAL );
@@ -683,6 +724,7 @@ else
     @Override
     public Data getDriverDivisionName() {
         Data d = super.getDriverDivisionName();
+        d.setState(Data.State.OFF);
 
         if (isValid()) {
             d.setValue( m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"DivisionName"),"",Data.State.NORMAL );
@@ -693,6 +735,7 @@ else
     @Override
     public Data getDriverInitials() {
         Data d = super.getDriverInitials();
+        d.setState(Data.State.OFF);
 
         if (isValid()) {
             d.setValue( m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"Initials") );
@@ -703,6 +746,7 @@ else
     @Override
     public Data getDriverLicenseColor() {
         Data d = super.getDriverLicenseColor();
+        d.setState(Data.State.OFF);
 
         try {
             if (isValid()) {
@@ -720,6 +764,7 @@ else
     @Override
     public Data getDriverLicenseColorText() {
         Data d = super.getDriverLicenseColorText();
+        d.setState(Data.State.OFF);
 
         if (isValid()) {
             int license = getDriverLicenseColor().getInteger();
@@ -736,21 +781,27 @@ else
     @Override
     public Data getDriverName() {
         Data d = super.getDriverName();
-        d.setValue(m_driverName,"",Data.State.NORMAL);
+        d.setState(Data.State.OFF);
+        if (isValid())
+            d.setValue(m_driverName,"",Data.State.NORMAL);
         return d;
     }
 
     @Override
     public Data getDriverNameShort() {
         Data d = super.getDriverNameShort();
-        String name = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"AbbrevName");
-        d.setValue(name,"",Data.State.NORMAL);
+        d.setState(Data.State.OFF);
+        if (isValid()) {
+            String name = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"AbbrevName");
+            d.setValue(name,"",Data.State.NORMAL);
+        }
         return d;
     }
     
     @Override
     public Data getDriverRating() {
         Data d = super.getDriverRating();
+        d.setState(Data.State.OFF);
 
         try {
             if (isValid()) {
@@ -821,40 +872,47 @@ else
     public Data getFuelLevelPerLap(int lapsToAverage, String UOM) {
         Data FuelPerLap  = super.getFuelLevelPerLap(lapsToAverage, UOM);
 
-        int c = 0;
-        double totalfuel = 0.0;
-        if (lapsToAverage > 0) {
-            //now take the average of the last "laps" laps that were not invalid laps
-            //if we don't have enough valid "laps", then use as many as you have.
-            for (int i=m_fuelConsummed.size()-1; c < lapsToAverage && i >= 0; i--) {
-                if (!m_invalidLaps.get(i)) {
-                    totalfuel += m_fuelConsummed.get(i);
-                    c++;
-                }
-            }
-        }
-        else {
-            //find the worse lap, that was not an invalid lap
-            for (int i=0; i < m_fuelConsummed.size(); i++) {
-                if (!m_invalidLaps.get(i)) {
-                    if (totalfuel < m_fuelConsummed.get(i)) {
-                        totalfuel = m_fuelConsummed.get(i);
-                        c = 1;
+        if (isME()) {
+            FuelPerLap.setState(Data.State.OFF);
+            
+            if (isValid()) {
+                int c = 0;
+                double totalfuel = 0.0;
+                if (lapsToAverage > 0) {
+                    //now take the average of the last "laps" laps that were not invalid laps
+                    //if we don't have enough valid "laps", then use as many as you have.
+                    for (int i=m_fuelConsummed.size()-1; c < lapsToAverage && i >= 0; i--) {
+                        if (!m_invalidLaps.get(i)) {
+                            totalfuel += m_fuelConsummed.get(i);
+                            c++;
+                        }
                     }
                 }
-            }
-        }
-
-        if (m_iRacingSIMPlugin.getIODriver().isConnected()) {
-            if (c > 0) {
-                FuelPerLap.setValue(totalfuel/c,m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("FuelLevel").Unit);
-            }
-            else {
-                FuelPerLap.setValue(0.0,m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("FuelLevel").Unit);
-            }
-        }
+                else {
+                    //find the worse lap, that was not an invalid lap
+                    for (int i=0; i < m_fuelConsummed.size(); i++) {
+                        if (!m_invalidLaps.get(i)) {
+                            if (totalfuel < m_fuelConsummed.get(i)) {
+                                totalfuel = m_fuelConsummed.get(i);
+                                c = 1;
+                            }
+                        }
+                    }
+                }
         
-        FuelPerLap.addConversion(this._getGauge(Gauge.Type.FUELLEVEL).getValueCurrent());
+                if (m_iRacingSIMPlugin.getIODriver().isConnected()) {
+                    if (c > 0) {
+                        FuelPerLap.setValue(totalfuel/c,m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("FuelLevel").Unit);
+                    }
+                    else {
+                        FuelPerLap.setValue(0.0,m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("FuelLevel").Unit);
+                    }
+                    FuelPerLap.setState(Data.State.NORMAL);
+                }
+                
+                FuelPerLap.addConversion(this._getGauge(Gauge.Type.FUELLEVEL).getValueCurrent());
+            }
+        }
 
         return FuelPerLap.convertUOM(_getGauge(Gauge.Type.FUELLEVEL).getUOM().getString()).convertUOM(UOM);
     }
@@ -862,14 +920,26 @@ else
     @Override
     public Data getFuelLevelNeeded(int lapsToAverage,double laps, String UOM) {
         Data d = super.getFuelLevelNeeded(lapsToAverage,laps,UOM);
-        d.addConversion(this._getGauge(Gauge.Type.FUELLEVEL).getValueCurrent());
+        if (isME()) {
+            d.setState(Data.State.OFF);
+            if (isValid()) {
+                d.addConversion(this._getGauge(Gauge.Type.FUELLEVEL).getValueCurrent());
+                d.setState(Data.State.NORMAL);
+            }
+        }
         return d.convertUOM(UOM);
     }
     
     @Override
     public Data getFuelLevelToFinish(int lapsToAverage,double laps, String UOM) {
         Data d = super.getFuelLevelToFinish(lapsToAverage,laps,UOM);
-        d.addConversion(this._getGauge(Gauge.Type.FUELLEVEL).getValueCurrent());
+        if (isME()) {
+            d.setState(Data.State.OFF);
+            if (isValid()) {
+                d.addConversion(this._getGauge(Gauge.Type.FUELLEVEL).getValueCurrent());
+                d.setState(Data.State.NORMAL);
+            }
+        }
         return d.convertUOM(UOM);
     }
     
@@ -893,14 +963,14 @@ else
             d.setValue(true);
             d.setState(Data.State.NORMAL);
         }
-        else
-            d.setState(Data.State.NOTAVAILABLE);
         return d;
     }
 
     @Override
     public Data getId() {
         Data d = super.getId();
+        d.setState(Data.State.OFF);
+
         if (isValid()) {
             d.setValue(m_id);
             d.setState(Data.State.NORMAL);
@@ -911,6 +981,7 @@ else
     @Override
     public Data getImageUrl() {
         Data d = super.getImageUrl();
+        d.setState(Data.State.OFF);
 
         try {
             if (isValid()) {
@@ -978,17 +1049,14 @@ else
     @Override
     public Data getIncidents() {
         Data d = super.getIncidents();
-        if (isValid()) {
-            if (isME() && m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarDriverIncidentCount") != null) {
+        if (isME() && m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarDriverIncidentCount") != null) {
+            d.setState(Data.State.OFF);
+
+            if (isValid()) {
                 int i = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarDriverIncidentCount");
                 if (i >= 0)
                     m_lastKnownIncidents = i;
                 d.setValue(m_lastKnownIncidents,d.getUOM(),Data.State.NORMAL);
-                
-            }
-            else
-            if (m_sessionEndTime > 0.0) {
-                d.setValue(m_results.getIncidents(),d.getUOM(),Data.State.NORMAL);
             }
         }
         return d;
@@ -998,10 +1066,11 @@ else
     public Data getIncidentsTeam() {
         Data d = super.getIncidentsTeam();
         //only return a value if in a team session
-        if (isValid()) {
-            if (isME()) {
-                if (!getTeamName().getString().isEmpty()
-                &&  m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarTeamIncidentCount") != null) {
+        if (isME() && m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarTeamIncidentCount") != null) {
+            d.setState(Data.State.OFF);
+            
+            if (isValid()) {
+                if (!getTeamName().getString().isEmpty()) {
                     int i = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarTeamIncidentCount");
                     if (i >= 0)
                         m_lastKnownIncidentsTeam = i;
@@ -1022,6 +1091,7 @@ else
             
             if ((flags & SessionFlags.black) != 0 || (flags & SessionFlags.repair) != 0)
                 d.setValue(true);
+            d.setState(Data.State.NORMAL);
         }
         return d;
     }
@@ -1036,6 +1106,7 @@ else
             
             if ((flags & SessionFlags.blue) != 0)
                 d.setValue(true);
+            d.setState(Data.State.NORMAL);
         }
         return d;
     }
@@ -1050,6 +1121,7 @@ else
             
             if ((flags & SessionFlags.disqualify) != 0)
                 d.setValue(true);
+            d.setState(Data.State.NORMAL);
         }
         return d;
     }
@@ -1067,6 +1139,7 @@ else
     @Override
     public Data getIsFixedSetup() {
         Data d = super.getIsFixedSetup();
+        d.setState(Data.State.OFF);
         try {
             if (isValid()) {
                 String fixed = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","WeekendOptions","IsFixedSetup");
@@ -1074,6 +1147,7 @@ else
                     d.setValue(true);
                 else
                     d.setValue(false);
+                d.setState(Data.State.NORMAL);
             }
         } catch (NumberFormatException e) {}
         return d;
@@ -1089,9 +1163,11 @@ else
     @Override
     public Data getIsPitSpeedLimiter() {
         Data d = super.getIsPitSpeedLimiter();
-        if (isValid() && isME()) {
+        if (isValid() && isME()) {  //TODO: Is there a way to determine if this car has a limiter?
+            d.setState(Data.State.NORMAL);
+            
             if (getWarnings().getString().contains(";PITSPEEDLIMITER;"))
-                d.setValue(true,"boolean",Data.State.NORMAL);
+                d.setValue(true,"boolean");
         }
         return d;
     }
@@ -1099,6 +1175,7 @@ else
     @Override
     public Data getIsSpectator() {
         Data d = super.getIsSpectator();
+        d.setState(Data.State.OFF);
         try {
             if (isValid()) {
                 String spectator = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"IsSpectator");
@@ -1114,6 +1191,7 @@ else
     @Override
     public Data getIsPaceCar() {
         Data d = super.getIsPaceCar();
+        d.setState(Data.State.OFF);
         if (isValid()) {
             d.setValue(isPaceCar(),"boolean",Data.State.NORMAL);
         }
@@ -1130,6 +1208,7 @@ else
             
             if ((flags & SessionFlags.yellow) != 0 || (flags & SessionFlags.yellowWaving) != 0)
                 d.setValue(true);
+            d.setState(Data.State.NORMAL);
         }
         return d;
     }
@@ -1137,6 +1216,8 @@ else
     @Override
     public Data getLap(String ref) {
         Data d = super.getLap(ref);
+        d.setState(Data.State.OFF);
+        
         String r = d.getValue("reference").toString();
 
         if (r.equals(Car.LapType.CURRENT)) {
@@ -1192,6 +1273,7 @@ else
     @Override
     public Data getLapsToGo() {
         Data d = super.getLapsToGo();
+        d.setState(Data.State.OFF);
         if (m_iRacingSIMPlugin.isConnected()) {
             boolean isRace = m_iRacingSIMPlugin.getSession().getType().getString().equalsIgnoreCase(Type.RACE);
             boolean isQual = m_iRacingSIMPlugin.getSession().getType().getString().equalsIgnoreCase(Type.LONE_QUALIFY)
@@ -1293,6 +1375,7 @@ else
     @Override
     public Data getLapTime(String ref) {
         Data d = super.getLapTime(ref);
+        d.setState(Data.State.OFF);
         String r = d.getValue("reference").toString();
 
         if (isValid()) {
@@ -1363,6 +1446,7 @@ else
         Data d = super.getLapTimeDelta(ref);
 
         if (isME()) {
+            d.setState(Data.State.OFF);
             String r = d.getValue("reference").toString();
 
             //spelling error in the variable name
@@ -1378,8 +1462,6 @@ else
                 d.setState(Data.State.NORMAL);
             }
         }
-        else
-            d.setState(Data.State.NOTAVAILABLE);
         return d;
     }
 
@@ -1393,7 +1475,7 @@ else
             t = getLapTime(r);
         else
             t = getLapTime("SessionBest");
-        d.setValue(t.getValue());
+        d.setValue(t.getValue(),t.getUOM(),t.getState());
         return d;
     }
 
@@ -1402,6 +1484,7 @@ else
         Data d = super.getLapTimeDeltaPercent(ref);
         if (isME()) {
             String r = d.getValue("reference").toString();
+            d.setState(Data.State.OFF);
 
             //spelling error in the variable name
             if (r.equals("SessionLast")) {
@@ -1422,8 +1505,6 @@ else
                 d.setState(Data.State.NORMAL);
             }
         }
-        else
-            d.setState(Data.State.NOTAVAILABLE);
         return d;
     }
 
@@ -1527,6 +1608,7 @@ else
     @Override
     public Data getNumberFont() {
         Data d = super.getNumberFont();
+        d.setState(Data.State.OFF);
 
         if (m_fontnames == null) {
             try {
@@ -1555,6 +1637,7 @@ else
     @Override
     public Data getNumberSlant() {
         Data d = super.getNumberSlant();
+        d.setState(Data.State.OFF);
 
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The slant of the number is the 2rd number.
@@ -1588,8 +1671,14 @@ else
     @Override
     public Data getPitTime() {
         Data d = super.getPitTime();
-        d.setValue(m_prevStatus.getTime(iRacingCar.Status.INPITSTALL,m_sessionTime));
-        d.setState(Data.State.NORMAL);
+        d.setState(Data.State.OFF);
+        //the times reported are typically .5 seconds too high because of the time it takes to get out of the stall. 
+        //So just removing that to get closer to what iRacing says.
+        int pitted = m_lapPitted -1;
+        if (pitted >= 0 && pitted < m_pitTimes.size()) {
+            d.setValue(m_pitTimes.get(pitted));
+            d.setState(Data.State.NORMAL);
+        }
         return d;
     }
 
@@ -1603,6 +1692,7 @@ else
     @Override
     public Data getPitLocation() {
         Data d = super.getPitLocation();
+        d.setState(Data.State.OFF);
         if (m_pitLocation >= 0.0)
             d.setValue(m_pitLocation * 100.0,"%",Data.State.NORMAL);
         return d;
@@ -1659,6 +1749,7 @@ else
     @Override
     public Data getRadioChannel() {
         Data d = super.getRadioChannel();
+        d.setState(Data.State.OFF);
         if (isValid()) {
             if (isME()) {
                 String s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("RadioInfo","SelectedRadioNum");
@@ -1677,6 +1768,7 @@ else
     @Override
     public Data getRadioChannelName() {
         Data d = super.getRadioChannelName();
+        d.setState(Data.State.OFF);
         if (isValid()) {
 //              RadioInfo:
 //              SelectedRadioNum: 0
@@ -1733,6 +1825,8 @@ else
     public Data getWarnings() {
         Data d = super.getWarnings();
         if (isME()) {
+            d.setState(Data.State.OFF);
+            
             int warnings     = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("EngineWarnings");
 
             StringBuffer s = new StringBuffer(String.format("%d;0x%X;",warnings,warnings));
@@ -1827,28 +1921,28 @@ else
             d.setValue(s.toString());
             d.setState(Data.State.NORMAL);
         }
-        else
-            d.setState(Data.State.NOTAVAILABLE);
         return d;
     }
 
     public Data getDivisionName() {
         Data d = new Data("CarDivisionName","");
-        d.setState(Data.State.NORMAL);
+        d.setState(Data.State.OFF);
 
         if (isValid()) {
             d.setValue( m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"DivisionName") );
+            d.setState(Data.State.NORMAL);
         }
         return d;
     }
 
     public Data getDriverLicLevel() {
         Data d = new Data("CarDriverLicLevel",0);
-        d.setState(Data.State.NORMAL);
+        d.setState(Data.State.OFF);
 
         try {
             if (isValid()) {
                 d.setValue( Integer.parseInt(m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"LicLevel")) );
+                d.setState(Data.State.NORMAL);
             }
         } catch (NumberFormatException e) {}
         
@@ -1857,11 +1951,12 @@ else
 
     public Data getDriverLicSubLevel() {
         Data d = new Data("CarDriverLicLevel",0);
-        d.setState(Data.State.NORMAL);
+        d.setState(Data.State.OFF);
 
         try {
             if (isValid()) {
                 d.setValue( Integer.parseInt(m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"LicSubLevel")) );
+                d.setState(Data.State.NORMAL);
             }
         } catch (NumberFormatException e) {}
         return d;
@@ -1871,11 +1966,15 @@ else
     public Data getFuelLevelAtStartFinish(String UOM) {
         Data d = super.getFuelLevelAtStartFinish(UOM);
         
-        if (isValid()) {
-            d.setValue(m_fuelAtStartFinish,m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("FuelLevel").Unit);
+        if (isME()) {
+            d.setState(Data.State.OFF);
+            if (isValid()) {
+                d.setValue(m_fuelAtStartFinish,m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("FuelLevel").Unit);
+                d.setState(Data.State.NORMAL);
+            }
+    
+            d.addConversion(this._getGauge(Gauge.Type.FUELLEVEL).getValueCurrent());
         }
-
-        d.addConversion(this._getGauge(Gauge.Type.FUELLEVEL).getValueCurrent());
         
         return d.convertUOM(_getGauge(Gauge.Type.FUELLEVEL).getUOM().getString()).convertUOM(UOM);
     }
@@ -1888,8 +1987,6 @@ else
             d.setUOM(m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PitRepairLeft").Unit);
             d.setState(Data.State.NORMAL);
         }
-        else
-            d.setState(Data.State.NOTAVAILABLE);
         return d;
     }
 
@@ -1901,18 +1998,18 @@ else
             d.setUOM(m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PitOptRepairLeft").Unit);
             d.setState(Data.State.NORMAL);
         }
-        else
-            d.setState(Data.State.NOTAVAILABLE);
         return d;
     }
 
     @Override
     public Data getTeamName() {
         Data d = super.getTeamName();
+        d.setState(Data.State.OFF);
 
         String teams = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TeamRacing");
         if (!teams.isEmpty() && Integer.parseInt(teams) != 0) {
             d.setValue( m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"TeamName") );
+            d.setState(Data.State.NORMAL);
         }
         return d;
     }
@@ -1965,6 +2062,7 @@ else
     @Override
     public    Data setAdminFlag(boolean onOffFlag) {
         Data d = super.setAdminFlag(onOffFlag);
+        d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
             if (onOffFlag) {
@@ -1981,6 +2079,7 @@ else
     @Override
     public Data setBlackFlag(int quantity,String uom) {
         Data d = super.setBlackFlag(quantity,uom);
+        d.setState(Data.State.OFF);
 
         if (!m_number.isEmpty()) {
             if (uom.equalsIgnoreCase("lap"))
@@ -2008,6 +2107,7 @@ else
     @Override
     public    Data setChatFlag(boolean onOffFlag) {
         Data d = super.setChatFlag(onOffFlag);
+        d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
             if (onOffFlag) {
@@ -2024,6 +2124,7 @@ else
     @Override
     public    Data setClearPenaltiesFlag() {
         Data d = super.setClearPenaltiesFlag();
+        d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
             d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "CLEAR").replace("[DRIVER]", m_number)).getString());
@@ -2035,6 +2136,7 @@ else
     @Override
     public    Data setDisqualifyFlag() {
         Data d = super.setDisqualifyFlag();
+        d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
             d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "DQ").replace("[DRIVER]", m_number)).getString());
@@ -2046,6 +2148,7 @@ else
     @Override
     public    Data setEndOfLineFlag() {
         Data d = super.setEndOfLineFlag();
+        d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
             d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "EOL").replace("[DRIVER]", m_number)).getString());
@@ -2057,6 +2160,7 @@ else
     @Override
     public    Data setRemoveFlag() {
         Data d = super.setRemoveFlag();
+        d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
             d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "REMOVE").replace("[DRIVER]", m_number)).getString());
@@ -2068,6 +2172,7 @@ else
     @Override
     public    Data setWaveAroundFlag() {
         Data d = super.setWaveAroundFlag();
+        d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
             d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "WAVEBY").replace("[DRIVER]", m_number)).getString());
@@ -2086,10 +2191,15 @@ else
             ((iRacingGauge)_getGauge(Gauge.Type.WINDSHIELDTEAROFF))._resetDetected();
             ((iRacingGauge)_getGauge(Gauge.Type.FASTREPAIRS))._resetDetected();
             
-            //TODO: add all the SIM only Gauges that are changed on pit,
-            //such as, Tape, Wedge, Wings, etc.
-            //I could loop through the gauges and look at the onResetChange flag,
-            //but I have to hard code them to use the Changeable class. I want them to match
+            //Loop through the gauges and if a Changeables class, reset it
+            Iterator<Entry<String, Gauge>> itr = m_gauges.entrySet().iterator();
+            while (itr.hasNext()) {
+                Entry<String, Gauge> gaugeEntry = itr.next();
+                Gauge gauge = gaugeEntry.getValue();
+                if (gauge instanceof Changeables) {
+                    ((iRacingGauge)gauge)._resetDetected();
+                }
+            }
         }
     }
     
@@ -2329,7 +2439,12 @@ else
                     nextStatus.setState(iRacingCar.Status.ENTERINGPITSTALL,m_sessionTime);
                 }
                 else {
-                    Server.logger().finest(String.format("PrevPct=%.15f, Pct=%.15f, Brake=%f", prevLapCompletedPercent,lapCompletedPercent,brake));
+                    Server.logger().fine(String.format("#%-3s (id=%-2d) InPitStall on Lap(%-3.3f), PrevPct=(%.15f), Pct=(%.15f), Brake=(%f), DataVersion=(%s)",
+                            m_number,m_id,
+                            (double)currentLap + this.m_lapCompletedPercent,
+                            prevLapCompletedPercent,lapCompletedPercent,brake,
+                            m_iRacingSIMPlugin.getSession().getDataVersion().getString() //getIODriver().getHeader().getLatest_VarBufTick()
+                    ));
                     
                     //add the delay back in
                     //tweaked a little to compensate for entry and exit time
@@ -2923,7 +3038,7 @@ else
         while (m_pitTimes.size() < m_lapCompleted || m_pitTimes.size() < m_lapPitted)
             m_pitTimes.add(0.0);
             
-        m_pitTimes.set(m_lapPitted-1, m_prevStatus.getTime(iRacingCar.Status.INPITSTALL,m_sessionTime) );
+        m_pitTimes.set(m_lapPitted-1, Math.max(0.0,m_prevStatus.getTime(iRacingCar.Status.INPITSTALL,m_sessionTime) - EXIT_PIT_DELAY - 0.5) );
 
         //update our gauges
         Iterator<Entry<String,Gauge>> gauge_iter = m_gauges.entrySet().iterator();
@@ -3111,7 +3226,11 @@ else
             else {
                 _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dcRWingIndex", "deg", null, null));
             }
-            //check to see if the new value exists, otherwise use old value for recorded files.
+            
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRrPerchOffsetm") != null) {
+                _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpRrPerchOffsetm", "mm", null, null));
+            }
+            else //check to see if the new value exists, otherwise use old value for recorded files.
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRrWedgeAdj") != null) {
                 _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpRrWedgeAdj", "mm", null, null));
             }
@@ -3121,7 +3240,7 @@ else
             _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h"));
             _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "SteeringWheelAngle", "rad"));
             _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "RPM", "rev/min", simGaugesBefore));
-            _setGauge(new Tape(Gauge.Type.TAPE,                                 this, track, IODriver));
+            _setGauge(new Changeables(Gauge.Type.TAPE,                          this, track, IODriver, "dpQtape", "%", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.THROTTLE,                     this, track, IODriver, "Throttle", "%", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.THROTTLESHAPE,                this, track, IODriver, "dcThrottleShape", "", null, null));
             
