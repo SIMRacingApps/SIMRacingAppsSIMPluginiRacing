@@ -39,6 +39,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getCategory() {
         Data d = super.getCategory();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","Category");
             d.setValue(s);
@@ -50,6 +52,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getCity() {
         Data d = super.getCity();
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TrackCity");
             d.setValue(s);
@@ -61,6 +65,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getConfiguration() {
         Data d = super.getConfiguration();
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TrackConfigName");
             d.setValue(s);
@@ -72,6 +78,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getCountry() {
         Data d = super.getCountry();
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TrackCountry");
             d.setValue(s);
@@ -83,6 +91,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getDescription() {
         Data d = super.getDescription();
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TrackDisplayName");
             d.setValue(s);
@@ -94,6 +104,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getLength() {
         Data d = super.getLength();
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String s[] = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TrackLength").split(" ");
             if (s.length == 2) {
@@ -117,6 +129,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     public Data getName() {
         Data d = super.getName();
         String s = Server.getArg("iracing-track");
+        d.setState(Data.State.OFF);
+
         if (!s.isEmpty()) {
             d.setValue(s);
             d.setState(Data.State.NORMAL);
@@ -133,6 +147,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getPitSpeedLimit(String UOM) {
         Data d = super.getPitSpeedLimit("");
+        d.setState(Data.State.OFF);
+
         String trackUOM = d.getUOM();
         if (m_SIMPlugin.isConnected()) {
             String s[] = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TrackPitSpeedLimit").split(" ");
@@ -157,6 +173,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getTemp(String UOM) {
         Data d = super.getTemp(UOM);
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String sUOM = d.getUOM();
             
@@ -206,6 +224,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getType() {
         Data d = super.getType();
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TrackType");
             d.setState(Data.State.NORMAL);
@@ -236,6 +256,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getWeatherFogLevel() {
         Data d = super.getWeatherFogLevel();
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String sUOM = d.getUOM();
             //This was added in Sept 2015
@@ -259,6 +281,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getWeatherRelativeHumidity() {
         Data d = super.getWeatherRelativeHumidity();
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String sUOM = d.getUOM();
             //This was added in Sept 2015
@@ -283,6 +307,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getWeatherSkies() {
         Data d = super.getWeatherSkies();
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String sUOM = d.getUOM();
             //This was added in Sept 2015
@@ -316,6 +342,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getWeatherTemp(String UOM) {
         Data d = super.getWeatherTemp(UOM);
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             String sUOM = d.getUOM();
             //This was added in Sept 2015
@@ -349,6 +377,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     @Override
     public Data getWeatherWindDirection(String UOM) {
         Data d = super.getWeatherWindDirection(UOM);
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
 if (false) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","WeekendOptions","WindDirection");
@@ -464,6 +494,8 @@ else {
     @Override
     public Data getWeatherWindSpeed(String UOM) {
         Data d = super.getWeatherWindSpeed(UOM);
+        d.setState(Data.State.OFF);
+
         if (m_SIMPlugin.isConnected()) {
             //This was added in Sept 2015
             VarHeader windVel = m_SIMPlugin.getIODriver().getVarHeaders().getVarHeaderValue("WindVel",m_SIMPlugin.getIODriver().getVars());

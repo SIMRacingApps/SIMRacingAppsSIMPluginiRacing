@@ -330,13 +330,14 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data getCamera() {
         Data d = super.getCamera();
+        d.setState(Data.State.OFF);
         
         if (_loadCameras()) {
             int groupNumber   = m_SIMPlugin.getIODriver().getVars().getInteger("CamGroupNumber");
             _camera camera = m_camera_groups_by_number.get(String.format("%d",groupNumber));
             
             if (camera != null)
-                d.setValue(camera.name);
+                d.setValue(camera.name,"",Data.State.NORMAL);
         }
         
         return d;
@@ -345,9 +346,10 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data getCameraFocus() {
         Data d = super.getCamera();
+        d.setState(Data.State.OFF);
         
         if (_loadCameras()) {
-            d.setValue(m_cameraFocusOn);
+            d.setValue(m_cameraFocusOn,"",Data.State.NORMAL);
         }
         
         return d;
@@ -356,9 +358,10 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data getCameras() {
         Data d = super.getCameras();
+        d.setState(Data.State.OFF);
         
         if (_loadCameras()) {
-            d.setValue(m_camera_groups_array);
+            d.setValue(m_camera_groups_array,"",Data.State.NORMAL);
         }
         
         return d;
@@ -383,6 +386,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getCars() {
         Data d = super.getCars();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int cars = m_cars.getNumberOfCars();
             d.setValue(cars);
@@ -394,6 +399,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getCautionLaps() {
         Data d = super.getCautionLaps();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected() && _CarIdx("LEADER") > -1) {
             d.setValue(m_cars.getCar(_CarIdx("LEADER")).getLap(Car.LapType.CAUTION).getInteger());
             d.setState(Data.State.NORMAL);
@@ -404,6 +411,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getCautions() {
         Data d = super.getCautions();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected() && _CarIdx("LEADER") > -1) {
             d.setValue(m_cars.getCar(_CarIdx("LEADER")).getCautions().getInteger());
             d.setState(Data.State.NORMAL);
@@ -414,6 +423,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getClassNames() {
         Data d = super.getClassNames();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected() && this.getNumberOfCarClasses().getInteger() > 1) {
             Map<Integer,String> classes = new TreeMap<Integer,String>(Collections.reverseOrder());
             
@@ -441,6 +452,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getDataVersion() {
         Data d = super.getDataVersion();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             d.setValue(
                 Integer.toString(m_sessionVersion)
@@ -455,6 +468,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getId() {
         Data d = super.getId();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             String seasonID = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SeasonID");
             String seriesID = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SeriesID");
@@ -468,6 +483,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getIncidentLimit() {
         Data d = super.getIncidentLimit();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","WeekendOptions","IncidentLimit");
             if (!s.isEmpty()) {
@@ -483,6 +500,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getIsGreenFlag() {
         Data d = super.getIsGreenFlag();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int flags = m_SIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
             if (flags == -1)
@@ -490,6 +509,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             
             if ((flags & SessionFlags.green) > 0)
                 d.setValue(true);
+            
+            d.setState(Data.State.NORMAL);
         }
         return d;
     }
@@ -497,6 +518,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getIsCautionFlag() {
         Data d = super.getIsCautionFlag();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int flags = m_SIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
             if (flags == -1)
@@ -504,6 +527,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             
             if ((flags & SessionFlags.caution) > 0 || (flags & SessionFlags.cautionWaving) > 0)
                 d.setValue(true);
+            d.setState(Data.State.NORMAL);
+            
         }
         return d;
     }
@@ -511,6 +536,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getIsCheckeredFlag() {
         Data d = super.getIsCheckeredFlag();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int flags = m_SIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
             if (flags == -1)
@@ -520,6 +547,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             &&  (getType().equals(Session.Type.RACE) || getType().equals(Session.Type.LONE_QUALIFY))
             )
                 d.setValue(true);
+            d.setState(Data.State.NORMAL);
+            
         }
         return d;
     }
@@ -527,6 +556,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getIsCrossedFlag() {
         Data d = super.getIsCrossedFlag();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             //even though iRacing has a crossed flag bit in the SessionFlags, I've never seen it set
             //so, I will calculate it myself as the halfway point based on the laps remaining in the session.
@@ -538,6 +569,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                     d.setValue(true);
                 }
             }
+            d.setState(Data.State.NORMAL);
+            
         }
         return d;
     }
@@ -545,6 +578,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getIsWhiteFlag() {
         Data d = super.getIsWhiteFlag();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int flags = m_SIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
             if (flags == -1)
@@ -552,6 +587,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             
             if ((flags & SessionFlags.white) > 0)
                 d.setValue(true);
+            d.setState(Data.State.NORMAL);
+            
         }
         return d;
     }
@@ -559,6 +596,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getIsRedFlag() {
         Data d = super.getIsRedFlag();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int flags = m_SIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
             if (flags == -1)
@@ -570,6 +609,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 )
             )
                 d.setValue(true);
+            d.setState(Data.State.NORMAL);
+            
         }
         return d;
     }
@@ -577,9 +618,13 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getIsReplay() {
         Data d = super.getIsReplay();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             boolean flag = m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying");
             d.setValue(flag);
+            d.setState(Data.State.NORMAL);
+            
         }
         return d;
     }
@@ -587,6 +632,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getLap() {
         Data d = super.getLap();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             String sessiontype = getType().getString();
             int lap  = sessiontype.equals(Session.Type.RACE)
@@ -601,6 +648,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getLaps(String sessionType) {
         Data d = super.getLaps(sessionType);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int session    = -1;
             
@@ -632,6 +681,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getLapsToGo() {
         Data d = super.getLapsToGo();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             boolean isRace = getType().getString().equalsIgnoreCase(Type.RACE);
             Data togo      = isRace 
@@ -647,6 +698,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getLeagueId() {
         Data d = super.getId();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             String ID = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","LeagueID");
             d.setValue(ID,"",Data.State.NORMAL);
@@ -707,6 +760,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    getNumberOfCarClasses() {
         Data d = super.getNumberOfCarClasses();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             String count = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","NumCarClasses");
             if (!count.isEmpty()) {
@@ -722,6 +777,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    getRadioChannels() {
         Data d = super.getRadioChannels();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             String count = m_SIMPlugin.getIODriver().getSessionInfo().getString("RadioInfo","Radios","0","NumFrequencies");
             if (!count.isEmpty()) {
@@ -733,6 +790,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
 
     public    Data    getRadioChannelActive() {
         Data d = super.getRadioChannelActive();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             //String channel = m_SIMPlugin.getIODriver().getSessionInfo().getString("RadioInfo","SelectedRadioNum");
             String channel = m_SIMPlugin.getIODriver().getVars().getString("RadioTransmitFrequencyIdx");
@@ -746,6 +805,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    getRadioChannelIsDeleteable(int channel) {
         Data d = super.getRadioChannelIsDeleteable(channel);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int count = getRadioChannels().getInteger();
             if (channel >= 0 && channel < count) {
@@ -760,6 +821,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    getRadioChannelIsListenOnly(int channel) {
         Data d = super.getRadioChannelIsListenOnly(channel);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int count = getRadioChannels().getInteger();
             if (channel >= 0 && channel < count) {
@@ -779,6 +842,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
 //It will not let you mute the active channel through the chat commands, yet you can in the F10 black box        
 //You also cannot tell of all the channels have been muted either.        
 //I'm going to disable for now so clients won't offer a mute option. As of 11/11/2015        
+//        d.setState(Data.State.OFF);
+//        
 //        if (m_SIMPlugin.isConnected()) {
 //            int count = getRadioChannels().getInteger();
 //            if (channel >= 0 && channel < count) {
@@ -793,6 +858,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    getRadioChannelIsMuted(int channel) {
         Data d = super.getRadioChannelIsMuted(channel);
+        d.setState(Data.State.OFF);
+        
         //This flag doesn't work, when you mute a channel, you cannot tell if it's muted until it is the active channel.
         //You also cannot tell of all the channels have been muted either.        
         if (m_SIMPlugin.isConnected()) {
@@ -811,6 +878,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    getRadioChannelIsScanable(int channel) {
         Data d = super.getRadioChannelIsScanable(channel);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int count = getRadioChannels().getInteger();
             if (channel >= 0 && channel < count) {
@@ -825,6 +894,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    getRadioChannelName(int channel) {
         Data d = super.getRadioChannelName(channel);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int count = getRadioChannels().getInteger();
             if (channel >= 0 && channel < count) {
@@ -839,6 +910,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    getRadioScan() {
         Data d = super.getRadioScan();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("RadioInfo","Radios","0","ScanningIsOn");
             if (!s.isEmpty())
@@ -851,6 +924,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    setRadioChannel(int channel) {
         Data d = super.setRadioChannel(channel);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int count = getRadioChannels().getInteger();
             if (channel >= 0 && channel < count) {
@@ -867,6 +942,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    setRadioChannelDelete(int channel) {
         Data d = super.setRadioChannelDelete(channel);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int count = getRadioChannels().getInteger();
             if (channel >= 0 && channel < count) {
@@ -883,6 +960,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    setRadioChannelMute(int channel,boolean flag) {
         Data d = super.setRadioChannelMute(channel,flag);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int count = getRadioChannels().getInteger();
             if (channel >= 0 && channel < count) {
@@ -902,6 +981,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    setRadioChannelName(String channelName) {
         Data d = super.setRadioChannelName(channelName);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int count = getRadioChannels().getInteger();
             int existingChannelNumber = -1;
@@ -928,6 +1009,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data    setRadioScan(boolean flag) {
         Data d = super.setRadioScan(flag);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             if (flag)
                 d.setValue(setChat(this.getSendKeys("RADIO_COMMANDS", "SCAN")).getString());
@@ -1042,6 +1125,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getReplay() {
         Data d = super.getReplay();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int speed = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySpeed");
             boolean slowmotion = m_SIMPlugin.getIODriver().getVars().getBoolean("ReplayPlaySlowMotion");
@@ -1056,6 +1141,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data setReplay(String command) {
         Data d = super.setReplay(command);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int speed = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySpeed");
             int slowmotion = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySlowMotion");
@@ -1193,6 +1280,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data setReplayPosition(String command) {
         Data d = super.setReplayPosition(command);
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             //int speed = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySpeed");
             //int slowmotion = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayPlaySlowMotion");
@@ -1325,6 +1414,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getStartTime() {
         Data d = super.getStartTime();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             double sessiontime = m_SIMPlugin.getIODriver().getHeader().getSubHeader().getSessionStartDate();
             d.setValue(sessiontime < 0.0 ? 0.0 : sessiontime);
@@ -1337,6 +1428,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getStrengthOfField() {
         Data d = super.getStrengthOfField();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             d.setValue(m_cars.getSOF());
             d.setState(Data.State.NORMAL);
@@ -1347,6 +1440,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getTimeElapsed() {
         Data d = super.getTimeElapsed();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             double sessiontime = m_SIMPlugin.getIODriver().getVars().getDouble("SessionTime");
             d.setValue(sessiontime < 0.0 ? 0.0 : sessiontime);
@@ -1359,6 +1454,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getTimeRemaining() {
         Data d = super.getTimeRemaining();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             double sessionTimeRemain = m_SIMPlugin.getIODriver().getVars().getDouble("SessionTimeRemain");
             double sessionTime = m_SIMPlugin.getIODriver().getVars().getDouble("SessionTime");
@@ -1412,6 +1509,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Data getType() {
         Data d = super.getType();
+        d.setState(Data.State.OFF);
+        
         if (m_SIMPlugin.isConnected()) {
             int session = m_SIMPlugin.getIODriver().getVars().getInteger("SessionNum");
             d.setValue(m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",Integer.toString(session),"SessionType").toUpperCase());
@@ -1452,6 +1551,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override    
     public    Data setChatReply(String text) {
         Data d = super.setChatReply(text);
+        d.setState(Data.State.OFF);
 
         //Need to make iRacing is focused, then send the keys.
         if (Windows.setForegroundWindow(null,Server.getArg("iracing-title",IRACING_TITLE))) {        
@@ -1486,6 +1586,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public    Data setCamera(String cameraName,String focusOn,String carIdentifier) {
         Data d = super.setCamera(cameraName,focusOn,carIdentifier);
+        d.setState(Data.State.OFF);
+        
         
         if (_loadCameras()) {
             
@@ -1537,6 +1639,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                     m_cameraFocusOn = "LEADER";
                 }
 
+                d.setState(Data.State.NORMAL);
+                
                 Server.logger().info(String.format("Switching Camera to %s,%s,%s (%d)",m_cameraFocusOn,carNumber,cameraName,camera.groupNumber));
                 
                 BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,Integer.toString(camera.groupNumber),"1");

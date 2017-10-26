@@ -1,7 +1,5 @@
 package com.SIMRacingApps.SIMPlugins.iRacing;
 
-import java.util.Map;
-
 import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 
 //enum irsdk_TrkLoc
