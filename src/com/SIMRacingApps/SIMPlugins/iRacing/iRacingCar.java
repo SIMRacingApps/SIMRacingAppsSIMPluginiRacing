@@ -2423,8 +2423,9 @@ else
                                 ? ((m_prevStatus.getTime(iRacingCar.Status.ENTERINGPITSTALL,m_sessionTime) < ENTER_PIT_DELAY)
                                    &&
                                    (Math.round(prevLapCompletedPercent * stoppedFactor) == Math.round(lapCompletedPercent * stoppedFactor))
-                                   && 
-                                   brake == 1.0
+//This was found not very reliable due to it didn't set the brake if not servicing
+//                                   && 
+//                                   brake == 1.0
                                   )
                                 : ((m_prevStatus.getTime(iRacingCar.Status.ENTERINGPITSTALL,m_sessionTime) < ENTER_PIT_DELAY)
                                     &&
@@ -2908,10 +2909,10 @@ else
                 //here we want to keep the repair time because iRacing zero's it out when you leave the pits
                 //even if you didn't complete the repairs
                 double repairtime    = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PitRepairLeft");
-                if (repairtime > 0.01 || isReset || this._getGauge(Gauge.Type.SPEEDOMETER).getValueCurrent().getDouble() < .01)
+                if (repairtime > 0.01 || isReset || m_repairTime < 1.0)
                     m_repairTime = repairtime;
                 double repairtimeopt = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PitOptRepairLeft");
-                if (repairtimeopt > 0.01 || isReset || this._getGauge(Gauge.Type.SPEEDOMETER).getValueCurrent().getDouble() < .01)
+                if (repairtimeopt > 0.01 || isReset || m_repairTimeOptional < 1.0)
                     m_repairTimeOptional = repairtimeopt;
 
                 //Since iRacing doesn't support sending commands for the Tape,Wedge and BrakeBias
