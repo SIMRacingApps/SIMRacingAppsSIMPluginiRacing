@@ -1,0 +1,143 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2017 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/dirtcar.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           11.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "xStates": {
+                   "SHIFTLIGHTS":  {"Start": 6500.0, "End": 7000.0},
+                    "SHIFT":       {"Start": 7000.0, "End": 7050.0},
+                    "SHIFTBLINK":  {"Start": 7050.0, "End": 99999999.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           0.0,
+                "Maximum":           1.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   1.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true
+            }
+        },
+        "WaterTemp": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "TEMP",
+                "UOM":               "F",
+                "Minimum":           100.0,
+                "Maximum":           280.0,
+                "MajorIncrement":    20.0,
+                "MinorIncrement":    10.0,
+                "StateAscending":    true,
+                "States": {
+                    "CRITICAL": {"Start": 266.0, "End": 99999.0},
+                    "WARNING":  {"Start": 240.0, "End": 266.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   10.6,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "Minimum":           0.0,
+                "Maximum":           14.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   11.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    20.0,
+                "MinorIncrement":    10.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 15.0},
+                    "WARNING":  {"Start": 15.0, "End": 30.0}
+                }
+            }
+        },
+        "FuelPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          150.0,
+                "MajorIncrement":   15.0,
+                "MinorIncrement":   7.5,
+                "States": {
+                    "CRITICAL": { "Start": 0.0, "End": 50.0 }
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "gal",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    2.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   18.9310976,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            }
+        }
+    }
+}
