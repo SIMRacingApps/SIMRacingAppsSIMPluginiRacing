@@ -111,7 +111,9 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             else
             if (car.equalsIgnoreCase("ME")) {
                 if (m_SIMPlugin.isConnected()) {
-                    idx = Integer.parseInt(m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","DriverCarIdx"));
+                    idx = m_SIMPlugin.getIODriver().getVars().getInteger("PlayerCarIdx");
+                    if (idx < 0)
+                        idx = Integer.parseInt(m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","DriverCarIdx"));
                 }
             }
             else
