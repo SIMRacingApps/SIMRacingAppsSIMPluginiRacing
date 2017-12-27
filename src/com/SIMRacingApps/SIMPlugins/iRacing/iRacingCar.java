@@ -1808,6 +1808,35 @@ else
     }
 
     @Override
+    public Data getSpotterMessage() {
+        Data d = super.getSpotterMessage();
+        if (isME()) {
+            d.setValue(SpotterMessages.OFF,"",Data.State.NORMAL);
+            
+            int message = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("CarLeftRight");
+            
+            if (message == CarLeftRight.LRClear)
+                d.setValue(SpotterMessages.CLEAR);
+            else
+            if (message == CarLeftRight.LRCarRight)
+                d.setValue(SpotterMessages.CARRIGHT);
+            else
+            if (message == CarLeftRight.LRCarLeft)
+                d.setValue(SpotterMessages.CARLEFT);
+            else
+            if (message == CarLeftRight.LRCarLeftRight)
+                d.setValue(SpotterMessages.CARLEFTRIGHT);
+            else
+            if (message == CarLeftRight.LR2CarsRight)
+                d.setValue(SpotterMessages.CARSRIGHT);
+            else
+            if (message == CarLeftRight.LR2CarsLeft)
+                d.setValue(SpotterMessages.CARSLEFT);
+        }
+        return d;
+    }
+    
+    @Override
     public Data getStartFinishTimes() {
         Data d = super.getStartFinishTimes();
         d.setValue(m_timeAtStartFinish,"s",Data.State.NORMAL);
