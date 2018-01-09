@@ -199,9 +199,12 @@ public class iRacingCar extends Car {
             int m_lapCompleted_2015 = -1;
 
 //These were causing funny results. Don't need them, unless replay, since it works from the session string without them.            
+            boolean replayFromFile = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SimMode").equals("replay");
+            
             if (m_iRacingSIMPlugin.getIODriver().build_June_9_2015() 
             &&  m_id >= 0
             &&  m_iRacingSIMPlugin.getSession().getIsReplay().getBoolean()  //only if in a replay
+            &&  replayFromFile
             ) {
                 //according to a post in the forums, this is updated during a replay while the session info isn't. TODO: Verify
                 m_position_2015      = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("CarIdxPosition",m_id);
@@ -213,7 +216,6 @@ public class iRacingCar extends Car {
                 return;
 
             m_sessionVersion = m_iRacingSIMPlugin.getIODriver().getHeader().getSessionInfoUpdate();
-            boolean replayFromFile = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SimMode").equals("replay");
 
             //our position in the results array could change every update, so we have to scan the array for this car every time
             int index = -1;
