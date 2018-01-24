@@ -301,29 +301,35 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     private ArrayList<String> m_camera_groups_array = null;
     
     private boolean _loadCameras() {
-        if (m_SIMPlugin.isConnected() && m_camera_groups == null) {
-            m_camera_groups = new TreeMap<String,_camera>();
-            
-            @SuppressWarnings("unchecked")
-            ArrayList<Map<String,Object>> groups = (ArrayList<Map<String,Object>>)m_SIMPlugin.getIODriver().getSessionInfo().getObject("CameraInfo","Groups");
-
-            for (int groupIdx = 0; groupIdx < groups.size(); groupIdx++) {
-                String groupName = (String) groups.get(groupIdx).get("GroupName");
-                int groupNumber  = (int) groups.get(groupIdx).get("GroupNum");
+        if (m_SIMPlugin.isConnected()) {
+            if (m_camera_groups == null) {
+                m_camera_groups = new TreeMap<String,_camera>();
                 
-                _camera camera = new _camera(groupName,groupNumber);
-                m_camera_groups.putIfAbsent(camera.group.toLowerCase(),camera);
+                @SuppressWarnings("unchecked")
+                ArrayList<Map<String,Object>> groups = (ArrayList<Map<String,Object>>)m_SIMPlugin.getIODriver().getSessionInfo().getObject("CameraInfo","Groups");
+    
+                for (int groupIdx = 0; groupIdx < groups.size(); groupIdx++) {
+                    String groupName = (String) groups.get(groupIdx).get("GroupName");
+                    int groupNumber  = (int) groups.get(groupIdx).get("GroupNum");
+                    
+                    _camera camera = new _camera(groupName,groupNumber);
+                    m_camera_groups.putIfAbsent(camera.group.toLowerCase(),camera);
+                    Server.logger().info(String.format("Camera #%d = %s", groupNumber, groupName));
+                }
+                
+                //now create the sorted arrays
+                Iterator<Entry<String, _camera>> itr = m_camera_groups.entrySet().iterator();
+                m_camera_groups_array = new ArrayList<String>();
+                m_camera_groups_by_number = new HashMap<String,_camera>();
+                while (itr.hasNext()) {
+                    _camera camera = itr.next().getValue();
+                    m_camera_groups_array.add(camera.group);
+                    m_camera_groups_by_number.put(String.format("%d",camera.groupNumber), camera);
+                }
             }
-            
-            //now create the sorted arrays
-            Iterator<Entry<String, _camera>> itr = m_camera_groups.entrySet().iterator();
-            m_camera_groups_array = new ArrayList<String>();
-            m_camera_groups_by_number = new HashMap<String,_camera>();
-            while (itr.hasNext()) {
-                _camera camera = itr.next().getValue();
-                m_camera_groups_array.add(camera.group);
-                m_camera_groups_by_number.put(String.format("%d",camera.groupNumber), camera);
-            }
+        }
+        else {
+            m_camera_groups = null;
         }
         
         return m_camera_groups != null;
@@ -1645,6 +1651,9 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 
                 Server.logger().info(String.format("Switching Camera to %s,%s,%s (%d)",m_cameraFocusOn,carNumber,cameraName,camera.groupNumber));
                 
+                //iRacing igores the 3rd argument, the camera number in the group. 
+                //instead it will cycle between all cameras in the group
+                //therefore, it doesn't really matter what camera I send it, so I will send it #1.
                 BroadcastMsg.send(m_SIMPlugin.getIODriver(), "CamSwitchNum",csMode,Integer.toString(camera.groupNumber),"1");
             }            
         }
