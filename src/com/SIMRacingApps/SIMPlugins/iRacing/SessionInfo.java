@@ -71,6 +71,10 @@ public class SessionInfo {
             //if iRacing already has them quoted, then remove the double quotes
             m_sessionstring = m_sessionstring.replaceAll("TeamName: (.*)", "TeamName: \"$1\"");
             
+            //some user names have invalid characters in leagues races. This adds quotes around them until iRacing fixes it.
+            //if iRacing already has them quoted, then remove the double quotes
+            m_sessionstring = m_sessionstring.replaceAll("UserName: (.*)", "UserName: \"$1\"");
+            
             //If cameras have been customized, they sometimes contain invalid characters to yaml
             m_sessionstring = m_sessionstring.replaceAll("GroupName: (.*)", "GroupName: \"$1\"");
 
