@@ -2423,7 +2423,7 @@ else
             currentLap = 1;
 
         if (!m_surfacelocation.equals(surfacelocation)) {
-            if (Server.logger().getLevel().intValue() >= Level.FINE.intValue())
+            if (Server.logger().getLevel().intValue() <= Level.FINE.intValue())
             Server.logger().fine(String.format("#%-3s (id=%-2d) surfacelocation changed on Lap(%-3.3f) from (%-17s) to (%-17s), DataVersion=(%s)",
                 m_number,m_id,
                 (double)currentLap + this.m_lapCompletedPercent,
