@@ -1505,11 +1505,13 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 if (count > 0) {
                     timeLeader /= count;    //convert to an average.
                     sessionTimeRemain = timeLeader * (leader.getLapsToGo().getDouble() - (leader.getLap(LapType.COMPLETEDPERCENT).getDouble() / 100.0));
-                    d.setUOM("~s");
                 }
                 else
                     sessionTimeRemain = 0.0;
-                
+
+                //always set this so clients know it is estimated, even if it's zero because
+                //we don't have enough data to estimate
+                d.setUOM("~s");
             }
             d.setValue((sessionTimeRemain < 0.0 || sessionTimeRemain == 604800.0) ? 0.0 : sessionTimeRemain);
             d.setState(Data.State.NORMAL);

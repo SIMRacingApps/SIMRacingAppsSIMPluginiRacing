@@ -741,6 +741,8 @@ else
 
         if (isValid()) {
             d.setValue( m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"Initials") );
+            if (d.getString().isEmpty() && getIsPaceCar().getBoolean())
+                d.setValue("PC");                
         }
         return d;
     }
@@ -795,6 +797,8 @@ else
         d.setState(Data.State.OFF);
         if (isValid()) {
             String name = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"AbbrevName");
+            if (name.isEmpty() && getIsPaceCar().getBoolean())
+                name = "Pace Car";
             d.setValue(name,"",Data.State.NORMAL);
         }
         return d;
@@ -1343,7 +1347,6 @@ else
                                 togo = 2;  //white flag will override this.
                             else
                                 togo = 0;
-                            d.setUOM("~lap");
                         }
                         else {
                             double percentCompleted = getLap(LapType.COMPLETEDPERCENT).getDouble() / 100.0;
@@ -1362,10 +1365,17 @@ else
                             }
                         }
                     }
+                    else {
+                        //if session has unlimited laps, then show as approximate
+                        if (laps == Session.UNLIMITEDLAPS) {
+                            togo = 0;
+                            d.setUOM("~lap");
+                        }
+                    }
                 }
             }
 
-            //apply some boundries to the result
+            //apply some boundaries to the result
             togo = (int)Math.min(laps,Math.min(Math.max(0, togo),isRace || isQual ? laps - lap : laps));
 
             d.setValue(togo);
