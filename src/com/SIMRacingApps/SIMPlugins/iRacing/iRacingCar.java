@@ -787,7 +787,7 @@ else
         Data d = super.getDriverName();
         d.setState(Data.State.OFF);
         if (isValid())
-            d.setValue(m_driverName,"",Data.State.NORMAL);
+            d.setValue(Server.getArg(m_driverName,m_driverName),"",Data.State.NORMAL);
         return d;
     }
 
@@ -799,7 +799,7 @@ else
             String name = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"AbbrevName");
             if (name.isEmpty() && getIsPaceCar().getBoolean())
                 name = "Pace Car";
-            d.setValue(name,"",Data.State.NORMAL);
+            d.setValue(Server.getArg(name,name),"",Data.State.NORMAL);
         }
         return d;
     }
