@@ -783,23 +783,30 @@ else
     }
 
     @Override
-    public Data getDriverName() {
-        Data d = super.getDriverName();
+    public Data getDriverName(boolean allowMapping) {
+        Data d = super.getDriverName(allowMapping);
         d.setState(Data.State.OFF);
-        if (isValid())
-            d.setValue(Server.getArg(m_driverName,m_driverName),"",Data.State.NORMAL);
+        if (isValid()) {
+            if (allowMapping)
+                d.setValue(Server.getArg(m_driverName,m_driverName),"",Data.State.NORMAL);
+            else
+                d.setValue(m_driverName,"",Data.State.NORMAL);
+        }
         return d;
     }
 
     @Override
-    public Data getDriverNameShort() {
-        Data d = super.getDriverNameShort();
+    public Data getDriverNameShort(boolean allowMapping) {
+        Data d = super.getDriverNameShort(allowMapping);
         d.setState(Data.State.OFF);
         if (isValid()) {
             String name = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"AbbrevName");
             if (name.isEmpty() && getIsPaceCar().getBoolean())
                 name = "Pace Car";
-            d.setValue(Server.getArg(name,name),"",Data.State.NORMAL);
+            if (allowMapping)
+                d.setValue(Server.getArg(name,name),"",Data.State.NORMAL);
+            else
+                d.setValue(name,"",Data.State.NORMAL);
         }
         return d;
     }
