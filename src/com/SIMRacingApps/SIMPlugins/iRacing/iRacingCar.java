@@ -1062,15 +1062,21 @@ else
     @Override
     public Data getIncidents() {
         Data d = super.getIncidents();
-        if (isME() && m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarDriverIncidentCount") != null) {
-            d.setState(Data.State.OFF);
-
-            if (isValid()) {
-                int i = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarDriverIncidentCount");
-                if (i >= 0)
-                    m_lastKnownIncidents = i;
-                d.setValue(m_lastKnownIncidents,d.getUOM(),Data.State.NORMAL);
+        if (isME()) {
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarDriverIncidentCount") != null) {
+                d.setState(Data.State.OFF);
+    
+                if (isValid()) {
+                    int i = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarDriverIncidentCount");
+                    if (i >= 0)
+                        m_lastKnownIncidents = i;
+                    d.setValue(m_lastKnownIncidents,d.getUOM(),Data.State.NORMAL);
+                }
             }
+        }
+        else {
+            //I think this will work in a hosted session and you're the admin
+            d.setValue(m_results.getIncidents(),d.getUOM(),Data.State.NORMAL);
         }
         return d;
     }
