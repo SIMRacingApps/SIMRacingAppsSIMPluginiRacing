@@ -1848,9 +1848,11 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             }
             m_dataVersion = m_SIMPlugin.getIODriver().getHeader().getLatest_VarBufTick();
 
-//            if (m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying")) {
-//                m_SIMPlugin.getSession().setReferenceCar("I"+m_SIMPlugin.getIODriver().getVars().getString("CamCarIdx"));
-//            }
+            if (Server.getArg("reference-camera", true) && m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying")) {
+                Integer idx = m_SIMPlugin.getIODriver().getVars().getInteger("CamCarIdx");
+                if (idx > 0)
+                    m_SIMPlugin.getSession().setReferenceCar("I"+idx.toString());
+            }
             
             m_cars.onDataVersionChange();
             
