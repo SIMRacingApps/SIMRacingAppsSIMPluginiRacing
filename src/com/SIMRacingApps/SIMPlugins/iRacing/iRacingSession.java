@@ -1469,6 +1469,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         
         if (m_SIMPlugin.isConnected()) {
             double sessionTimeRemain = m_SIMPlugin.getIODriver().getVars().getDouble("SessionTimeRemain");
+            double estimatedTimeRemain = 0.0;
             double sessionTime = m_SIMPlugin.getIODriver().getVars().getDouble("SessionTime");
             
             //used for testing. Set the arg to the duration of the session in seconds
@@ -1476,9 +1477,9 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             
             d.setUOM(m_SIMPlugin.getIODriver().getVarHeaders().getVarHeader("SessionTimeRemain").Unit);
             
-            //when the session isn't timed, iRacing returns 604800 (number of seconds in a week)
-            //I don't want this stupid number, set it to zero.
-            if (sessionTimeRemain >= 604800.0) {
+            //if the session has limited laps, then estimate the time remaining
+            //based on the overall leader
+            if (getLaps().getInteger() != Session.UNLIMITEDLAPS) {
                 Car leader                           = m_SIMPlugin.getSession().getCar(CarIdentifiers.LEADER);
                 ArrayList<Double> lapTimesLeader     = leader.getLapTimes().getDoubleArray();
                 ArrayList<Boolean> lapsInvalidLeader = leader.getLapInvalidFlags().getBooleanArray();
@@ -1504,16 +1505,23 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 
                 if (count > 0) {
                     timeLeader /= count;    //convert to an average.
-                    sessionTimeRemain = timeLeader * (leader.getLapsToGo().getDouble() - (leader.getLap(LapType.COMPLETEDPERCENT).getDouble() / 100.0));
+                    estimatedTimeRemain = timeLeader * (leader.getLapsToGo().getDouble() - (leader.getLap(LapType.COMPLETEDPERCENT).getDouble() / 100.0));
                 }
-                else
-                    sessionTimeRemain = 0.0;
-
-                //always set this so clients know it is estimated, even if it's zero because
-                //we don't have enough data to estimate
-                d.setUOM("~s");
             }
-            d.setValue((sessionTimeRemain < 0.0 || sessionTimeRemain == 604800.0) ? 0.0 : sessionTimeRemain);
+            
+            if (sessionTimeRemain <= 0.0 || sessionTimeRemain >= 604800.0) {
+                d.setValue(Math.max(0.0,estimatedTimeRemain),"~"+d.getUOM());
+            }
+            else
+            if (estimatedTimeRemain > 0.0 && sessionTimeRemain > 0.0) {
+                if (estimatedTimeRemain < sessionTimeRemain)
+                    d.setValue(estimatedTimeRemain,"~"+d.getUOM());
+                else
+                    d.setValue(sessionTimeRemain);
+            }
+            else
+                d.setValue(Math.max(0.0,sessionTimeRemain));
+            
             d.setState(Data.State.NORMAL);
         }
         return d;
