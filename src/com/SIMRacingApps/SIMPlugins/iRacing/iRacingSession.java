@@ -133,6 +133,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             if (car.equalsIgnoreCase("TRANSMITTING")) {
                 if (m_SIMPlugin.isConnected()) {
                     idx = m_SIMPlugin.getIODriver().getVars().getInteger("RadioTransmitCarIdx");
+                    idx = Server.getArg("idx-transmitting", idx);   //for debugging
                 }
                 
                 if (idx == -1 && Server.getArg("teamspeak-transmitting", true)) {
