@@ -803,6 +803,28 @@ else
             String name = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"AbbrevName");
             if (name.isEmpty() && getIsPaceCar().getBoolean())
                 name = "Pace Car";
+            else
+            if (name.isEmpty()) {
+                //try and make the long name shorter
+                String names[] = getDriverName(false).getString().split(" ");
+                name = names[names.length-1];   //get the last name
+                //if that returns a modifier, get the previous name
+                if (name.equalsIgnoreCase("JR")
+                ||  name.equalsIgnoreCase("JR.")
+                ||  name.equalsIgnoreCase("I")
+                ||  name.equalsIgnoreCase("I.")
+                ||  name.equalsIgnoreCase("II")
+                ||  name.equalsIgnoreCase("II.")
+                ||  name.equalsIgnoreCase("III")
+                ||  name.equalsIgnoreCase("III.")
+                ) {
+                    if (names.length > 1)
+                        name = names[names.length-2];
+                }
+                //now tack on the first initial
+                name += ", " + names[0].substring(0, 1);
+            }
+            
             if (allowMapping)
                 d.setValue(Server.getArg(name,name),"",Data.State.NORMAL);
             else
