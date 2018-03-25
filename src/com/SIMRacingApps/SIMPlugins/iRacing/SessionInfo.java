@@ -28,13 +28,14 @@ public class SessionInfo {
     private static final Yaml snakeYaml = new Yaml();
     private static final Yaml_parser yaml = new Yaml_parser();
     private static boolean m_useSnakeYaml = Server.getArg("snake-yaml", false);
+    private static boolean m_save_rawsessionstring = Server.getArg("rawsessionstring", false);
     private static double m_totalTime = 0.0;
     private static double m_count = 0.0;
     private static double m_maxTime = 0.0;
     
     byte m_buffer[] = null;
     Object m_data = null;
-//    String m_rawsessionstring = null;
+    String m_rawsessionstring = null;
     String m_sessionstring = null;
 
     public SessionInfo (Header header, ByteBuffer bytebuffer) {
@@ -46,7 +47,8 @@ public class SessionInfo {
     public Object getData() {
 
         if (m_data == null && m_buffer != null) {
-//            m_rawsessionstring = new String(m_buffer);            //convert it to string
+            if (m_save_rawsessionstring)
+                m_rawsessionstring = new String(m_buffer);            //convert it to string
 
             State s = new State("Parsing",System.currentTimeMillis() / 1000.0);
             
