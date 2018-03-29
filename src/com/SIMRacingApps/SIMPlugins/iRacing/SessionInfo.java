@@ -5,13 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-//import org.yaml.snakeyaml.*;
-
-
-
-
-import org.yaml.snakeyaml.Yaml;
-
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Util.State;
 import com.owlike.genson.Genson;
@@ -25,7 +18,6 @@ import com.owlike.genson.Genson;
 public class SessionInfo {
 
     private static final Genson genson = new Genson();
-    private static final Yaml snakeYaml = new Yaml();
     private static final Yaml_parser yaml = new Yaml_parser();
     private static boolean m_useSnakeYaml = Server.getArg("snake-yaml", false);
     private static boolean m_save_rawsessionstring = Server.getArg("rawsessionstring", false);
@@ -52,58 +44,8 @@ public class SessionInfo {
 
             State s = new State("Parsing",System.currentTimeMillis() / 1000.0);
             
-if (m_useSnakeYaml) {
-//The Snake YAML parser does not like characters that are not within the ASCII range
-//decided to convert to basic hex value with \x, then in the getData() method convert it back to a char.
-//I chose this because the iRacing data is all bytes not double bytes. It would take double bytes to support 4 digit unicode sequences.
-//This will support java clients running on the Windows platform which has direct access to the SIMulator data.
-//for remote clients, the Servlet can choose to encode these to UTF-8 Unicode escapes if needed.
-
-//            m_sessionstring = m_buffer.toString().replaceAll("[\000\200-\377]", "");    //clean up the data for the yaml parser
-            StringBuffer out = new StringBuffer();
-            for(int i=0; i < m_buffer.length; i++)
-            {
-                char c = (char) m_buffer[i];
-                if(c > 127)
-                {
-//                    out.append("&#");
-//                    out.append((int)c & 0xFF);
-//                    out.append(";");
-                    out.append(String.format("\\x%02x",(int)c & 0xFF));
-                }
-                else
-                if(c != 0)
-                {
-                    out.append(c);
-                }
-            }
-            m_sessionstring = out.toString();
-
-            //try and protect car numbers with leading zeros. The parser strips them thinking there either an integer or octal string
-            //if iRacing already has them quoted, then remove the double quotes
-            m_sessionstring = m_sessionstring.replaceAll("CarNumber: ([0].*)", "CarNumber: \"$1\"");
-
-            //some team names have a colon in them causing the parser to get confused. This adds quotes around them until iRacing fixes it.
-            //if iRacing already has them quoted, then remove the double quotes
-            m_sessionstring = m_sessionstring.replaceAll("TeamName: (.*)", "TeamName: \"$1\"");
-            
-            //some user names have invalid characters in leagues races. This adds quotes around them until iRacing fixes it.
-            //if iRacing already has them quoted, then remove the double quotes
-            m_sessionstring = m_sessionstring.replaceAll("UserName: (.*)", "UserName: \"$1\"");
-            m_sessionstring = m_sessionstring.replaceAll("Initials: (.*)", "Initials: \"$1\"");
-            m_sessionstring = m_sessionstring.replaceAll("AbbrevName: (.*)", "AbbrevName: \"$1\"");
-            
-            //If cameras have been customized, they sometimes contain invalid characters to yaml
-            m_sessionstring = m_sessionstring.replaceAll("GroupName: (.*)", "GroupName: \"$1\"");
-
-            m_data = snakeYaml.load(m_sessionstring);
-            if (m_data == null) {
-            	m_data = new HashMap<String,Object>();
-            }
-}
-else {
             m_data = yaml.load(m_buffer);
-}
+
             if (Server.isLogLevelFinest()) {
                 double time = s.getTime(System.currentTimeMillis() / 1000.0);
                 m_totalTime += time;
