@@ -1048,12 +1048,14 @@ else
                     String wheeltype = "0"; //TODO: wheel type, matt or chrome, is not output by iRacing as of May 2015, so use matt
                     String wheels = parts.length > 4 ? wheeltype + ","+parts[4] : wheeltype + ",000000";
                     
-    //for now, iRacing always displays 45, so disable the car number                        
-    //                String numparts[] = CarNumberDesignStr.split("[,;]");
-    //                String car_number = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumber").replace("\"", "");
-    //                String numfont = numparts.length > 0 ? numparts[0] : "0";
-    //                String numslant = numparts.length > 1 ? numparts[1] : "0";
-    //                String numcolors = numparts.length > 4 ? numparts[2]+","+numparts[3]+","+numparts[4] : "ffffff,777777,000000";
+                    //had this commented out, but at some point iRacing defaults to showing the car number
+                    //put it back so at least the colors are correct event if it is ignoring the carnumber passed in.
+                    String numparts[] = CarNumberDesignStr.split("[,;]");
+                    String car_number = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumber").replace("\"", "");
+                    //String car_number = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberRaw").replace("\"", "");
+                    String numfont = numparts.length > 0 ? numparts[0] : "0";
+                    String numslant = numparts.length > 1 ? numparts[1] : "0";
+                    String numcolors = numparts.length > 4 ? numparts[2]+","+numparts[3]+","+numparts[4] : "ffffff,777777,000000";
                     
                     //the caller must replace iRacing with the hostname and port of the iRacing server
                     //if running on the same machine, then it is 127.0.0.1::32034
@@ -1062,11 +1064,11 @@ else
                             + "&size=2"
                             + "&pat="+pat
                             + "&lic="+lic
-    //                        + "&car_number="+car_number
-    //                        + "&carnumber="+car_number
-    //                        + "&numfont="+numfont
-    //                        + "&numslant="+numslant
-    //                        + "&numcolors="+numcolors
+                            + "&car_number="+car_number
+                            + "&carnumber="+car_number
+                            + "&numfont="+numfont
+                            + "&numslant="+numslant
+                            + "&numcolors="+numcolors
                             + "&colors="+colors
                             + "&sponsors="+sponsors
                             + "&club="+club
