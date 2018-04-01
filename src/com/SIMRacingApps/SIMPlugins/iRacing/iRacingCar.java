@@ -60,7 +60,6 @@ public class iRacingCar extends Car {
 //    protected int   m_app_ini_autoResetPitBox=1;    //iRacing defaults to 1
     private iRacingSIMPlugin m_iRacingSIMPlugin;
     private Integer m_driversIdx            = -1;   //The index of the car in the DriverInfo.Drivers[] array.
-    private String  m_driverName            = "";
     private String  m_number                = "";
     private Integer m_numberRaw             = -1;
 
@@ -120,7 +119,7 @@ public class iRacingCar extends Car {
         private int     m_lapBest       = 0;      public int getLapBest()        { _refresh(); return m_lapBest; }
         private double  m_lapTimeBest   = 0.0;    public double getLapTimeBest() { _refresh(); return m_lapTimeBest; }
         private int     m_incidents     = 0;      public int getIncidents()      { _refresh(); return m_incidents; }
-
+        
         private _ResultsQualifying() {}
 
         private void _refresh() {
@@ -166,6 +165,7 @@ public class iRacingCar extends Car {
                         if (!s.isEmpty() && Integer.parseInt(s) >= 0) {
                             m_incidents = Integer.parseInt(s);
                         }
+                        
                         break;
                     }
                 }
@@ -186,6 +186,10 @@ public class iRacingCar extends Car {
         private int     m_lapCompleted          = 0;    public int getLapCompleted()   { _refresh(); return m_lapCompleted; }
         private int     m_lapsLed               = 0;    public int getLapsLed()        { _refresh(); return m_lapsLed; }
         private int     m_incidents             = 0;    public int getIncidents()      { _refresh(); return m_incidents; }
+        private int     m_highestPosition       = 999;  public int getPositionHighest(){ _refresh(); return Math.min(0, m_highestPosition); }
+        private int     m_highestPositionClass  = 999;  public int getPositionHighestClass(){ _refresh(); return Math.min(0,m_highestPositionClass); }
+        private int     m_lowestPosition        = 0;    public int getPositionLowest(){ _refresh(); return m_lowestPosition; }
+        private int     m_lowestPositionClass   = 0;    public int getPositionLowestClass(){ _refresh(); return m_lowestPositionClass; }
         
         private String  m_sessionNum                 = "";
         private ArrayList<Double>  m_lapTimes        = new ArrayList<Double>();  public ArrayList<Double>  getLapTimes()       { _refresh(); return m_lapTimes; } //indexed by lap completed, zero based (e.g. Lap 1 = index 0)
@@ -378,6 +382,18 @@ public class iRacingCar extends Car {
                         m_incidents     = m_resultsQualifying.getIncidents();
 //                    }
                 }
+                
+                if (m_position > 0) {
+                    m_highestPosition = Math.min(m_highestPosition, m_position);
+                    m_lowestPosition  = Math.max(m_lowestPosition, m_position);
+                }
+                if (m_positionClass > 0) {
+                    m_highestPositionClass = Math.min(m_highestPositionClass, m_positionClass);
+                    m_lowestPositionClass  = Math.max(m_lowestPositionClass, m_positionClass);
+                }
+                
+                if (m_id != m_ME)
+                    ((iRacingSession)m_iRacingSIMPlugin.getSession())._setHasIncidents(m_incidents);
             }  
             catch (IndexOutOfBoundsException e) {}
             catch (NumberFormatException e) {}
@@ -742,7 +758,20 @@ else
         if (isValid()) {
             d.setValue( m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"Initials") );
             if (d.getString().isEmpty() && getIsPaceCar().getBoolean())
-                d.setValue("PC");                
+                d.setValue("PC");
+            else
+            if (d.getString().isEmpty() && m_name.equals("PITSTALL"))
+                d.setValue("PIT");
+            else
+            if (d.getString().isEmpty()) {
+                String s[] = getDriverNameShort(false).getString().split(" ");
+                if (s.length == 1 && !s[0].isEmpty())
+                    d.setValue(s[0].substring(0, 1));
+                else
+                if (s.length > 1 && !s[s.length-1].isEmpty() && !s[0].isEmpty()) {
+                    d.setValue(s[s.length-1].substring(0, 1) + s[0].substring(0, 1));
+                }
+            }
         }
         return d;
     }
@@ -787,10 +816,14 @@ else
         Data d = super.getDriverName(allowMapping);
         d.setState(Data.State.OFF);
         if (isValid()) {
+            String driverName = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"UserName");
+            if (driverName.isEmpty() && m_name.equals("PITSTALL"))
+                driverName = "Pit Stall";
+            
             if (allowMapping)
-                d.setValue(Server.getArg(m_driverName,m_driverName),"",Data.State.NORMAL);
+                d.setValue(Server.getArg(driverName,driverName),"",Data.State.NORMAL);
             else
-                d.setValue(m_driverName,"",Data.State.NORMAL);
+                d.setValue(driverName,"",Data.State.NORMAL);
         }
         return d;
     }
@@ -804,25 +837,32 @@ else
             if (name.isEmpty() && getIsPaceCar().getBoolean())
                 name = "Pace Car";
             else
+            if (name.isEmpty() && m_name.equals("PITSTALL"))
+                name = "Pit";
+            else
             if (name.isEmpty()) {
                 //try and make the long name shorter
                 String names[] = getDriverName(false).getString().split(" ");
-                name = names[names.length-1];   //get the last name
-                //if that returns a modifier, get the previous name
-                if (name.equalsIgnoreCase("JR")
-                ||  name.equalsIgnoreCase("JR.")
-                ||  name.equalsIgnoreCase("I")
-                ||  name.equalsIgnoreCase("I.")
-                ||  name.equalsIgnoreCase("II")
-                ||  name.equalsIgnoreCase("II.")
-                ||  name.equalsIgnoreCase("III")
-                ||  name.equalsIgnoreCase("III.")
-                ) {
-                    if (names.length > 1)
-                        name = names[names.length-2];
+                if (names.length > 0) {
+                    name = names[names.length-1];   //get the last name
+                    //if that returns a modifier, get the previous name
+                    if (name.equalsIgnoreCase("JR")
+                    ||  name.equalsIgnoreCase("JR.")
+                    ||  name.equalsIgnoreCase("I")
+                    ||  name.equalsIgnoreCase("I.")
+                    ||  name.equalsIgnoreCase("II")
+                    ||  name.equalsIgnoreCase("II.")
+                    ||  name.equalsIgnoreCase("III")
+                    ||  name.equalsIgnoreCase("III.")
+                    ) {
+                        if (names.length > 1)
+                            name = names[names.length-2];
+                    }
+                    
+                    //now tack on the first initial
+                    if (!names[0].isEmpty())
+                        name += ", " + names[0].substring(0, 1);
                 }
-                //now tack on the first initial
-                name += ", " + names[0].substring(0, 1);
             }
             
             if (allowMapping)
@@ -1099,8 +1139,10 @@ else
             }
         }
         else {
-            //I think this will work in a hosted session and you're the admin
-            d.setValue(m_results.getIncidents(),d.getUOM(),Data.State.NORMAL);
+            //if we've seen any incidents from other cars, either end of race or admin
+            if (((iRacingSession)m_iRacingSIMPlugin.getSession())._getHasIncidents()) {
+                d.setValue(m_results.getIncidents(),d.getUOM(),Data.State.NORMAL);
+            }
         }
         return d;
     }
@@ -1756,6 +1798,22 @@ else
     }
 
     @Override
+    public Data getPositionHighest() {
+        Data d = super.getPositionHighest();
+        d.setValue(m_results.getPositionHighest());
+        d.setState(Data.State.NORMAL);
+        return d;
+    }
+
+    @Override
+    public Data getPositionLowest() {
+        Data d = super.getPositionLowest();
+        d.setValue(m_results.getPositionLowest());
+        d.setState(Data.State.NORMAL);
+        return d;
+    }
+    
+    @Override
     public Data getPositions() {
         Data d = super.getPositions();
         d.setValue(m_results.getPositions());
@@ -1771,6 +1829,22 @@ else
         return d;
     }
 
+    @Override
+    public Data getPositionHighestClass() {
+        Data d = super.getPositionHighestClass();
+        d.setValue(m_results.getPositionHighestClass());
+        d.setState(Data.State.NORMAL);
+        return d;
+    }
+
+    @Override
+    public Data getPositionLowestClass() {
+        Data d = super.getPositionLowestClass();
+        d.setValue(m_results.getPositionLowestClass());
+        d.setState(Data.State.NORMAL);
+        return d;
+    }
+    
     @Override
     public Data getPositionsClass() {
         Data d = super.getPositionsClass();
@@ -2369,14 +2443,15 @@ else
             m_prevStatus.setState(nextStatus);
             return false;
         }
-        
-        String teams = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TeamRacing");
-        if (!teams.isEmpty() && Integer.parseInt(teams) != 0) {
-        }
+
+//moved to getTeamName()        
+//        String teams = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TeamRacing");
+//        if (!teams.isEmpty() && Integer.parseInt(teams) != 0) {
+//        }
 
         //In team events, this can change, but the caridx and car number will stay the same
         //So, keep it updated in real-time.
-        m_driverName = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"UserName");
+        //m_driverName = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"UserName");
         
 //      "RadioTransmitCarIdx": -1,
 //      "RadioTransmitFrequencyIdx": 5,
@@ -2396,11 +2471,11 @@ else
         
         if (isME()) {
             fuelLevel = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("FuelLevel");
-//            if (m_pitLocation < 0.0) {
+            if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().isDataParsed()) {
                 String s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","DriverPitTrkPct");
                 if (!s.isEmpty())
                     m_pitLocation = Double.parseDouble(s);
-//            }
+            }
             //see below for setting the pit location for other cars when they eventually stop in their pit stall. 
                 
             //if the fuel level increases and it wasn't checked, then we must have 
@@ -2963,7 +3038,7 @@ else
         if (nextStatus.equals(iRacingCar.Status.INPITSTALL)) {
 
             //see if the location of the pit stall has not been set and set it.
-            if (m_pitLocation < 0.0) {
+            if (m_pitLocation < 0.0 || m_sessionVersion != m_iRacingSIMPlugin.getIODriver().getHeader().getSessionInfoUpdate()) {
 //                if (!isME()) {
                     m_pitLocation = m_lapCompletedPercent;
 //                }
@@ -3131,6 +3206,7 @@ else
 //            _setupBeforePitting(m_lapPitted);
         }
         
+        m_sessionVersion = m_iRacingSIMPlugin.getIODriver().getHeader().getSessionInfoUpdate();
         m_isNewCar = false;
         return isValid();
     }
@@ -3184,7 +3260,7 @@ else
         String numberRaw  = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberRaw");
         if (!numberRaw.isEmpty())
             m_numberRaw = Integer.parseInt(numberRaw);
-        m_driverName = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"UserName");
+        //m_driverName = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"UserName");
 
         //get the lap completed from the results, then we will use current lap later to keep this updated.
         m_lapCompleted = m_results.getLapCompleted();

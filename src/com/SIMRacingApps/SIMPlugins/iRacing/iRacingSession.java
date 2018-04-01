@@ -46,6 +46,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     private int                                      m_dataVersion;
     private int                                      m_sessionVersion;
     private boolean                                  m_connected = false;
+    private boolean                                  m_hasIncidents;
     private iRacingTrack                             m_track;
     private SessionDataCars                          m_cars;
     private SessionDataCarsByCarNumber               m_carsByCarNumber;
@@ -66,6 +67,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         m_dataVersion                    = -1;
         m_sessionVersion                 = -1;
         m_connected                      = false;
+        m_hasIncidents                   = false;
         m_track                          = new iRacingTrack(m_SIMPlugin);
         m_cars                           = new SessionDataCars(m_SIMPlugin);
         m_carsByCarNumber                = new SessionDataCarsByCarNumber(m_SIMPlugin,m_cars);
@@ -92,6 +94,15 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     @Override
     public Track getTrack() {
         return m_track;
+    }
+    
+    public void _setHasIncidents(int incidents) {
+        if (incidents > 0)
+            m_hasIncidents = true;
+    }
+    
+    public boolean _getHasIncidents() {
+        return m_hasIncidents;
     }
     
     private int _CarIdx(String car) {

@@ -19,7 +19,6 @@ public class SessionInfo {
 
     private static final Genson genson = new Genson();
     private static final Yaml_parser yaml = new Yaml_parser();
-    private static boolean m_useSnakeYaml = Server.getArg("snake-yaml", false);
     private static boolean m_save_rawsessionstring = Server.getArg("rawsessionstring", false);
     private static double m_totalTime = 0.0;
     private static double m_count = 0.0;
@@ -28,7 +27,7 @@ public class SessionInfo {
     byte m_buffer[] = null;
     Object m_data = null;
     String m_rawsessionstring = null;
-    String m_sessionstring = null;
+//    String m_sessionstring = null;
 
     public SessionInfo (Header header, ByteBuffer bytebuffer) {
         m_buffer = new byte[bytebuffer.capacity()];
@@ -52,7 +51,7 @@ public class SessionInfo {
                 m_count++;
                 m_maxTime = Math.max(m_maxTime, time);
                 Server.logger().finest(String.format("%s: time = %f, max = %f, avg = %f, count = %.0f"
-                        , m_useSnakeYaml ? "SnakeYaml" : "Yaml_parser"
+                        , "Yaml_parser"
                         , time
                         , m_maxTime
                         , m_totalTime / m_count
@@ -65,7 +64,11 @@ public class SessionInfo {
         return m_data;
     }
 
-    public String toString() { getData(); return m_sessionstring; }
+    //use this if you only want to query the data if it has been parsed.
+    //parsing is delayed until thing needs it.
+    public boolean isDataParsed() { return m_data != null; }
+    
+//    public String toString() { getData(); return m_sessionstring; }
 
     @SuppressWarnings("unchecked")
     public Object getObject(String ... args) {
@@ -119,23 +122,6 @@ public class SessionInfo {
             if (o instanceof ArrayList || o instanceof Map) {
                 o = genson.serialize(o);
             }
-if (m_useSnakeYaml) {            
-            //convert the hex codes back to their characters
-            if (o.toString().contains("\\x")) {
-                StringBuffer s = new StringBuffer();
-                String os = o.toString();
-                int position = 0;
-                int index = os.indexOf("\\x",position);
-                while (index > -1) {
-                    s.append(os.substring(position, index));
-                    s.append((char)Integer.parseInt(os.substring(index+2,index+4),16));
-                    position = index + 4;
-                    index = os.indexOf("\\x",position);
-                }
-                s.append(os.substring(position));
-                o = s;
-            }
-}
         }
         else
             o = "";

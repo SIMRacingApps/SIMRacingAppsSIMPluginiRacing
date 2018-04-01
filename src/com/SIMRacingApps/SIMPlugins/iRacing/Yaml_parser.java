@@ -287,6 +287,7 @@ public class Yaml_parser {
 
     //java -classpath SIMRacingAppsServer.exe com.SIMRacingApps.SIMPlugins.iRacing.Yaml
     public static void main(String[] args) {
+        @SuppressWarnings("deprecation")
         Genson genson = new Genson.Builder().useIndentation(true).create();
         Yaml_parser y = new Yaml_parser();
         TreeMap<String,Object> m = y.load((
