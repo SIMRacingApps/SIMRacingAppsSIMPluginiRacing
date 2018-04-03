@@ -186,8 +186,8 @@ public class iRacingCar extends Car {
         private int     m_lapCompleted          = 0;    public int getLapCompleted()   { _refresh(); return m_lapCompleted; }
         private int     m_lapsLed               = 0;    public int getLapsLed()        { _refresh(); return m_lapsLed; }
         private int     m_incidents             = 0;    public int getIncidents()      { _refresh(); return m_incidents; }
-        private int     m_highestPosition       = 999;  public int getPositionHighest(){ _refresh(); return Math.min(0, m_highestPosition); }
-        private int     m_highestPositionClass  = 999;  public int getPositionHighestClass(){ _refresh(); return Math.min(0,m_highestPositionClass); }
+        private int     m_highestPosition       = 999;  public int getPositionHighest(){ _refresh(); return m_highestPosition == 999 ? 0 : m_highestPosition; }
+        private int     m_highestPositionClass  = 999;  public int getPositionHighestClass(){ _refresh(); return m_highestPositionClass == 999 ? 0 : m_highestPositionClass; }
         private int     m_lowestPosition        = 0;    public int getPositionLowest(){ _refresh(); return m_lowestPosition; }
         private int     m_lowestPositionClass   = 0;    public int getPositionLowestClass(){ _refresh(); return m_lowestPositionClass; }
         
