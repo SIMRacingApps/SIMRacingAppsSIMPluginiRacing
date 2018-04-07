@@ -102,14 +102,13 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     }
 
     @Override
-    public Data getLength() {
-        Data d = super.getLength();
+    public Data getLength(String UOM) {
+        Data d = super.getLength(UOM);
         d.setState(Data.State.OFF);
 
         if (m_SIMPlugin.isConnected()) {
             String s[] = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","TrackLength").split(" ");
             if (s.length == 2) {
-                String UOM = d.getUOM();
                 d.setValue(Double.parseDouble(s[0]));
                 d.setUOM(s[1]);
                 d.setState(Data.State.NORMAL);

@@ -1,8 +1,8 @@
-/**
+   /**
  * 
  */
 package com.SIMRacingApps.SIMPlugins.iRacing.Gauges;
-
+  
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Track;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
@@ -21,7 +21,7 @@ import com.SIMRacingApps.Util.State;
  */
 public class Speedometer extends iRacingGauge {
     private final double SPEED_FACTOR       = 1.0;
-    private final int NUM_SPEED_SAMPLES     = 3;
+    private final int NUM_SPEED_SAMPLES     = 10;
     private Data    m_speed                 = new Data("Speed",0.0,"km/h");
     private double  m_speed_sessionTime[]   = new double[NUM_SPEED_SAMPLES];
     private double  m_speed_percentage[]    = new double[NUM_SPEED_SAMPLES];
@@ -85,7 +85,7 @@ public class Speedometer extends iRacingGauge {
 	            //if we have enough samples
 	            if (m_speed_sessionTime[index] > 0.0 && m_speed_sessionTime[m_speed_index] > 0.0) {
 	                double start        = m_speed_percentage[m_speed_index];
-	                double distanceTime = sessionTime - m_speed_sessionTime[m_speed_index];
+	                double distanceTime = m_speed_sessionTime[index] - m_speed_sessionTime[m_speed_index];
 	    
 	                if (distanceTime > 0.0) {
 	                    double distancePercent;
@@ -97,8 +97,8 @@ public class Speedometer extends iRacingGauge {
 	                        distancePercent = lapCompletedPercent - start;
 	                    }
 	    
-	                    double meters = (trackLength * 1000 * distancePercent);
-	                    m_speed.setValue(meters / distanceTime);
+	                    double kilometers = (trackLength * distancePercent);
+	                    m_speed.setValue(kilometers / (distanceTime / (60 * 60)));
 	                    if (m_speed.getDouble() > 500.0 || m_speed.getDouble() < 1.0)
 	                        m_speed.setValue(0.0);
 	                    else
