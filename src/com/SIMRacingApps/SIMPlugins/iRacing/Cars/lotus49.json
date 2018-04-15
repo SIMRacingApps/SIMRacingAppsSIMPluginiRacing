@@ -55,6 +55,7 @@
             "default": {
                 "Name":              "FUEL",
                 "TypeName":          "LEVEL",
+                "imperial":          "impgal",
                 "UOM":               "impgal",
                 "Minimum":           0.0,
                 "Maximum":           40.0,
