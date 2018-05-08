@@ -1,7 +1,7 @@
-@echo off
-cd
 @echo on
-set CAR=lotus
-del %CAR%.zip %CAR%.sra
-7z a %CAR%.sra -bb1 -tzip -r %CAR% %CAR%*.json
+%~d0
+cd %~dp0
+set CAR=ferrari488gt3
+del %TMP%\%CAR%.zip %TMP%\%CAR%.sra
+7z a %TMP%\%CAR%.sra -bb1 -tzip -r %CAR% %CAR%*.json
 pause

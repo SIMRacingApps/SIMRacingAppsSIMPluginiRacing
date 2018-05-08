@@ -15,7 +15,13 @@
                 "Maximum":           8.0,
                 "MajorIncrement":    1.0,
                 "MinorIncrement":    0.2,
-                "StateAscending":    true
+                "StateAscending":    true,
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6350.0, "End": 7100.0},
+                    "SHIFT":       {"Start": 7100.0, "End": 7150.0},
+                    "SHIFTBLINK":  {"Start": 7150.0, "End": 7750.0},
+                    "CRITICAL":    {"Start": 7750.0, "End": 99999.0}
+                }
             }
         },
         "Gear": {
