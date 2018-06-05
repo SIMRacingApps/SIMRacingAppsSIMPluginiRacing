@@ -91,6 +91,10 @@ public class iRacingCar extends Car {
     private int     m_lastKnownFrequency    = 0;    //Keep track of the last frequency they transmitted on.
     private int     m_lastKnownIncidents    = 0;
     private int     m_lastKnownIncidentsTeam= 0;
+    private Map<Integer,Integer> m_runningAverageSincePittingLaps = new HashMap<Integer,Integer>();
+    private Map<Integer,Integer> m_averageSincePittingLaps = new HashMap<Integer,Integer>();
+    private Map<Integer,Double> m_runningAverageSincePittingTime = new HashMap<Integer,Double>();
+    private Map<Integer,Double> m_averageSincePittingTime = new HashMap<Integer,Double>();
 
 //    private VarDataDouble m_fuelReader;
 //    private VarDataDoubleSpeed m_speedReader;
@@ -1299,12 +1303,102 @@ else
     }
 
     @Override
-    public Data getLap(String ref) {
-        Data d = super.getLap(ref);
+    public Data getLap(String ref,int lapsToAverage) {
+        Data d = super.getLap(ref,lapsToAverage);
         d.setState(Data.State.OFF);
         
         String r = d.getValue("reference").toString();
 
+        if (r.equals(Car.LapType.AVERAGE)) {
+            int c = 0;
+            int laps = m_results.getLapTimes().size();
+            if (lapsToAverage > 0) {
+                //now take the average of the last "laps" laps that were not invalid laps
+                //if we don't have enough valid "laps", then use as many as you have.
+                for (int i=0; c < lapsToAverage && i < laps; i++) {
+                    if (i < m_invalidLaps.size() && !m_invalidLaps.get(i)) {
+                        c++;
+                    }
+                }
+            }
+            if (c > 0 && (c == lapsToAverage || lapsToAverage == 9999)) {
+                d.setValue(c);
+                d.setState(Data.State.NORMAL);
+            }
+        }
+        else
+        if (r.equals(Car.LapType.RUNNINGAVERAGE)) {
+            int c = 0;
+            if (lapsToAverage > 0) {
+                //now take the average of the last "laps" laps that were not invalid laps
+                //if we don't have enough valid "laps", then use as many as you have.
+                for (int i=m_results.getLapTimes().size()-1; c < lapsToAverage && i >= 0; i--) {
+                    if (i < m_invalidLaps.size() && !m_invalidLaps.get(i)) {
+                        c++;
+                    }
+                }
+            }
+            if (c > 0 && (c == lapsToAverage || lapsToAverage == 9999)) {
+                d.setValue(c);
+                d.setState(Data.State.NORMAL);
+            }
+        }
+        else
+        if (r.equals(Car.LapType.AVERAGESINCEPITTING)) {
+            int c = 0;
+            int laps = m_results.getLapTimes().size();
+            
+            if (!m_averageSincePittingLaps.isEmpty() && getStatus().getString().equals(Car.Status.LEAVINGPITS))
+                m_averageSincePittingLaps = new HashMap<Integer,Integer>();
+            
+            if (lapsToAverage > 0) {
+                //now take the average of the last "laps" laps that were not invalid laps
+                //if we don't have enough valid "laps", then use as many as you have.
+                for (int i=m_lapPitted-1; c < lapsToAverage && i < laps; i++) {
+                    if (i < m_invalidLaps.size() && !m_invalidLaps.get(i)) {
+                        c++;
+                    }
+                }
+            }
+            if (c > 0 && (c == lapsToAverage || lapsToAverage == 9999)) {
+                d.setValue(c);
+                d.setState(Data.State.NORMAL);
+                m_averageSincePittingLaps.put(lapsToAverage, c);
+            }
+            else
+            if (m_averageSincePittingLaps.containsKey(lapsToAverage)) {
+                d.setValue(m_averageSincePittingLaps.get(lapsToAverage));
+                d.setState(Data.State.NORMAL);
+            }
+        }
+        else
+        if (r.equals(Car.LapType.RUNNINGAVERAGESINCEPITTING)) {
+            int c = 0;
+            
+            if (!m_runningAverageSincePittingLaps.isEmpty() && getStatus().getString().equals(Car.Status.LEAVINGPITS))
+                m_runningAverageSincePittingLaps = new HashMap<Integer,Integer>();
+            
+            if (lapsToAverage > 0) {
+                //now take the average of the last "laps" laps that were not invalid laps
+                //if we don't have enough valid "laps", then use as many as you have.
+                for (int i=m_results.getLapTimes().size()-1; c < lapsToAverage && i >= 0 && i >= (m_lapPitted-1); i--) {
+                    if (i < m_invalidLaps.size() && !m_invalidLaps.get(i)) {
+                        c++;
+                    }
+                }
+            }
+            if (c > 0 && (c == lapsToAverage || lapsToAverage == 9999)) {
+                d.setValue(c);
+                d.setState(Data.State.NORMAL);
+                m_runningAverageSincePittingLaps.put(lapsToAverage, c);
+            }
+            else
+            if (m_runningAverageSincePittingLaps.containsKey(lapsToAverage)) {
+                d.setValue(m_runningAverageSincePittingLaps.get(lapsToAverage));
+                d.setState(Data.State.NORMAL);
+            }
+        }
+        else
         if (r.equals(Car.LapType.CURRENT)) {
             d.setValue(m_lapCompleted+1);
             d.setState(Data.State.NORMAL);
@@ -1464,12 +1558,114 @@ else
     }
     
     @Override
-    public Data getLapTime(String ref) {
-        Data d = super.getLapTime(ref);
+    public Data getLapTime(String ref, int lapsToAverage) {
+        Data d = super.getLapTime(ref,lapsToAverage);
         d.setState(Data.State.OFF);
         String r = d.getValue("reference").toString();
 
         if (isValid()) {
+            if (r.equals(Car.LapType.AVERAGE)) {
+                ArrayList<Double> lapTimes = m_results.getLapTimes();
+                double average = 0.0;
+                int c = 0;
+                int laps = lapTimes.size();
+                if (lapsToAverage > 0) {
+                    //now take the average of the last "laps" laps that were not invalid laps
+                    //if we don't have enough valid "laps", then use as many as you have.
+                    for (int i=0; c < lapsToAverage && i < laps; i++) {
+                        if (i < m_invalidLaps.size() && !m_invalidLaps.get(i)) {
+                            average += lapTimes.get(i);
+                            c++;
+                        }
+                    }
+                }
+                if (c > 0 && (c == lapsToAverage || lapsToAverage == 9999)) {
+                    d.setValue(average / (double)c);
+                    d.setState(Data.State.NORMAL);
+                }
+            }
+            else
+            if (r.equals(Car.LapType.RUNNINGAVERAGE)) {
+                ArrayList<Double> lapTimes = m_results.getLapTimes();
+                double average = 0.0;
+                int c = 0;
+                if (lapsToAverage > 0) {
+                    //now take the average of the last "laps" laps that were not invalid laps
+                    //if we don't have enough valid "laps", then use as many as you have.
+                    for (int i=lapTimes.size()-1; c < lapsToAverage && i >= 0; i--) {
+                        if (i < m_invalidLaps.size() && !m_invalidLaps.get(i)) {
+                            average += lapTimes.get(i);
+                            c++;
+                        }
+                    }
+                }
+                if (c > 0 && (c == lapsToAverage || lapsToAverage == 9999)) {
+                    d.setValue(average / (double)c);
+                    d.setState(Data.State.NORMAL);
+                }
+            }
+            else
+            if (r.equals(Car.LapType.AVERAGESINCEPITTING)) {
+                ArrayList<Double> lapTimes = m_results.getLapTimes();
+                double average = 0.0;
+                int c = 0;
+                int laps = lapTimes.size();
+                
+                if (!m_averageSincePittingTime.isEmpty() && getStatus().getString().equals(Car.Status.LEAVINGPITS))
+                    m_averageSincePittingTime = new HashMap<Integer,Double>();
+
+                if (lapsToAverage > 0) {
+                    //now take the average of the last "laps" laps that were not invalid laps
+                    //if we don't have enough valid "laps", then use as many as you have.
+                    for (int i=m_lapPitted-1; c < lapsToAverage && i < laps; i++) {
+                        if (i < m_invalidLaps.size() && !m_invalidLaps.get(i)) {
+                            average += lapTimes.get(i);
+                            c++;
+                        }
+                    }
+                }
+                if (c > 0 && (c == lapsToAverage || lapsToAverage == 9999)) {
+                    d.setValue(average / (double)c);
+                    d.setState(Data.State.NORMAL);
+                    m_averageSincePittingTime.put(lapsToAverage, d.getDouble());
+                }
+                else
+                if (m_averageSincePittingTime.containsKey(lapsToAverage)) {
+                    d.setValue(m_averageSincePittingTime.get(lapsToAverage));
+                    d.setState(Data.State.NORMAL);
+                }
+            }
+            else
+            if (r.equals(Car.LapType.RUNNINGAVERAGESINCEPITTING)) {
+                ArrayList<Double> lapTimes = m_results.getLapTimes();
+                double average = 0.0;
+                int c = 0;
+                
+                if (!m_runningAverageSincePittingTime.isEmpty() && getStatus().getString().equals(Car.Status.LEAVINGPITS))
+                    m_runningAverageSincePittingTime = new HashMap<Integer,Double>();
+
+                if (lapsToAverage > 0) {
+                    //now take the average of the last "laps" laps that were not invalid laps
+                    //if we don't have enough valid "laps", then use as many as you have.
+                    for (int i=lapTimes.size()-1; c < lapsToAverage && i >= 0 && i >= (m_lapPitted-1); i--) {
+                        if (i < m_invalidLaps.size() && !m_invalidLaps.get(i)) {
+                            average += lapTimes.get(i);
+                            c++;
+                        }
+                    }
+                }
+                if (c > 0 && (c == lapsToAverage || lapsToAverage == 9999)) {
+                    d.setValue(average / (double)c);
+                    d.setState(Data.State.NORMAL);
+                    m_runningAverageSincePittingTime.put(lapsToAverage, d.getDouble());
+                }
+                else
+                if (m_runningAverageSincePittingTime.containsKey(lapsToAverage)) {
+                    d.setValue(m_runningAverageSincePittingTime.get(lapsToAverage));
+                    d.setState(Data.State.NORMAL);
+                }
+            }
+            else
             if (r.equals(Car.LapType.CURRENT)) {
                 double timeAtStartFinish = this.m_timeAtStartFinish.size() > 0 ? this.m_timeAtStartFinish.get(this.m_timeAtStartFinish.size()-1) : 0.0;
                 
@@ -2495,6 +2691,10 @@ else
         if (isME() && m_iRacingSIMPlugin.getIODriver().getVars().getBoolean("IsInGarage") /*&& m_lapCompletedPercent == -1.0*/) {
             nextStatus.setState(iRacingCar.Status.INGARAGE,m_sessionTime);
         }
+//        else
+//        if (isME() && m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PlayerCarTowTime") > 0.0) {  //June 2018?
+//            nextStatus.setState(iRacingCar.Status.TOWING,m_sessionTime);
+//        }
         else
         if (surfacelocation.equals(TrackSurface.InPitStall)) {
             nextStatus.setState(iRacingCar.Status.INPITSTALL,m_sessionTime);
@@ -2902,12 +3102,9 @@ else
             ||  nextStatus.equals(iRacingCar.Status.APPROACHINGPITS)
             ||  nextStatus.equals(iRacingCar.Status.LEAVINGPITS)
             ||  nextStatus.equals(iRacingCar.Status.OFFTRACK)
-            || (m_sessionFlags & (
-                    SessionFlags.caution
-                   |SessionFlags.cautionWaving
-                   |SessionFlags.red
-                   |SessionFlags.green)
-                ) != 0
+            || (m_sessionFlags & (SessionFlags.caution|SessionFlags.cautionWaving|SessionFlags.red)) != 0
+               //on green, list track types where you are not up to speed at the line
+            || ((m_sessionFlags & SessionFlags.green) != 0 && !(m_iRacingSIMPlugin.getSession().getTrack().getType().getString().equals(Track.Type.ROAD_COURSE)))
             ) {
                 m_invalidLaps.set(currentLap-1, true);
             }
