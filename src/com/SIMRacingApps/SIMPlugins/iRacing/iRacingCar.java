@@ -1859,6 +1859,11 @@ else
 
             if ((flags & SessionFlags.repair) != 0)  { flagnames.append(";"); flagnames.append(Car.Message.REPAIR); }
             if (getIsPitSpeedLimiter().getBoolean()) { flagnames.append(";"); flagnames.append(Car.Message.PITSPEEDLIMITER); }
+            double towtime = 0.0;
+            if (isME() && (towtime = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PlayerCarTowTime")) > 0.0) {  //June 2018
+                flagnames.append(";"); flagnames.append(Car.Message.TOWING + " " + String.format("%.0f:%02.0f", Math.floor(towtime / 60.0), towtime % 60.0));
+            }
+
             flagnames.append(";");
             d.setValue(flagnames.toString());
             d.setState(Data.State.NORMAL);
@@ -2691,10 +2696,10 @@ else
         if (isME() && m_iRacingSIMPlugin.getIODriver().getVars().getBoolean("IsInGarage") /*&& m_lapCompletedPercent == -1.0*/) {
             nextStatus.setState(iRacingCar.Status.INGARAGE,m_sessionTime);
         }
-//        else
-//        if (isME() && m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PlayerCarTowTime") > 0.0) {  //June 2018?
-//            nextStatus.setState(iRacingCar.Status.TOWING,m_sessionTime);
-//        }
+        else
+        if (isME() && m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PlayerCarTowTime") > 0.0) {  //June 2018?
+            nextStatus.setState(iRacingCar.Status.TOWING,m_sessionTime);
+        }
         else
         if (surfacelocation.equals(TrackSurface.InPitStall)) {
             nextStatus.setState(iRacingCar.Status.INPITSTALL,m_sessionTime);

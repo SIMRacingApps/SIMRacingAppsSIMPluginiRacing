@@ -1,5 +1,5 @@
 {
-    "Copyright":   "Copyright (C) 2015 - 2017 Jeffrey Gilliam",
+    "Copyright":   "Copyright (C) 2015 - 2018 Jeffrey Gilliam",
     "License":     "Apache License 2.0",
     "Description": "",
     "MfrLogo":     "com/SIMRacingApps/Cars/porsche.png",
@@ -7,71 +7,17 @@
     "Gauges": {
         "Tachometer": {
             "default": {
-                "Maximum":           9.0
-            },
-            "default-R": {
-                "Maximum":           9.0,
-                "States": {
-                    "SHIFTLIGHTS": {"Start": 5200.0, "End": 8200.0},
-                    "SHIFT":       {"Start": 8200.0, "End": 8250.0},
-                    "SHIFTBLINK":  {"Start": 8250.0, "End": 9999999.0} 
-                }
-            },
-            "default-N": {
-                "Maximum":           9.0,
-                "States": {
-                    "SHIFTLIGHTS": {"Start": 5200.0, "End": 8200.0},
-                    "SHIFT":       {"Start": 8200.0, "End": 8250.0},
-                    "SHIFTBLINK":  {"Start": 8250.0, "End": 9999999.0} 
-                }
-            },
-            "default-1": {
-                "Maximum":           9.0,
-                "States": {
-                    "SHIFTLIGHTS": {"Start": 6200.0, "End": 7500.0},
-                    "SHIFT":       {"Start": 7500.0, "End": 7550.0},
-                    "SHIFTBLINK":  {"Start": 7550.0, "End": 9999999.0} 
-                }
-            },
-            "default-2": {
-                "Maximum":           9.0,
-                "States": {
-                    "SHIFTLIGHTS": {"Start": 6500.0, "End": 8100.0},
-                    "SHIFT":       {"Start": 8100.0, "End": 8150.0},
-                    "SHIFTBLINK":  {"Start": 8150.0,"End": 9999999.0} 
-                }
-            },
-            "default-3": {
-                "Maximum":           9.0,
-                "States": {
-                    "SHIFTLIGHTS": {"Start": 6600.0, "End": 8100.0},
-                    "SHIFT":       {"Start": 8100.0, "End": 8150.0},
-                    "SHIFTBLINK":  {"Start": 8150.0,"End": 9999999.0} 
-                }
-            },
-            "default-4": {
-                "Maximum":           9.0,
-                "States": {
-                    "SHIFTLIGHTS": {"Start": 6800.0, "End": 8100.0},
-                    "SHIFT":       {"Start": 8100.0, "End": 8150.0},
-                    "SHIFTBLINK":  {"Start": 8150.0,"End": 9999999.0} 
-                }
-            },
-            "default-5": {
-                "Maximum":           9.0,
-                "States": {
-                    "SHIFTLIGHTS": {"Start": 6900.0, "End": 8100.0},
-                    "SHIFT":       {"Start": 8100.0, "End": 8150.0},
-                    "SHIFTBLINK":  {"Start": 8150.0,"End": 9999999.0} 
-                }
-            },
-            "default-6": {
-                "Maximum":           9.0,
-                "States": {
-                    "SHIFTLIGHTS": {"Start": 7100.0, "End": 8100.0},
-                    "SHIFT":       {"Start": 8100.0, "End": 8150.0},
-                    "SHIFTBLINK":  {"Start": 8150.0,"End": 9999999.0} 
-                }
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rev/min",
+                "imperial":          "rev/min",
+                "metric":            "rev/min",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true
             }
         },
         "Gear": {
@@ -147,11 +93,11 @@
                 "TypeName":          "LEVEL",
                 "UOM":               "l",
                 "Minimum":           0.0,
-                "Maximum":           110.0,
+                "Maximum":           100.0,
                 "MajorIncrement":    10.0,
                 "MinorIncrement":    5.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   106.0,
+                "CapacityMaximum":   100.0,
                 "CapacityIncrement": 1.0,
                 "IsFixed":           false,
                 "IsChangable":       true,
