@@ -2670,6 +2670,18 @@ else
             }
         }
         
+
+        //iRacing has a bug where it outputs lap 2 at the start of the race while the green flag is out
+        //for about the first 10% of the race. It is really lap one
+        int    currentLap              = (isValid() ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("CarIdxLap", m_id) : -1);
+        
+        //if we can't get a currentLap from the array, fall back to the none array for IBT files.
+        if (currentLap == -1 && isME() && m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("CarIdxLap") == null)
+            currentLap = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("Lap");
+        
+        if (currentLap == 2 && (m_sessionFlags & SessionFlags.green) != 0)
+            currentLap = 1;
+        
         if (isME()) {
             fuelLevel = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("FuelLevel");
             if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().isDataParsed()) {
@@ -2681,12 +2693,20 @@ else
                 
             //if the fuel level increases and it wasn't checked, then we must have 
             //either reset or clicked new car
+            //apparently iRacing resets the flag as it starts fueling.
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PitSvFlags") != null
             &&  prevFuelLevel > -1.0
-            &&  fuelLevel > (prevFuelLevel + 0.001)
+            &&  fuelLevel > (prevFuelLevel + Server.getArg("fuel-level-reset-minimum-liters", 1.0)) //greater than you can fill since last tick. Using 1 liter for now.
             && ((m_iRacingSIMPlugin.getIODriver().getVars().getBitfield("PitSvFlags") & PitSvFlags.FuelFill) == 0)
             ) {
                 m_isNewCar = true;
+                Server.logger().fine(String.format("#%-3s (id=%-2d) New Car because fuel increased on Lap(%-3.3f) from (%-3.3f) to (%-3.3f), DataVersion=(%s)",
+                        m_number,m_id,
+                        (double)currentLap + this.m_lapCompletedPercent,
+                        prevFuelLevel,
+                        fuelLevel,
+                        m_iRacingSIMPlugin.getSession().getDataVersion().getString() //getIODriver().getHeader().getLatest_VarBufTick()
+                    ));
             }
         }
 
@@ -2737,17 +2757,6 @@ else
         if (surfacelocation.equals(TrackSurface.OffTrack)) {
             nextStatus.setState(iRacingCar.Status.OFFTRACK,m_sessionTime);
         }
-
-        //iRacing has a bug where it outputs lap 2 at the start of the race while the green flag is out
-        //for about the first 10% of the race. It is really lap one
-        int    currentLap              = (isValid() ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("CarIdxLap", m_id) : -1);
-        
-        //if we can't get a currentLap from the array, fall back to the none array for IBT files.
-        if (currentLap == -1 && isME() && m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("CarIdxLap") == null)
-            currentLap = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("Lap");
-        
-        if (currentLap == 2 && (m_sessionFlags & SessionFlags.green) != 0)
-            currentLap = 1;
 
         if (!m_surfacelocation.equals(surfacelocation)) {
             if (Server.logger().getLevel().intValue() <= Level.FINE.intValue())
