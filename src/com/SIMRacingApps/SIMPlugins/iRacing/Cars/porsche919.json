@@ -48,21 +48,21 @@
             "default": {
                 "Name":              "FUEL",
                 "TypeName":          "LEVEL",
-                "UOM":               "kg",
+                "UOM":               "l",
                 "Minimum":           0.0,
-                "Maximum":           50.0,
-                "MajorIncrement":    5.0,
-                "MinorIncrement":    2.5,
+                "Maximum":           70.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   46.875,
-                "CapacityIncrement": 0.375,
+                "CapacityMaximum":   62.5,
+                "CapacityIncrement": 0.5,
                 "IsFixed":           false,
                 "IsChangable":       true,
                 "OnResetChange":     true,
                 "StateAscending":    false,
                 "States": {
-                    "CRITICAL": {"Start": 0.0, "End": 3.0},
-                    "WARNING":  {"Start": 3.0, "End": 6.0}
+                    "CRITICAL": {"Start": 0.0, "End": 5.0},
+                    "WARNING":  {"Start": 10.0, "End": 15.0}
                 }
             }
         }
