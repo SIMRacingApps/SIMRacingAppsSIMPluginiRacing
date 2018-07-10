@@ -3035,9 +3035,9 @@ else
         
         //bring the array up to the current lap if needed.
         while (m_invalidLaps.size() < (currentLap-1))
-            m_invalidLaps.add(false); //if we just got into the session, mark the early laps invalid.
+            m_invalidLaps.add(true);    //if we just got into the session, mark the earlier laps invalid.
         if (m_invalidLaps.size() < currentLap)
-            m_invalidLaps.add(false);
+            m_invalidLaps.add(false);   //mark the current lap valid until proven guilty.
 
 //if (isME())
 //    currentLap=currentLap;
@@ -3503,7 +3503,7 @@ else
             double DriverCarSLLastRPM  = Double.parseDouble(m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","DriverCarSLLastRPM"));
             double DriverCarSLBlinkRPM = Double.parseDouble(m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","DriverCarSLBlinkRPM"));
             
-            Server.logger().fine(String.format("iRacingCar._initialize() returned First=%.0f, Shift=%.0f, Last=%.0f, Blink=%.0f, RedLine=%.0f for #%s(%d) - %s",
+            Server.logger().info(String.format("iRacingCar._initialize() returned First=%.0f, Shift=%.0f, Last=%.0f, Blink=%.0f, RedLine=%.0f for #%s(%d) - %s",
                     DriverCarSLFirstRPM,
                     DriverCarSLShiftRPM,
                     DriverCarSLLastRPM,
