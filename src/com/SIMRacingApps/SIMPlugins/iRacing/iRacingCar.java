@@ -1410,7 +1410,10 @@ else
         }
         else
         if (r.equals(Car.LapType.QUALIFYING)) {
-            d.setValue(m_resultsQualifying.getLapBest());
+            if (m_sessionType.equals(Session.Type.LONE_QUALIFY) || m_sessionType.equals(Session.Type.OPEN_QUALIFY))
+                d.setValue(m_results.getLapBest());
+            else
+                d.setValue(m_resultsQualifying.getLapBest());
             d.setState(Data.State.NORMAL);
         }
         else
@@ -1717,7 +1720,10 @@ else
             }
             else
             if (r.equals(Car.LapType.QUALIFYING)) {
-                d.setValue(m_resultsQualifying.getLapTimeBest());
+                if (m_sessionType.equals(Session.Type.LONE_QUALIFY) || m_sessionType.equals(Session.Type.OPEN_QUALIFY))
+                    d.setValue(m_results.getLapTimeBest());
+                else
+                    d.setValue(m_resultsQualifying.getLapTimeBest());
             }
             else
             if (r.equals(Car.LapType.SESSIONLAST) || r.equals(Car.LapType.SESSIONLAST)) {
