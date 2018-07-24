@@ -193,7 +193,7 @@ public class iRacingSIMPlugin extends SIMPlugin {
             else
                 m_endingVersion = Long.MAX_VALUE;
             
-            Server.logger().info(String.format("iRacing: Starting Version(%d), Ending Verision(%d)",m_startingVersion,m_endingVersion));
+            Server.logger().info(String.format("iRacing: Starting Version(%d), Ending Version(%d)",m_startingVersion,m_endingVersion));
         }
         
         //don't read new data without locking first
