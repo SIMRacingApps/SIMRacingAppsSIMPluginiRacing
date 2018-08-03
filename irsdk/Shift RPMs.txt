@@ -1,0 +1,95 @@
+This is a list of the shift light RPMs as posted by David Tucker.
+It appears to be the same values that is dumped in the telemetry, which some are wrong.
+
+http://members.iracing.com/jforum/posts/list/3612381.page#11142325
+
+// Shift Indicator lights (first light, shift light, last light, blink lights)
+
+astonmartin\dbr9\ RPMsShiftLED 6000.0 , 7000.0 , 7500.0 , 7550.0 , // 7600.0 rev limit, ??? auto shift
+audi90gto\ RPMsShiftLED 6200.0 , 7600.0 , 7600.0 , 7650.0 ,
+audir18\ RPMsShiftLED 4300.0 , 4700.0 , 4715.0 , 4730.0 , // 4750.0 rev limit
+audir8gt3\ RPMsShiftLED 7300.0 , 8050.0 , 8100.0 , 8150.0 , // 8200 target shift point (8500 rev limit)
+bmwz4gt3\ RPMsShiftLED 7700.0 , 8650.0 , 8650.0 , 8800.0 , // 9000.0 rev limit, ?-? auto shift
+bmwz4gt3\gtlm\ RPMsShiftLED 7700.0 , 8650.0 , 8650.0 , 8800.0 , // 9000.0 rev limit, ?-? auto shift
+c6r\ RPMsShiftLED 4700.0 , 5700.0 , 6000.0 , 6200.0 , // 6200.0 rev limit, 5840-5450 auto shift
+c7vettedp\ RPMsShiftLED 6700.0 , 7000.0 , 7000.0 , 7100.0 , // 7100.0 rev limit, 6680 auto shift
+cadillacctsvr\ RPMsShiftLED 6600.0 , 7400.0 , 7300.0 , 7750.0 , // 7900.0 rev limit, 6900 auto shift
+dallara\ RPMsShiftLED 8000.0 , 10000.0 , 10000.0 , 10250.0 , // 10350.0 rev limit, 9740 auto shift
+dallaradw12\ RPMsShiftLED 9500.0 , 11700.0 , 11825.0 , 11950.0 , // 12000.0 rev limit, 9740 auto shift
+dallarair18\ RPMsShiftLED 9500.0 , 11700.0 , 11825.0 , 11950.0 , // 12000.0 rev limit, 9740 auto shift
+dirtlatemodel\350\ RPMsShiftLED 7000.0 , 7400.0 , 7600.0 , 7800.0 , // 8500.0 rev limit
+dirtlatemodel\358\ RPMsShiftLED 7000.0 , 7400.0 , 7600.0 , 7800.0 , // 8500.0 rev limit
+dirtlatemodel\438\ RPMsShiftLED 7000.0 , 7400.0 , 7600.0 , 7800.0 , // 8500.0 rev limit
+dirtmidget\ RPMsShiftLED 10300.0 , 10300.0 , 10300.0 , 10300.0 , // 10500.0 rev limit
+dirtsprint\nonwinged\360\ RPMsShiftLED 8900.0 , 8900.0 , 8900.0 , 8900.0 , // 9100.0 rev limit
+dirtsprint\nonwinged\410\ RPMsShiftLED 8900.0 , 8900.0 , 8900.0 , 8900.0 , // 9100.0 rev limit
+dirtsprint\winged\305\ RPMsShiftLED 8900.0 , 8900.0 , 8900.0 , 8900.0 , // 9100.0 rev limit
+dirtsprint\winged\360\ RPMsShiftLED 8900.0 , 8900.0 , 8900.0 , 8900.0 , // 9100.0 rev limit
+dirtsprint\winged\410\ RPMsShiftLED 8900.0 , 8900.0 , 8900.0 , 8900.0 , // 9100.0 rev limit
+dirtstreetstock\ RPMsShiftLED 6800.0 , 6800.0 , 6800.0 , 6800.0 , // 8200.0 rev limit updated for dirt, 6400-5700 auto shift
+dirtumpmod\ RPMsShiftLED 6500.0 , 6800.0 , 7100.0 , 7400.0 , // 8500.0 rev limit
+ferrari488gt3\ RPMsShiftLED 6350.0 , 6850.0 , 6950.0 , 7100.0 ,         // 7750 rev limit, except it's effectively closer to 7250
+ferrari488gte\ RPMsShiftLED 6100.0 , 6550.0 , 6475.0 , 6525.0 ,         // 7300.0 rev limit, 6600 shift
+fordfiestarswrc\ RPMsShiftLED 6200.0 , 7600.0 , 7600.0 , 7650.0 ,
+fordgt\ RPMsShiftLED 7100.0 , 7400.0 , 7400.0 , 7600.0 , // 7600.0 rev limit, 6680-6430 auto shift
+fordgt\gt3\ RPMsShiftLED 7100.0 , 7400.0 , 7400.0 , 7600.0 , // 7600.0 rev limit, 6680-6430 auto shift
+fordgt2017\ RPMsShiftLED 6100.0 , 6550.0 , 6475.0 , 6525.0 ,        // 7300.0 rev limit, 6600 shift
+fordv8sc\ RPMsShiftLED 6500.0 , 7450.0 , 7450.0 , 7500.0 , // 7500.0 rev limit, 7060 auto shift
+formulamazda\ RPMsShiftLED 8000.0 , 8400.0 , 8400.0 , 8500.0 , // 8600.0 rev limit, 7820 auto shift !! ** the auto shift RPM needs to be changed ** !!
+formularenault20\ RPMsShiftLED 6600.0 , 7300.0 , 7300.0 , 7550.0 , // 7550.0 rev limit, ??? auto shift
+fr500s\ RPMsShiftLED 5600.0 , 6400.0 , 6400.0 , 6850.0 , // 7000.0 rev limit, 6600-6030 auto shift
+hpdarx01c\ RPMsShiftLED 6113.0 , 9800.0 , 9800.0 , 9850.0 , // 10000.0 rev limit, 9280-8860 auto shift
+jettatdi\ RPMsShiftLED 4000.0 , 4400.0 , 4400.0 , 4500.0 , // 5000.0 rev limit, 4350-4280 auto shift
+kiaoptima\ RPMsShiftLED 5750.0 , 6250.0 , 6750.0 , 7000.0 , // 8000.0 rev limit, 7000-6250 auto shift
+latemodel\ RPMsShiftLED 6150.0 , 7050.0 , 7050.0 , 7300.0 , // 7600.0 rev limit, 6710-6630 auto shift
+legends\dirtford34c\ RPMsShiftLED 9500.0 , 10300.0 , 10300.0 , 11000.0 , // 11000.0 rev limit, 10360 auto shift
+legends\ford34c\ RPMsShiftLED 9500.0 , 10300.0 , 10300.0 , 11000.0 , // 11000.0 rev limit, 10360 auto shift
+legends\ford34c\rookie\ RPMsShiftLED 7200.0 , 7750.0 , 7750.0 , 8000.0 , // 8000.0 rev limit, 7530 auto shift
+lotus49\ RPMsShiftLED 8500.0 , 8900.0 , 9300.0 , 9500.0 , // 9800.0 rev limit
+lotus79\ RPMsShiftLED 9500.0 , 10350.0 , 10350.0 , 11000.0 , // 11000.0 rev limit, 10350 auto shift
+mclarenmp4\ RPMsShiftLED 6300.0 , 6900.0 , 7000.0 , 7400.0 , // 7820.0 rev limit
+mclarenmp430\ RPMsShiftLED 10700.0 , 12400.0 , 12400.0 , 20000.0 , // 12900.0 rev limit, 12250.0 auto shift
+mercedesamggt3\ RPMsShiftLED 6200.0 , 6600.0 , 6800.0 , 7500.0 , // 7500.0 rev limit, ?-? auto shift
+mx5\cup\ RPMsShiftLED 6000.0 , 6850.0 , 6850.0 , 7000.0 , // 7000.0 rev limit, 6590 auto shift
+mx5\mx52016\ RPMsShiftLED 6000.0 , 6850.0 , 6850.0 , 7000.0 , // 7000.0 rev limit, 6590 auto shift
+mx5\roadster\ RPMsShiftLED 6000.0 , 6850.0 , 6850.0 , 7000.0 , // 7000.0 rev limit, 6590 auto shift
+nissangtpzxt\ RPMsShiftLED 6000.0 , 7400.0 , 7400.0 , 7450.0 ,
+porsche911cup\ RPMsShiftLED 6800.0 , 8100.0 , 8150.0 , 8200.0 ,     // 8500 rev limit
+porsche919\ RPMsShiftLED 8500.0 , 8800.0 , 8750.0 , 8850.0 , // 9000.0 rev limit
+porsche991rsr\ RPMsShiftLED 8800.0 , 9250.0 , 9300.0 , 9350.0 ,         // 9500.0 rev limit, TBD shift
+radical\sr8\ RPMsShiftLED 8500.0 , 10000.0 , 10300.0 , 10750.0 , // 10750.0 rev limit, 10130 auto shift
+rileydp\ RPMsShiftLED 6700.0 , 7000.0 , 7000.0 , 7100.0 , // 7100.0 rev limit, 6680 auto shift
+rm1\ RPMsShiftLED 10600.0 , 11400.0 , 12100.0 , 12500.0 , // 13000.0 rev limit
+rt2000\ RPMsShiftLED  5700.0 , 6100.0 , 6100.0 , 6400.0 , // 6400.0 rev limit, 6020 auto shift
+rufrt12r\awd\ RPMsShiftLED 6500.0 , 6850.0 , 7150.0 , 7350.0 , // 7500.0 rev limit, ?-? auto shift
+rufrt12r\grcmule\ RPMsShiftLED 6500.0 , 6850.0 , 7150.0 , 7350.0 , // 7500.0 rev limit, ?-? auto shift
+rufrt12r\rwd\ RPMsShiftLED 6500.0 , 6850.0 , 7150.0 , 7350.0 , // 7500.0 rev limit, ?-? auto shift
+rufrt12r\track\ RPMsShiftLED 8200.0 , 8800.0 , 9100.0 , 9350.0 , // 9400.0 rev limit, ?-? auto shift
+rufrt12r\track\cspec\ RPMsShiftLED 7200.0 , 7500.0 , 7800.0 , 8000.0 , // 8500.0 rev limit, ?-? auto shift
+silvercrown\ RPMsShiftLED 7000.0 , 7800.0 , 7800.0 , 8300.0 , // 8300.0 rev limit, 7800 auto shift
+skmodified\ RPMsShiftLED 6100.0 , 6500.0 , 6500.0 , 7100.0 , // 7100.0 rev limit, 6450 auto shift
+skmodified\tour\ RPMsShiftLED 7400.0 , 7900.0 , 7900.0 , 8300.0 , // 8300.0 rev limit, 7800 auto shift
+solstice\ RPMsShiftLED 6200.0 , 6800.0 , 6800.0 , 7200.0 , // 7200.0 rev limit, 6780 auto shift
+solstice\rookie\ RPMsShiftLED 6200.0 , 6800.0 , 6800.0 , 7200.0 , // 7200.0 rev limit, 6770 auto shift
+specracer\ RPMsShiftLED 5200.0 , 6100.0 , 6100.0 , 6500.0 , // 6500.0 rev limit, 6100-5400 auto shift
+sprint\ RPMsShiftLED 8900.0 , 8900.0 , 8900.0 , 8900.0 , // 9100.0 rev limit
+stockcars\chevyss\ RPMsShiftLED 8000.0 , 9000.0 , 9000.0 , 9200.0 , // 9400.0 rev limit, 9230 auto shifts
+stockcars\fordfusion\ RPMsShiftLED 8000.0 , 9000.0 , 9000.0 , 9200.0 , // 9400.0 rev limit, 9230 auto shifts
+stockcars\impala\ RPMsShiftLED 8500.0 , 9500.0 , 9500.0 , 9800.0 , // 9800.0 rev limit, 9230 auto shifts
+stockcars\toyotacamry\ RPMsShiftLED 8000.0 , 9000.0 , 9000.0 , 9200.0 , // 9400.0 rev limit, 9230 auto shifts
+stockcars2\camry2015\ RPMsShiftLED 7500.0 , 8300.0 , 8300.0 , 9000.0 , // 9000.0 rev limit
+stockcars2\chevy\ RPMsShiftLED 6500.0 , 7300.0 , 7300.0 , 7950.0 , // 7950.0 rev limit, 7500 auto shift
+stockcars2\chevy\cot\ RPMsShiftLED 7500.0 , 8300.0 , 8300.0 , 9000.0 , // 9000.0 rev limit
+stockcars2\nwcamaro2014\ RPMsShiftLED 7500.0 , 8300.0 , 8300.0 , 9000.0 , // 9000.0 rev limit
+stockcars2\nwford2013\ RPMsShiftLED 7500.0 , 8300.0 , 8300.0 , 9000.0 , // 9000.0 rev limit
+streetstock\ RPMsShiftLED 5500.0 , 6500.0 , 6500.0 , 7200.0 , // 7200.0 rev limit, 6400-5700 auto shift
+subaruwrxsti\ RPMsShiftLED 6000.0 , 6000.0 , 6000.0 , 6000.0 ,
+superlatemodel\ RPMsShiftLED 6450.0 , 7350.0 , 7350.0 , 7600.0 , // 7600.0 rev limit, 6710-6630 auto shift
+trucks\silverado\ RPMsShiftLED 7600.0 , 8600.0 , 8600.0 , 9000.0 , // 9000.0 rev limit, 8480 auto shift
+trucks\silverado2015\ RPMsShiftLED 7600.0 , 8600.0 , 8600.0 , 9000.0 , // 9000.0 rev limit, 8480 auto shift
+trucks\tundra2015\ RPMsShiftLED 7600.0 , 8600.0 , 8600.0 , 9000.0 , // 9000.0 rev limit, 8480 auto shift
+v8supercars\ford2014\ RPMsShiftLED 6500.0 , 7450.0 , 7450.0 , 7500.0 , // 7500.0 rev limit, 7060 auto shift  ** NEED TO CHECK.  PROBABLY OKAY AS REV LIMIT HASN'T CHANGED ** !!
+v8supercars\holden2014\ RPMsShiftLED 6500.0 , 7450.0 , 7450.0 , 7500.0 , // 7500.0 rev limit, 7060 auto shift  ** NEED TO CHECK.  PROBABLY OKAY AS REV LIMIT HASN'T CHANGED ** !!
+vwbeetlegrc\ RPMsShiftLED 6200.0 , 7600.0 , 7600.0 , 7650.0 ,
+williamsfw31\ RPMsShiftLED 16200.0 , 16800.0 , 16800.0 , 17500.0 , // 17850.0 rev limit, 16800 auto shift
+
