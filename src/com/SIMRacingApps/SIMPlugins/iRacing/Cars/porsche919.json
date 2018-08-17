@@ -2,7 +2,7 @@
     "Copyright":   "Copyright (C) 2015 - 2018 Jeffrey Gilliam",
     "License":     "Apache License 2.0",
     "Description": "Pirsche 919 2016",
-    "MfrLogo":     "com/SIMRacingApps/Cars/prosche.png",
+    "MfrLogo":     "com/SIMRacingApps/Cars/porsche.png",
     "Gauges": {
         "Tachometer": {
             "default": {
