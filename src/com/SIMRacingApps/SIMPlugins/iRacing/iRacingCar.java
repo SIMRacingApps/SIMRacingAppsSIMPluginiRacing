@@ -200,6 +200,19 @@ public class iRacingCar extends Car {
         private ArrayList<Integer> m_positions       = new ArrayList<Integer>(); public ArrayList<Integer> getPositions()      { _refresh(); return m_positions; } //indexed by lap completed, zero based (e.g. Lap 1 = index 0)
         private ArrayList<Integer> m_positionsClass  = new ArrayList<Integer>(); public ArrayList<Integer> getPositionsClass() { _refresh(); return m_positionsClass; } //indexed by lap completed, zero based (e.g. Lap 1 = index 0)
 
+        private Map<String,Double>  m_lapTimeBestDriver = new HashMap<String,Double>();
+        private Map<String,Integer> m_lapBestDriver     = new HashMap<String,Integer>();
+        public double getLapTimeBestDriver(String driverName) { 
+            _refresh();
+            Double lapTime = m_lapTimeBestDriver.get(driverName);
+            return lapTime == null ? 0.0 : lapTime.doubleValue(); 
+        }
+        public double getLapBestDriver(String driverName) { 
+            _refresh();
+            Integer lap = m_lapBestDriver.get(driverName);
+            return lap == null ? 0 : lap.intValue(); 
+        }
+        
         public _Results() {}
         private void _refresh() {
             int m_position_2015 = -1;
@@ -373,6 +386,18 @@ public class iRacingCar extends Car {
                             s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"FastestLap");
                             if (!s.isEmpty())
                                 m_lapBest       = Integer.parseInt(s);
+                        }
+                        
+                        //track best lap times per driver in a team session
+                        Double lapTime = m_lapTimeBestDriver.get(getDriverName(false).getString());
+                        if (m_lapTimeLast > 0.0 && lapTime == null) {
+                            m_lapTimeBestDriver.put(getDriverName(false).getString(), m_lapTimeLast);
+                            m_lapBestDriver.put(getDriverName(false).getString(), m_lapCompleted);
+                        }
+                        else
+                        if (m_lapTimeLast > 0.0 && m_lapTimeLast < lapTime) {
+                            m_lapTimeBestDriver.replace(getDriverName(false).getString(), m_lapTimeLast);
+                            m_lapBestDriver.replace(getDriverName(false).getString(), m_lapCompleted);
                         }
                         
                     }
@@ -1764,11 +1789,15 @@ else
         String r = d.getValue("reference").toString();
         Data t;
         //iRacing doesn't give me the reference value for all of them, so for the ones that don't use SessionBest
-        if (r.equals("SessionLast"))
+        if (r.equals("SessionLast")) {
             t = getLapTime(r);
-        else
-            t = getLapTime("SessionBest");
-        d.setValue(t.getValue(),t.getUOM(),t.getState());
+            d.setValue(t.getValue(),t.getUOM(),t.getState());
+        }
+        else {
+            d.setValue(m_results.getLapTimeBestDriver(getDriverName(false).getString()));
+            if (d.getDouble() > 0.0)
+                d.setState(Data.State.NORMAL);
+        }
         return d;
     }
 
