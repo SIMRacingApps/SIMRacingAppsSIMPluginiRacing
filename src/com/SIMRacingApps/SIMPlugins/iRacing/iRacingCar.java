@@ -3608,7 +3608,10 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.FUELMIXTURE,                  this, track, IODriver, "dcFuelMixture", "", null, null));
             _setGauge(new FuelPressure(Gauge.Type.FUELPRESSURE,                 this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.GEAR,                         this, track, IODriver, "Gear", "", null, null));
-            _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,             this, track, IODriver, "dpLrWedgeAdj", "mm", null, null));
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpLRWedgeAdj") != null)
+                _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dpLRWedgeAdj", "mm", null, null));
+            else
+                _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dpLrWedgeAdj", "mm", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.OILLEVEL,                     this, track, IODriver, "OilLevel", "l", null, null));
             _setGauge(new OilPressure(Gauge.Type.OILPRESSURE,                   this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.OILTEMP,                      this, track, IODriver, "OilTemp", "C", null, null));
@@ -3632,6 +3635,10 @@ else
                 _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpRrPerchOffsetm", "mm", null, null));
             }
             else //check to see if the new value exists, otherwise use old value for recorded files.
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRRWedgeAdj") != null) {
+                _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpRRWedgeAdj", "mm", null, null));
+            }
+            else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRrWedgeAdj") != null) {
                 _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpRrWedgeAdj", "mm", null, null));
             }
