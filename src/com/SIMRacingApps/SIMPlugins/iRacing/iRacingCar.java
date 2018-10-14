@@ -3719,6 +3719,9 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.WEIGHTJACKERLEFT,             this, track, IODriver, "dcWeightJackerLeft", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.WEIGHTJACKERRIGHT,            this, track, IODriver, "dcWeightJackerRight", "", null, null));
             _setGauge(new WindshieldTearoff(Gauge.Type.WINDSHIELDTEAROFF,       this, track, IODriver));
+
+            _setGauge(new iRacingGauge(Gauge.Type.HYSCHARGE,                    this, track, IODriver, "EnergyERSBatteryPct", "%", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.HYSDDEPLOYMENT,               this, track, IODriver, "EnergyMGU_KLapDeployPct", "%", null, null));
             
 //            dumpGauges();
         }
