@@ -188,6 +188,60 @@
                     "WARNING":  {"Start": 5.0, "End": 10.0}
                 }
             }
+        },
+        "FuelMixture": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "CONSUMPTION",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           9.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   9.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        },
+        "MGUKRegenGain": {
+            "default": {
+                "Name":              "MGU-K",
+                "TypeName":          "REGEN GAIN",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           9.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   9.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        },
+        "DiffEntry": {
+            "default": {
+                "Name":              "DIFF",
+                "TypeName":          "ENTRY",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           9.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   9.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
         }
     }
 }

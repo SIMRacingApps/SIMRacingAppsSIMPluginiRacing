@@ -64,10 +64,10 @@
                 "IsFixed":           false
             }
         },
-        "RearWing": {
+        "WingRear": {
             "default": {
-                "Name":              "REAR",
-                "TypeName":          "WING",
+                "Name":              "WING",
+                "TypeName":          "REAR",
                 "UOM":               "deg",
                 "StateAscending":    false,
                 "Minimum":           0.0,
@@ -152,6 +152,24 @@
                     "CRITICAL": {"Start": 0.0, "End": 1.0},
                     "WARNING":  {"Start": 1.0, "End": 2.0}
                 }
+            }
+        },
+        "FuelMixture": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "MIXTURE",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           8.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   8.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
             }
         }
     }

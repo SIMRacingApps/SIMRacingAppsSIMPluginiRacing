@@ -138,6 +138,24 @@
                     "WARNING":  {"Start": 1.0, "End": 2.0}
                 }
             }
+        },
+        "WingRear": {
+            "default": {
+                "Name":              "WING",
+                "TypeName":          "REAR",
+                "UOM":               "inch",
+                "imperial":          "inch",
+                "metric":            "mm",
+                "StateAscending":    false,
+                "Minimum":           -10.0,
+                "Maximum":           0.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -10.0,
+                "CapacityMaximum":   0.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
         }
     }
 }

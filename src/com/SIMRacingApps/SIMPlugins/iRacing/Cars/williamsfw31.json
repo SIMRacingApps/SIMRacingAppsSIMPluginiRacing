@@ -488,6 +488,59 @@
                     "WARNING":  {"Start": 1.0, "End": 2.0}
                 }
             }
+        },
+        "FuelMixture": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "MIXTURE",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   10.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        },
+        "EnginePower": {
+            "default": {
+                "Name":              "ENGINE",
+                "TypeName":          "POWER",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        },
+        "ThrottleShape": {
+            "default": {
+                "Name":              "THROTTLE",
+                "TypeName":          "SHAPE{{}}",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           4.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   4.0,
+                "CapacityIncrement": 1.0
+            }
         }
     }
 }

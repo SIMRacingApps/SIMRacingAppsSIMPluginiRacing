@@ -85,6 +85,24 @@
                     "WARNING":  {"Start": 3.0, "End": 6.0}
                 }
             }
+        },
+        "FuelMixture": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "MIXTURE",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           8.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   8.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
         }
     }
 }

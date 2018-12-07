@@ -107,6 +107,26 @@
                     "WARNING":  {"Start": 1.0, "End": 2.0}
                 }
             }
+        },
+        "HYSDeployTrim": {
+            "default": {
+                "Name":              "HYS",
+                "TypeName":          "DEPLOY TRIM",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           14.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   14.0,
+                "CapacityIncrement": 1.0,
+                "OnResetChange":     false,
+                "IsChangable":       false,
+                "IsFixed":           false
+            }
         }
     }
 }

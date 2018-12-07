@@ -123,7 +123,6 @@ public class iRacingGauge extends Gauge {
     protected Data _readVar(String varName) {
         Data d = new Data(varName,0.0,"",Data.State.NOTAVAILABLE);
         double value = d.getDouble();
-        double voltage = m_IODriver.getVars().getDouble("Voltage");
         
         //need to report NOTAVAILABLE if the SIM is not running or 
         //this car doesn't have this gauge
@@ -196,7 +195,7 @@ public class iRacingGauge extends Gauge {
             d.setValue("N");
         else
         //Turn the gauge off if the car is turned off
-        if (!d.getState().equals(Data.State.NOTAVAILABLE) && voltage == 0.0) {
+        if (!d.getState().equals(Data.State.NOTAVAILABLE) && m_IODriver.getVars().getDouble("Voltage") == 0.0) {
             d.setState(Data.State.OFF);
             d.setStatePercent(0.0);
         }

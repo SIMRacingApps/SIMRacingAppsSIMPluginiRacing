@@ -87,6 +87,7 @@ public class Vars {
         if (varheader != null) {
             if (varheader.Type.getType() == VarType.irsdk_bitField
             ||  varheader.Type.getType() == VarType.irsdk_int
+            ||  varheader.Type.getType() == VarType.irsdk_bool
             ) {
                 f = new Float(getInteger(name,index));
             }
@@ -118,6 +119,7 @@ public class Vars {
         if (varheader != null) {
             if (varheader.Type.getType() == VarType.irsdk_bitField
             ||  varheader.Type.getType() == VarType.irsdk_int
+            ||  varheader.Type.getType() == VarType.irsdk_bool
             ) {
                 d = (double)getInteger(name,index);
             }

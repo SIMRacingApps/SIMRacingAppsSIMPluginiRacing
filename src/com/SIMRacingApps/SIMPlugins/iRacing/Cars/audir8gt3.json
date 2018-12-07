@@ -94,6 +94,41 @@
                 "CapacityIncrement": 1.0,
                 "StateAscending":    true
             }
+        },
+        "TractionControlRear": {
+            "default": {
+                "Name":              "TRACTION CONTROL",
+                "TypeName":          "REAR",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           9.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   9.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        },
+        "ThrottleShape": {
+            "default": {
+                "Name":              "THROTTLE",
+                "TypeName":          "SHAPE{{}}",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           3.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   3.0,
+                "CapacityIncrement": 1.0
+            }
         }
     }
 }            

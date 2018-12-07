@@ -14,6 +14,7 @@ import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Session;
 import com.SIMRacingApps.Track;
+import com.SIMRacingApps.SIMPlugin.SIMPluginException;
 import com.SIMRacingApps.SIMPlugins.iRacing.Gauges.*;
 import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 import com.SIMRacingApps.SIMPlugins.iRacing.SessionFlags;
@@ -2151,7 +2152,39 @@ else
 //                  IsDeletable: 0
             
             String selectedRadio = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("RadioInfo","SelectedRadioNum");
+            int idx = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("RadioTransmitCarIdx");
 
+            String teamspeakName = "";
+            try {
+                teamspeakName = m_SIMPlugin.getData("TeamSpeak/Talker").getString();
+            } catch (SIMPluginException e1) {
+            }
+
+            //see if we can detect if anyone is talking on TeamSpeak
+            if (idx == -1                                       //no one on iRacing is transmitting
+            &&  Server.getArg("teamspeak-transmitting", true)   //we are allowed to check for teamspeak transmitting
+            &&  !teamspeakName.isEmpty()                        //someone is transmitting on teamspeak right now
+            ) {
+                //now see if this name has a mapping
+                String nameMapped = Server.getArg(teamspeakName,teamspeakName);
+                String driverName = this.getDriverName().getString();
+if (driverName.equals("Jeff Gilliam"))
+    driverName = driverName;
+                if (com.SIMRacingApps.SIMPlugins.iRacing.SessionDataCache.SessionDataCars._isMatching(this, teamspeakName, nameMapped)) {
+                    d.setValue("TEAMSPEAK");
+                    d.setState(Data.State.NORMAL);
+                    return d;
+                }
+                else {
+                    nameMapped = Server.getArg(this.getDriverName().getString(),this.getDriverName().getString());
+                    if (com.SIMRacingApps.SIMPlugins.iRacing.SessionDataCache.SessionDataCars._isMatching(this, teamspeakName, nameMapped)) {
+                        d.setValue("TEAMSPEAK");
+                        d.setState(Data.State.NORMAL);
+                        return d;
+                    }
+                }
+            }
+            
             if (!selectedRadio.isEmpty()) {
                 Data channel = getRadioChannel();
                 String name = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("RadioInfo","Radios",Integer.toString(m_lastKnownRadio),"Frequencies",channel.getString(),"FrequencyName");
@@ -3590,9 +3623,12 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.DIFFENTRY,                    this, track, IODriver, "dcDiffEntry", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.DIFFEXIT,                     this, track, IODriver, "dcDiffExit", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.DIFFMIDDLE,                   this, track, IODriver, "dcDiffMiddle", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.DIFFPRELOAD,                  this, track, IODriver, "dcDiffPreload", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.DISABLEFUELCUT,               this, track, IODriver, "dcFuelNoCutToggle", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.ENGINEBRAKING,                this, track, IODriver, "dcEngineBraking", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.ENGINEPOWER,                  this, track, IODriver, "dcEnginePower", "", null, null));
             _setGauge(new FastRepairs(Gauge.Type.FASTREPAIRS,                   this, track, IODriver));
+            _setGauge(new iRacingGauge(Gauge.Type.FULLCOURSEYELLOWMODE,         this, track, IODriver, "dcFCYToggle", "", null, null));
             _setGauge(new Changeables(Gauge.Type.FRONTFLAP,                     this, track, IODriver, "dpFNOMKnobSetting", "", null, null));
             if (IODriver.getVarHeaders().getVarHeader("dpFWingAngle") != null) {
                 _setGauge(new Changeables(Gauge.Type.FRONTWING,                 this, track, IODriver, "dpFWingAngle", "deg", null, null));
@@ -3604,10 +3640,20 @@ else
             else {
                 _setGauge(new Changeables(Gauge.Type.FRONTWING,                 this, track, IODriver, "dpFWingIndex", "deg", null, null));
             }
+            _setGauge(new iRacingGauge(Gauge.Type.FUELCUTPOSITION,              this, track, IODriver, "dcFuelCutPosition", "", null, null));
             _setGauge(new FuelLevel(Gauge.Type.FUELLEVEL,                       this, track, IODriver, m_driversIdx));
             _setGauge(new iRacingGauge(Gauge.Type.FUELMIXTURE,                  this, track, IODriver, "dcFuelMixture", "", null, null));
             _setGauge(new FuelPressure(Gauge.Type.FUELPRESSURE,                 this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.GEAR,                         this, track, IODriver, "Gear", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.HYSBOOSTHOLD,                 this, track, IODriver, "dcHysBoostHold", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.HYSCHARGE,                    this, track, IODriver, "EnergyERSBatteryPct", "%", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.HYSDEPLOYMENT,                this, track, IODriver, "EnergyMGU_KLapDeployPct", "%", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.HYSDEPLOYMODE,                this, track, IODriver, "dcMGUKDeployMode", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.HYSDEPLOYTRIM,                this, track, IODriver, "dcMGUKDeployFixed", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.HYSDISABLEBOOSTHOLD,          this, track, IODriver, "dcHysNoBoostToggle", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.HYSREGENGAIN,                 this, track, IODriver, "dcMGUKRegenGain", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.INLAPMODE,                    this, track, IODriver, "dcInLapToggle", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.LOWFUELACCEPT,                this, track, IODriver, "dcLowFuelAccept", "", null, null));
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpLRWedgeAdj") != null)
                 _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dpLRWedgeAdj", "mm", null, null));
             else
@@ -3615,20 +3661,23 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.OILLEVEL,                     this, track, IODriver, "OilLevel", "l", null, null));
             _setGauge(new OilPressure(Gauge.Type.OILPRESSURE,                   this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.OILTEMP,                      this, track, IODriver, "OilTemp", "C", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.PEAKBRAKEBIAS,                this, track, IODriver, "dcPeakBrakeBias", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.PITSPEEDLIMITER,              this, track, IODriver, "dcPitSpeedLimiterToggle", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.POWERSTEERINGASSIST,          this, track, IODriver, "dpPSSetting", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.RFBRAKECONNECTED,             this, track, IODriver, "dcRFBrakeAttachedToggle", "", null, null));
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dcWingRear") != null) {
-                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dcWingRear", "mm", null, null));
+                _setGauge(new iRacingGauge(Gauge.Type.WINGREAR,                  this, track, IODriver, "dcWingRear", "mm", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRWingAngle") != null) {
-                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dcRWingAngle", "deg", null, null));
+                _setGauge(new Changeables(Gauge.Type.WINGREAR,                  this, track, IODriver, "dcRWingAngle", "deg", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRWingSetting") != null) {
-                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dpRWingSetting", "", null, null));
+                _setGauge(new Changeables(Gauge.Type.WINGREAR,                  this, track, IODriver, "dpRWingSetting", "", null, null));
             }
             else {
-                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dcRWingIndex", "deg", null, null));
+                _setGauge(new iRacingGauge(Gauge.Type.WINGREAR,                  this, track, IODriver, "dcRWingIndex", "deg", null, null));
             }
             
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRrPerchOffsetm") != null) {
@@ -3646,6 +3695,7 @@ else
                 _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpWedgeAdj", "mm", null, null));
             }
             _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h"));
+            _setGauge(new iRacingGauge(Gauge.Type.STARTER,                      this, track, IODriver, "dcStarter", "", null, null));
             _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "SteeringWheelAngle", "rad"));
             _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "RPM", "rev/min", simGaugesBefore));
             _setGauge(new Changeables(Gauge.Type.TAPE,                          this, track, IODriver, "dpQtape", "%", null, null));
@@ -3711,7 +3761,9 @@ else
                     (TireWear)_getGauge(Gauge.Type.TIREWEARRRR)
             ));
 
-            _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROL,              this, track, IODriver, "dcTractionControl", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROLFRONT,         this, track, IODriver, "dcTractionControl2", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROLREAR,          this, track, IODriver, "dcTractionControl", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROL,              this, track, IODriver, "dcTractionControlToggle", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.VOLTAGE,                      this, track, IODriver, "Voltage", "v", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.WATERLEVEL,                   this, track, IODriver, "WaterLevel", "l", null, null));
             _setGauge(new WaterPressure(Gauge.Type.WATERPRESSURE,               this, track, IODriver));
@@ -3719,9 +3771,6 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.WEIGHTJACKERLEFT,             this, track, IODriver, "dcWeightJackerLeft", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.WEIGHTJACKERRIGHT,            this, track, IODriver, "dcWeightJackerRight", "", null, null));
             _setGauge(new WindshieldTearoff(Gauge.Type.WINDSHIELDTEAROFF,       this, track, IODriver));
-
-            _setGauge(new iRacingGauge(Gauge.Type.HYSCHARGE,                    this, track, IODriver, "EnergyERSBatteryPct", "%", null, null));
-            _setGauge(new iRacingGauge(Gauge.Type.HYSDDEPLOYMENT,               this, track, IODriver, "EnergyMGU_KLapDeployPct", "%", null, null));
             
 //            dumpGauges();
         }

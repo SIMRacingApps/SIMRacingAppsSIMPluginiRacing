@@ -103,6 +103,37 @@ public class SessionDataCars extends SessionData {
         return m_cars.get(-2);
     }
 
+    //make static so iRacingCar class can call it.
+    public static boolean _isMatching( iRacingCar car, String name, String nameMapped) {
+        String name2 = name.replaceAll("#\\d[ \t-_=]", "").replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
+        String nameMapped2 = name.replaceAll("#\\d[ \\t-_=]", "").replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
+        
+        String driverName = car.getDriverName(true).getString().replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
+        String driverNameNotMapped = car.getDriverName(false).getString().replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
+        String driverNameWithNumber = car.getDriverName(false).getString().replaceAll("[\\-_=\\*<>]", ""); //remove punctuation leave the number
+
+        if (name2.equalsIgnoreCase(driverNameNotMapped)
+        ||  name2.equalsIgnoreCase(driverName)
+        ||  name2.equalsIgnoreCase(driverNameWithNumber)
+        ||  nameMapped2.equalsIgnoreCase(driverNameNotMapped)
+        ||  nameMapped2.equalsIgnoreCase(driverName)
+        ||  nameMapped2.equalsIgnoreCase(driverNameWithNumber)
+//        if (name.equalsIgnoreCase(car.getDriverName().getString())
+//        || name.equalsIgnoreCase(car.getDriverName(false).getString())
+//        || name.equalsIgnoreCase(String.format("#%s %s", car.getNumber().getString(),car.getDriverName().getString()))
+//        || name.equalsIgnoreCase(String.format("#%s %s", car.getNumber().getString(),car.getDriverName(false).getString()))
+//        || name.equalsIgnoreCase(String.format("%s #%s", car.getDriverName().getString(),car.getNumber().getString()))
+//        || name.equalsIgnoreCase(String.format("%s #%s", car.getDriverName(false).getString(),car.getNumber().getString()))
+//        || name.equalsIgnoreCase(String.format("%s %s", car.getNumber().getString(),car.getDriverName().getString()))
+//        || name.equalsIgnoreCase(String.format("%s %s", car.getNumber().getString(),car.getDriverName(false).getString()))
+//        || name.equalsIgnoreCase(String.format("%s %s", car.getDriverName().getString(),car.getNumber().getString()))
+//        || name.equalsIgnoreCase(String.format("%s %s", car.getDriverName(false).getString(),car.getNumber().getString()))
+        ) {
+            return true;
+        }
+        return false;
+    }
+    
     public iRacingCar getByName(String name) {
         if (name.isEmpty())
             return null;
@@ -121,29 +152,8 @@ public class SessionDataCars extends SessionData {
         try {
             for (Iterator<Entry<Integer, iRacingCar>> itr = m_cars.entrySet().iterator(); itr.hasNext();) {
                 iRacingCar car = itr.next().getValue();
-                String driverName = car.getDriverName(true).getString().replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
-                String driverNameNotMapped = car.getDriverName(false).getString().replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
-                String driverNameWithNumber = car.getDriverName(false).getString().replaceAll("[\\-_=\\*<>]", ""); //remove punctuation leave the number
-
-                if (nameToMatch.equalsIgnoreCase(driverNameNotMapped)
-                ||  nameToMatch.equalsIgnoreCase(driverName)
-                ||  nameToMatch.equalsIgnoreCase(driverNameWithNumber)
-                ||  nameToMatchMapped.equalsIgnoreCase(driverNameNotMapped)
-                ||  nameToMatchMapped.equalsIgnoreCase(driverName)
-                ||  nameToMatchMapped.equalsIgnoreCase(driverNameWithNumber)
-//                if (name.equalsIgnoreCase(car.getDriverName().getString())
-//                || name.equalsIgnoreCase(car.getDriverName(false).getString())
-//                || name.equalsIgnoreCase(String.format("#%s %s", car.getNumber().getString(),car.getDriverName().getString()))
-//                || name.equalsIgnoreCase(String.format("#%s %s", car.getNumber().getString(),car.getDriverName(false).getString()))
-//                || name.equalsIgnoreCase(String.format("%s #%s", car.getDriverName().getString(),car.getNumber().getString()))
-//                || name.equalsIgnoreCase(String.format("%s #%s", car.getDriverName(false).getString(),car.getNumber().getString()))
-//                || name.equalsIgnoreCase(String.format("%s %s", car.getNumber().getString(),car.getDriverName().getString()))
-//                || name.equalsIgnoreCase(String.format("%s %s", car.getNumber().getString(),car.getDriverName(false).getString()))
-//                || name.equalsIgnoreCase(String.format("%s %s", car.getDriverName().getString(),car.getNumber().getString()))
-//                || name.equalsIgnoreCase(String.format("%s %s", car.getDriverName(false).getString(),car.getNumber().getString()))
-                ) {
+                if (_isMatching(car,nameToMatch,nameToMatchMapped))
                     return car;
-                }
             }
         }
         catch (IllegalStateException e) {

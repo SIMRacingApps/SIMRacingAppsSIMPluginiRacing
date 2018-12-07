@@ -108,6 +108,24 @@
                     "WARNING":  {"Start": 4.0, "End": 8.0}
                 }
             }
+        },
+        "TractionControlFront": {
+            "default": {
+                "Name":              "TRACTION CONTROL",
+                "TypeName":          "FRONT",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           11.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   11.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
         }
     }
 }
