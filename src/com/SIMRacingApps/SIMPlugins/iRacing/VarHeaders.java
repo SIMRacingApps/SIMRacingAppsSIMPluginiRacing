@@ -115,7 +115,7 @@ public class VarHeaders {
 //            &&  !name.isEmpty()
 //            //from build_2014_10_21
 //            &&  !name.equals("IsOnTrackCar")
-//            &&  !name.equals("dpQtape") //not on all cars, ...stockcars2_chevy (National)
+//            &&  !name.equals("dcQTape") //not on all cars, ...stockcars2_chevy (National)
 //            &&  !name.equals("dpWedgeAdj") //not on all cars, street stock
 //            ) {
 //                Server.logger().warning(String.format("VarHeaders.getVarHeader(%s) returned null", name));

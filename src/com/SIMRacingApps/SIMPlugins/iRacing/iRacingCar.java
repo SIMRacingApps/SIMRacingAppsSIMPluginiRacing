@@ -3657,7 +3657,11 @@ if (driverName.equals("Jeff Gilliam"))
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpLRWedgeAdj") != null)
                 _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dpLRWedgeAdj", "mm", null, null));
             else
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpLrWedgeAdj") != null)
                 _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dpLrWedgeAdj", "mm", null, null));
+            else
+                _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dcWeightJackerLeft", "mm", null, null));
+            
             _setGauge(new iRacingGauge(Gauge.Type.OILLEVEL,                     this, track, IODriver, "OilLevel", "l", null, null));
             _setGauge(new OilPressure(Gauge.Type.OILPRESSURE,                   this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.OILTEMP,                      this, track, IODriver, "OilTemp", "C", null, null));
@@ -3691,14 +3695,25 @@ if (driverName.equals("Jeff Gilliam"))
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRrWedgeAdj") != null) {
                 _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpRrWedgeAdj", "mm", null, null));
             }
-            else {
+            else 
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpWedgeAdj") != null) {
                 _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpWedgeAdj", "mm", null, null));
             }
+            else {
+                _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dcWeightJackerRight", "mm", null, null));
+            }
+            
             _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h"));
             _setGauge(new iRacingGauge(Gauge.Type.STARTER,                      this, track, IODriver, "dcStarter", "", null, null));
             _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "SteeringWheelAngle", "rad"));
             _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "RPM", "rev/min", simGaugesBefore));
-            _setGauge(new Changeables(Gauge.Type.TAPE,                          this, track, IODriver, "dpQtape", "%", null, null));
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpQtape") != null)
+                _setGauge(new Changeables(Gauge.Type.TAPE,                          this, track, IODriver, "dpQtape", "%", null, null));
+            else
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpQTape") != null)
+                _setGauge(new Changeables(Gauge.Type.TAPE,                          this, track, IODriver, "dpQTape", "%", null, null));
+            else
+                _setGauge(new Changeables(Gauge.Type.TAPE,                          this, track, IODriver, "dcQTape", "%", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.THROTTLE,                     this, track, IODriver, "Throttle", "%", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.THROTTLESHAPE,                this, track, IODriver, "dcThrottleShape", "", null, null));
             

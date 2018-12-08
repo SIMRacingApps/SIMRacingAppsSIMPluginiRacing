@@ -142,7 +142,7 @@ public class iRacingGauge extends Gauge {
                     if (Double.isNaN(value))
                         d.setState(Data.State.OFF);
                     else {
-                        if (varName.equals("dpQtape")) {
+                        if (varName.equalsIgnoreCase("dcQTape") || varName.equalsIgnoreCase("dpQtape")) {
                             if (m_reader.equals("DataVarTape")) {
                                 //prior to april 22, 2014 the tape was simply values from 0 to 10
                                 //after that, 0 - 100
