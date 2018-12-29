@@ -1,12 +1,19 @@
 package com.SIMRacingApps.SIMPlugins.iRacing;
 
 import java.io.FileNotFoundException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Formatter;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TimeZone;
 import java.util.TreeMap;
 import java.util.logging.Level;
 
@@ -1440,10 +1447,106 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         d.setState(Data.State.OFF);
         
         if (m_SIMPlugin.isConnected()) {
-            double sessiontime = m_SIMPlugin.getIODriver().getHeader().getSubHeader().getSessionStartDate();
-            d.setValue(sessiontime < 0.0 ? 0.0 : sessiontime);
+            int sessionNum = this.m_SIMPlugin.getIODriver().getVars().getInteger("SessionNum");
+            String sessionNumString = this.m_SIMPlugin.getIODriver().getVars().getString("SessionNum");
+            String timezone = m_track.getTimeZone().getString();
+            String timezoneShort =  this._getShortTimeZone(new Date(d.getLong() * 1000L), timezone);
+            String timezoneOffset = d.getState();
+            boolean addPreviousSessions = false;
+            
+            //"TimeOfDay": "2:00 pm"
+            String timeOfDay = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNumString,"TimeOfDay");
+
+            //if not in the session data, get the global data
+            if (timeOfDay.isEmpty())
+                timeOfDay    = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","WeekendOptions","TimeOfDay");
+            
+            //"Date": "2018-11-14"
+            String date      = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNumString,"Date");
+            
+            //if not in the session data, get the global data
+            if (date.isEmpty()) {
+                date         = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","WeekendOptions","Date");
+                addPreviousSessions = true;
+            }
+            
+            
+            Calendar sessionCal    = Calendar.getInstance(TimeZone.getTimeZone(timezone));
+            sessionCal.setTimeInMillis(d.getLong()*1000L);
+            
+            if (!date.isEmpty()) {
+                if (date.length() == 10) {
+                    try {
+                        sessionCal.set(Calendar.YEAR,Integer.parseInt(date.substring(0, 4)));
+                        sessionCal.set(Calendar.MONTH,Integer.parseInt(date.substring(5, 7))-1);
+                        sessionCal.set(Calendar.DAY_OF_MONTH,Integer.parseInt(date.substring(8, 10)));
+                    }
+                    catch (Exception e) {} //ignore any parsing issues
+                }
+            }
+            
+            if (!timeOfDay.isEmpty()) {
+                if (timeOfDay.length() == 7 || timeOfDay.length() == 8) {
+                    String parts[] = timeOfDay.split("[: ]");
+                    if (parts.length == 3) {
+                        //remove any time element
+                        sessionCal.clear(Calendar.AM_PM);
+                        sessionCal.clear(Calendar.HOUR);
+                        sessionCal.clear(Calendar.HOUR_OF_DAY);
+                        sessionCal.clear(Calendar.MINUTE);
+                        sessionCal.clear(Calendar.SECOND);
+                        sessionCal.clear(Calendar.MILLISECOND);
+                        sessionCal.clear(Calendar.DST_OFFSET);
+                        
+                        int hours = Integer.parseInt(parts[0]);
+                        int minutes = Integer.parseInt(parts[1]);
+                        Boolean pm = parts[2].equalsIgnoreCase("PM");
+                        
+                        try {
+                            sessionCal.setTimeZone(TimeZone.getTimeZone(timezone));
+                            sessionCal.add(Calendar.HOUR_OF_DAY, pm && hours < 12 ? hours + 12 : hours);
+                            sessionCal.add(Calendar.MINUTE, minutes);
+                        }
+                        catch (Exception e) {} //ignore any parsing issues
+                        timezoneShort = this._getShortTimeZone(new Date(sessionCal.getTimeInMillis()), timezone);
+                        timezoneOffset = this._getTimeZoneOffset(new Date(sessionCal.getTimeInMillis()), timezone);
+                    }
+                }
+            }
+
+            double sessionTimeUTC = (sessionCal.getTimeInMillis() / 1000L);
+            
+            //if we had to use the global time then
+            //Calculate the start of the current session by adding the time from completed sessions.
+            //TODO: what if the admin advances the previous sessions before they complete?
+            for (int session=0; addPreviousSessions && session < sessionNum;session++) {
+                String sessionTime = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionTime");
+                if (!sessionTime.equals("unlimited")) {
+                    String time[] = sessionTime.split("[ ]");
+                    if (time.length > 0 && !time[0].isEmpty()) {
+                        sessionTimeUTC += Double.parseDouble(time[0]);
+                        //iRacing is adding time between sessions
+                        if (m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionType").equals("Practice")) {
+                            sessionTimeUTC += 120;
+                        }
+                        else
+                        if (m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionType").equals("Open Qualify")) {
+                            sessionTimeUTC += 300;
+                        }
+                        else
+                        if (m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionType").equals("Lone Qualify")) {
+                            sessionTimeUTC += 300;
+                        }
+                    }
+                }
+            }
+            
+//            Server.logger().finest(String.format("%tc",(long)Math.floor(sessionTimeUTC*1000)));
+            
+            d.setValue(sessionTimeUTC < 0.0 ? 0.0 : sessionTimeUTC);
             d.setUOM("s");
-            d.setState(Data.State.NORMAL);
+//            d.setState(timezoneShort);
+            d.setState(timezoneOffset);  //Offsets are much more reliable than short time zones. Too many conflicts.
         }
         return d;
     }

@@ -222,13 +222,30 @@ public class iRacingCar extends Car {
 
 //These were causing funny results. Don't need them, unless replay, since it works from the session string without them.            
             boolean replayFromFile = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","SimMode").equals("replay");
-            
+
+//if (m_number.equals("07"))
+//    m_id = m_id;
+
             if (m_iRacingSIMPlugin.getIODriver().build_June_9_2015() 
             &&  m_id >= 0
             &&  m_iRacingSIMPlugin.getSession().getIsReplay().getBoolean()  //only if in a replay
             &&  replayFromFile
             ) {
-                //according to a post in the forums, this is updated during a replay while the session info isn't. TODO: Verify
+                //according to a post in the forums, this is updated during a replay while the session info isn't.
+//                "CarIdxClassPosition": [],
+//                "CarIdxEstTime": [],
+//                "CarIdxF2Time": [],
+//                "CarIdxGear": [],
+//                "CarIdxLap": [],
+//                "CarIdxLapCompleted": [],
+//                "CarIdxLapDistPct": [],
+//                "CarIdxOnPitRoad": [],
+//                "CarIdxPosition": [],
+//                "CarIdxRPM": [],
+//                "CarIdxSteer": [],
+//                "CarIdxTrackSurface": [],
+//                "CarIdxTrackSurfaceMaterial": [],
+                
                 m_position_2015      = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("CarIdxPosition",m_id);
                 m_positionClass_2015 = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("CarIdxClassPosition",m_id);
                 m_lapCompleted_2015 = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("CarIdxLapCompleted",m_id);
@@ -3630,6 +3647,10 @@ if (driverName.equals("Jeff Gilliam"))
             _setGauge(new FastRepairs(Gauge.Type.FASTREPAIRS,                   this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.FULLCOURSEYELLOWMODE,         this, track, IODriver, "dcFCYToggle", "", null, null));
             _setGauge(new Changeables(Gauge.Type.FRONTFLAP,                     this, track, IODriver, "dpFNOMKnobSetting", "", null, null));
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpWingFront") != null) {
+                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpWingFront", "mm", null, null));
+            }
+            else
             if (IODriver.getVarHeaders().getVarHeader("dpFWingAngle") != null) {
                 _setGauge(new Changeables(Gauge.Type.FRONTWING,                 this, track, IODriver, "dpFWingAngle", "deg", null, null));
             }
@@ -3660,7 +3681,7 @@ if (driverName.equals("Jeff Gilliam"))
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpLrWedgeAdj") != null)
                 _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dpLrWedgeAdj", "mm", null, null));
             else
-                _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dcWeightJackerLeft", "mm", null, null));
+                _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dpWeightJackerLeft", "mm", null, null));
             
             _setGauge(new iRacingGauge(Gauge.Type.OILLEVEL,                     this, track, IODriver, "OilLevel", "l", null, null));
             _setGauge(new OilPressure(Gauge.Type.OILPRESSURE,                   this, track, IODriver));
@@ -3669,19 +3690,19 @@ if (driverName.equals("Jeff Gilliam"))
             _setGauge(new iRacingGauge(Gauge.Type.PITSPEEDLIMITER,              this, track, IODriver, "dcPitSpeedLimiterToggle", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.POWERSTEERINGASSIST,          this, track, IODriver, "dpPSSetting", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.RFBRAKECONNECTED,             this, track, IODriver, "dcRFBrakeAttachedToggle", "", null, null));
-            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dcWingRear") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.WINGREAR,                  this, track, IODriver, "dcWingRear", "mm", null, null));
+            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpWingRear") != null) {
+                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                  this, track, IODriver, "dpWingRear", "mm", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRWingAngle") != null) {
-                _setGauge(new Changeables(Gauge.Type.WINGREAR,                  this, track, IODriver, "dcRWingAngle", "deg", null, null));
+                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dpRWingAngle", "deg", null, null));
             }
             else
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRWingSetting") != null) {
-                _setGauge(new Changeables(Gauge.Type.WINGREAR,                  this, track, IODriver, "dpRWingSetting", "", null, null));
+                _setGauge(new Changeables(Gauge.Type.REARWING,                  this, track, IODriver, "dpRWingSetting", "", null, null));
             }
             else {
-                _setGauge(new iRacingGauge(Gauge.Type.WINGREAR,                  this, track, IODriver, "dcRWingIndex", "deg", null, null));
+                _setGauge(new iRacingGauge(Gauge.Type.REARWING,                  this, track, IODriver, "dpRWingIndex", "deg", null, null));
             }
             
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpRrPerchOffsetm") != null) {
@@ -3700,7 +3721,7 @@ if (driverName.equals("Jeff Gilliam"))
                 _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpWedgeAdj", "mm", null, null));
             }
             else {
-                _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dcWeightJackerRight", "mm", null, null));
+                _setGauge(new Changeables(Gauge.Type.RRWEDGEADJUSTMENT,         this, track, IODriver, "dpWeightJackerRight", "mm", null, null));
             }
             
             _setGauge(new Speedometer(Gauge.Type.SPEEDOMETER,                   this, track, IODriver, "Speed", "km/h"));
@@ -3776,6 +3797,7 @@ if (driverName.equals("Jeff Gilliam"))
                     (TireWear)_getGauge(Gauge.Type.TIREWEARRRR)
             ));
 
+            _setGauge(new iRacingGauge(Gauge.Type.TOPWING,                      this, track, IODriver, "dcWingRear", "mm", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROLFRONT,         this, track, IODriver, "dcTractionControl2", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROLREAR,          this, track, IODriver, "dcTractionControl", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.TRACTIONCONTROL,              this, track, IODriver, "dcTractionControlToggle", "", null, null));
