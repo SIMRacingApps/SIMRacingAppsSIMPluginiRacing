@@ -1,6 +1,6 @@
 {
     "Description": "Chevrolet Monte Carlo SS",
-    "Copyright":   "Copyright (C) 2015 - 2017 Jeffrey Gilliam",
+    "Copyright":   "Copyright (C) 2015 - 2019 Jeffrey Gilliam",
     "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
     "Gauges": {
         "FuelLevel": {

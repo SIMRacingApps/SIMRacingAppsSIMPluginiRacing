@@ -1,7 +1,7 @@
 {
     "Description": "Dirt Street Stock",
     "MfrLogo":     "com/SIMRacingApps/Cars/dirtcar.png",
-    "Copyright": "Copyright (C) 2015 - 2017 Jeffrey Gilliam",
+    "Copyright": "Copyright (C) 2015 - 2019 Jeffrey Gilliam",
     "Gauges" : {
         "FuelLevel": {
             "default": {
