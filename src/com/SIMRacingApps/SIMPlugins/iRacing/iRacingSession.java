@@ -1564,6 +1564,17 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
+    public Data getTime() {
+        Data d = super.getTime();
+        if (m_SIMPlugin.isConnected()) {
+            //TODO: Get multiplier from iRacing when they impliment it.
+            //      For now, let the user put it in their settings
+            d.setValue( d.getDouble() * Server.getArg("simtime-multiplier",1.0) );
+        }
+        return d;
+    }
+
+    @Override
     public Data getTimeElapsed() {
         Data d = super.getTimeElapsed();
         d.setState(Data.State.OFF);
