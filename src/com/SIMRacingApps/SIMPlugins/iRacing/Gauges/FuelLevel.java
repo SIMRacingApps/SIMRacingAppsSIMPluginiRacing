@@ -98,9 +98,10 @@ public class FuelLevel extends iRacingGauge {
     
     @Override 
     public Data setValueNext(double d,String UOM) {
-        Data r = super.setValueNext(d, UOM);
+        Data r = super.setValueNext(d, this._getGaugeUOM(UOM));
         
-        r.setValue(d,UOM);
+        //we must set the value and UOM again because the super just returns the current value.
+        r.setValue(d,this._getGaugeUOM(UOM));
         
         //convert the requested value to the iRacing UOM and round it up to the next increment
         //while keeping it within the min/max boundaries

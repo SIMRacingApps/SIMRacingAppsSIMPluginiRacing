@@ -71,7 +71,10 @@ public class TirePressure extends Tire {
     
     @Override 
     public Data setValueNext(double d,String UOM) {
-        Data r = super.setValueNext(d, UOM);
+        Data r = super.setValueNext(d, this._getGaugeUOM(UOM));
+        
+        //we must set the value and UOM again because the super just returns the current value.
+        r.setValue(d,this._getGaugeUOM(UOM));
         
         if (!m_isFixed) {
             //convert the requested value to the iRacing UOM and round it up to the next increment
