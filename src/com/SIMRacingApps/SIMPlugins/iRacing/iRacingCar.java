@@ -3303,6 +3303,16 @@ if (driverName.equals("Jeff Gilliam"))
             m_repairTime = 0.0;
         }
 
+
+        //here we want to keep the repair time because iRacing zero's it out when you leave the pits
+        //even if you didn't complete the repairs
+        double repairtime    = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PitRepairLeft");
+        if (repairtime > 0.01 || isReset || m_repairTime < 1.0 || nextStatus.equals(iRacingCar.Status.INGARAGE))
+            m_repairTime = repairtime;
+        double repairtimeopt = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PitOptRepairLeft");
+        if (repairtimeopt > 0.01 || isReset || m_repairTimeOptional < 1.0 || nextStatus.equals(iRacingCar.Status.INGARAGE))
+            m_repairTimeOptional = repairtimeopt;
+
         //if we just entered put road
         if (nextStatus.equals(iRacingCar.Status.ONPITROAD)
         && !m_prevStatus.equals(iRacingCar.Status.ONPITROAD)
@@ -3354,15 +3364,6 @@ if (driverName.equals("Jeff Gilliam"))
 
                 if (m_fuelAtStartFinish == -1.0)
                     m_fuelAtStartFinish = m_fuelLevel;
-
-                //here we want to keep the repair time because iRacing zero's it out when you leave the pits
-                //even if you didn't complete the repairs
-                double repairtime    = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PitRepairLeft");
-                if (repairtime > 0.01 || isReset || m_repairTime < 1.0)
-                    m_repairTime = repairtime;
-                double repairtimeopt = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PitOptRepairLeft");
-                if (repairtimeopt > 0.01 || isReset || m_repairTimeOptional < 1.0)
-                    m_repairTimeOptional = repairtimeopt;
 
                 //Since iRacing doesn't support sending commands for the Tape,Wedge and BrakeBias
                 //we will read the current values as they do get output when you make the changes in their black box
