@@ -3637,6 +3637,7 @@ if (driverName.equals("Jeff Gilliam"))
             _setGauge(new iRacingGauge(Gauge.Type.BRAKE,                        this, track, IODriver, "Brake", "%", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.BRAKEBIASADJUSTMENT,          this, track, IODriver, "dcBrakeBias", "%", null, null));
             _setGauge(new BrakePressure(Gauge.Type.BRAKEPRESSURE,               this, track, IODriver));
+            _setGauge(new iRacingGauge(Gauge.Type.BOOSTLEVEL,                   this, track, IODriver, "dcBoostLevel", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.CLUTCH,                       this, track, IODriver, "Clutch", "%", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.DIFFENTRY,                    this, track, IODriver, "dcDiffEntry", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.DIFFEXIT,                     this, track, IODriver, "dcDiffExit", "", null, null));
