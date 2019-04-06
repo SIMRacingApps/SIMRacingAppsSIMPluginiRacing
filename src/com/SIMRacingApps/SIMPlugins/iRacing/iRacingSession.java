@@ -554,6 +554,19 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             int flags = m_SIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
             if (flags == -1)
                 flags = 0;
+
+            flags = (flags == 0
+                    &&
+                    this.getIsReplay().getBoolean() 
+                    &&
+                    getType().equals(Session.Type.RACE) 
+                    &&
+                    this.m_SIMPlugin.getSession().getCar("PACECAR").getStatus().equals(Car.Status.ONTRACK)
+                    &&
+                    this.m_SIMPlugin.getSession().getLaps().getInteger() > 1
+                   ) 
+                 ? SessionFlags.caution 
+                 : flags;
             
             if ((flags & SessionFlags.caution) > 0 || (flags & SessionFlags.cautionWaving) > 0)
                 d.setValue(true);
@@ -573,10 +586,22 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             if (flags == -1)
                 flags = 0;
             
-            if ((flags & SessionFlags.checkered) > 0
-            &&  (getType().equals(Session.Type.RACE) || getType().equals(Session.Type.LONE_QUALIFY))
-            )
+            flags = (flags == 0
+                    &&
+                    this.getIsReplay().getBoolean() 
+                    &&
+                    getType().equals(Session.Type.RACE) 
+                    &&
+                    this.m_SIMPlugin.getSession().getLaps().getInteger() > 1
+                    && 
+                    this.m_SIMPlugin.getSession().getLapsToGo().getInteger() == 0
+                    ) 
+                  ? SessionFlags.checkered 
+                  : flags;
+            
+            if ((flags & SessionFlags.checkered) > 0) {
                 d.setValue(true);
+            }
             d.setState(Data.State.NORMAL);
             
         }
@@ -614,6 +639,19 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             int flags = m_SIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
             if (flags == -1)
                 flags = 0;
+            
+            flags = (flags == 0
+                    &&
+                    this.getIsReplay().getBoolean() 
+                    &&
+                    getType().equals(Session.Type.RACE) 
+                    &&
+                    this.m_SIMPlugin.getSession().getLaps().getInteger() > 1
+                    && 
+                    this.m_SIMPlugin.getSession().getLapsToGo().getInteger() == 1
+                   ) 
+                 ? SessionFlags.white 
+                 : flags;
             
             if ((flags & SessionFlags.white) > 0)
                 d.setValue(true);
@@ -1470,7 +1508,6 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 addPreviousSessions = true;
             }
             
-            
             Calendar sessionCal    = Calendar.getInstance(TimeZone.getTimeZone(timezone));
             sessionCal.setTimeInMillis(d.getLong()*1000L);
             
@@ -1512,38 +1549,39 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                         timezoneOffset = this._getTimeZoneOffset(new Date(sessionCal.getTimeInMillis()), timezone);
                     }
                 }
-            }
 
-            double sessionTimeUTC = (sessionCal.getTimeInMillis() / 1000L);
-            
-            //if we had to use the global time then
-            //Calculate the start of the current session by adding the time from completed sessions.
-            //TODO: what if the admin advances the previous sessions before they complete?
-            for (int session=0; addPreviousSessions && session < sessionNum;session++) {
-                String sessionTime = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionTime");
-                if (!sessionTime.equals("unlimited")) {
-                    String time[] = sessionTime.split("[ ]");
-                    if (time.length > 0 && !time[0].isEmpty()) {
-                        sessionTimeUTC += Double.parseDouble(time[0]);
-                        //iRacing is adding time between sessions
-                        if (m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionType").equals("Practice")) {
-                            sessionTimeUTC += 120;
-                        }
-                        else
-                        if (m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionType").equals("Open Qualify")) {
-                            sessionTimeUTC += 300;
-                        }
-                        else
-                        if (m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionType").equals("Lone Qualify")) {
-                            sessionTimeUTC += 300;
+                double sessionTimeUTC = (sessionCal.getTimeInMillis() / 1000L);
+                
+                //if we had to use the global time then
+                //Calculate the start of the current session by adding the time from completed sessions.
+                //TODO: what if the admin advances the previous sessions before they complete?
+                //      I've also seen long qual sessions of 20 minutes needing to add 3 minutes
+                for (int session=0; addPreviousSessions && session < sessionNum;session++) {
+                    String sessionTime = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionTime");
+                    if (!sessionTime.equals("unlimited")) {
+                        String time[] = sessionTime.split("[ ]");
+                        if (time.length > 0 && !time[0].isEmpty()) {
+                            sessionTimeUTC += Double.parseDouble(time[0]);
+                            //iRacing is adding time between sessions
+                            if (m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionType").equals("Practice")) {
+                                sessionTimeUTC += 120;
+                            }
+                            else
+                            if (m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionType").equals("Open Qualify")) {
+                                sessionTimeUTC += 300;
+                            }
+                            else
+                            if (m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",String.format("%d", session),"SessionType").equals("Lone Qualify")) {
+                                sessionTimeUTC += 300;
+                            }
                         }
                     }
                 }
+                
+    //            Server.logger().finest(String.format("%tc",(long)Math.floor(sessionTimeUTC*1000)));
+                
+                d.setValue(sessionTimeUTC < 0.0 ? 0.0 : sessionTimeUTC);
             }
-            
-//            Server.logger().finest(String.format("%tc",(long)Math.floor(sessionTimeUTC*1000)));
-            
-            d.setValue(sessionTimeUTC < 0.0 ? 0.0 : sessionTimeUTC);
             d.setUOM("s");
 //            d.setState(timezoneShort);
             d.setState(timezoneOffset);  //Offsets are much more reliable than short time zones. Too many conflicts.
@@ -1567,9 +1605,41 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     public Data getTime() {
         Data d = super.getTime();
         if (m_SIMPlugin.isConnected()) {
-            //TODO: Get multiplier from iRacing when they impliment it.
-            //      For now, let the user put it in their settings
-            d.setValue( d.getDouble() * Server.getArg("simtime-multiplier",1.0) );
+            int sessionTimeOfDay = (int) Math.floor(m_SIMPlugin.getIODriver().getVars().getDouble("SessionTimeOfDay"));
+            if (sessionTimeOfDay >= 0.0) {
+                String timezone = m_track.getTimeZone().getString();
+                Calendar sessionCal    = Calendar.getInstance(TimeZone.getTimeZone(timezone));
+                sessionCal.setTimeInMillis(getStartTime().getLong()*1000L);
+
+                long startTime = (sessionCal.get(Calendar.HOUR_OF_DAY) * 60 * 60)
+                               + (sessionCal.get(Calendar.MINUTE) * 60)
+                               + (sessionCal.get(Calendar.SECOND));
+                
+                //remove any time element
+                sessionCal.clear(Calendar.AM_PM);
+                sessionCal.clear(Calendar.HOUR);
+                sessionCal.clear(Calendar.HOUR_OF_DAY);
+                sessionCal.clear(Calendar.MINUTE);
+                sessionCal.clear(Calendar.SECOND);
+                sessionCal.clear(Calendar.MILLISECOND);
+                
+                //adjust for 24 hour races, or races that cross midnight
+                if (sessionTimeOfDay < startTime) {
+                    sessionCal.set(Calendar.SECOND,(24*60*60) + sessionTimeOfDay);
+                }
+                else {
+                    sessionCal.set(Calendar.SECOND,sessionTimeOfDay);
+                }
+                d.setValue(sessionCal.getTimeInMillis() / 1000L);
+            }
+//            else {
+//                String sFactor = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","WeekendOptions","EarthRotationSpeedupFactor");
+//                double factor = Server.getArg("simtime-multiplier",1.0);
+//                if (!sFactor.isEmpty())
+//                    factor = Integer.parseInt(sFactor);
+//                
+//                d.setValue( d.getDouble() * factor );
+//            }
         }
         return d;
     }

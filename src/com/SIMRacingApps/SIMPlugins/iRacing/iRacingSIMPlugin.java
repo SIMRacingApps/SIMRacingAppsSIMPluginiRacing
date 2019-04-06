@@ -44,10 +44,10 @@ public class iRacingSIMPlugin extends SIMPlugin {
         return m_session;
     }
     
-    @Override
-    public Data getSIMName() {
-        return super.getSIMName().setValue("iRacing").setState(Data.State.NORMAL);
-    }
+//    @Override
+//    public Data getSIMName() {
+//        return super.getSIMName().setValue("iRacing").setState(Data.State.NORMAL);
+//    }
 
     @Override
     public Data setPlay(String file) {

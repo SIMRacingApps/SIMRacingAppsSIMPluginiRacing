@@ -1903,24 +1903,45 @@ else
     @Override
     public Data getMessages() {
         Data d = super.getMessages();
-        if (m_iRacingSIMPlugin.isConnected() && isME()) {
-            int flags = m_iRacingSIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
-            if (flags == -1)
-                flags = 0;
-            
-            StringBuffer flagnames = new StringBuffer("");
-
-            if ((flags & SessionFlags.repair) != 0)  { flagnames.append(";"); flagnames.append(Car.Message.REPAIR); }
-            if (getIsPitSpeedLimiter().getBoolean()) { flagnames.append(";"); flagnames.append(Car.Message.PITSPEEDLIMITER); }
-            double towtime = 0.0;
-            if (isME() && (towtime = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PlayerCarTowTime")) > 0.0) {  //June 2018
-                flagnames.append(";"); flagnames.append(Car.Message.TOWING + " " + String.format("%.0f:%02.0f", Math.floor(towtime / 60.0), towtime % 60.0));
+        StringBuffer flagnames = new StringBuffer("");
+        
+        if (m_iRacingSIMPlugin.isConnected()) {
+            if (isME()) {
+                int flags = m_iRacingSIMPlugin.getIODriver().getVars().getBitfield("SessionFlags");
+                if (flags == -1)
+                    flags = 0;
+                int pitStatus = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarPitSvStatus");
+                if (pitStatus == -1)
+                    pitStatus = PitSvStatus.None;
+                
+    
+                if ((flags & SessionFlags.repair) != 0)  { flagnames.append(";"); flagnames.append(Car.Message.REPAIR); }
+                if (getIsPitSpeedLimiter().getBoolean()) { flagnames.append(";"); flagnames.append(Car.Message.PITSPEEDLIMITER); }
+                double towtime = 0.0;
+                if (isME() && (towtime = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("PlayerCarTowTime")) > 0.0) {  //June 2018
+                    flagnames.append(";"); flagnames.append(Car.Message.TOWING + " " + String.format("%.0f:%02.0f", Math.floor(towtime / 60.0), towtime % 60.0));
+                }
+    
+                if (pitStatus == PitSvStatus.BadAngle)      { flagnames.append(";"); flagnames.append(Car.Message.STRAIGHTENUP); }
+                if (pitStatus == PitSvStatus.CantFixThat)   { flagnames.append(";"); flagnames.append(Car.Message.TOOMUCHDAMAGE); }
+                if (pitStatus == PitSvStatus.InProgress)    { flagnames.append(";"); flagnames.append(Car.Message.PITSERVICEINPROGRESS); }
+                if (pitStatus == PitSvStatus.TooFarBack)    { flagnames.append(";"); flagnames.append(Car.Message.TOOFARBACK); }
+                if (pitStatus == PitSvStatus.TooFarForward) { flagnames.append(";"); flagnames.append(Car.Message.TOOFARFORWARD); }
+                if (pitStatus == PitSvStatus.TooFarLeft)    { flagnames.append(";"); flagnames.append(Car.Message.TOOFARLEFT); }
+                if (pitStatus == PitSvStatus.TooFarRight)   { flagnames.append(";"); flagnames.append(Car.Message.TOOFARRIGHT); }
+                
             }
-
+            else {
+                //only these messages are available for other cars
+                if (m_prevStatus.equals(iRacingCar.Status.INPITSTALL)) { flagnames.append(";"); flagnames.append(Car.Message.PITSERVICEINPROGRESS); }
+            }
+        }
+        
+        if (flagnames.length() > 0) {
             flagnames.append(";");
             d.setValue(flagnames.toString());
-            d.setState(Data.State.NORMAL);
         }
+        d.setState(Data.State.NORMAL);
         return d;
     }
 
@@ -2178,22 +2199,21 @@ else
             }
 
             //see if we can detect if anyone is talking on TeamSpeak
-            if (idx == -1                                       //no one on iRacing is transmitting
+            if (idx == -1                                       //Noone on iRacing is talking. They take priority
             &&  Server.getArg("teamspeak-transmitting", true)   //we are allowed to check for teamspeak transmitting
             &&  !teamspeakName.isEmpty()                        //someone is transmitting on teamspeak right now
             ) {
                 //now see if this name has a mapping
                 String nameMapped = Server.getArg(teamspeakName,teamspeakName);
-                String driverName = this.getDriverName().getString();
-if (driverName.equals("Jeff Gilliam"))
-    driverName = driverName;
+
                 if (com.SIMRacingApps.SIMPlugins.iRacing.SessionDataCache.SessionDataCars._isMatching(this, teamspeakName, nameMapped)) {
                     d.setValue("TEAMSPEAK");
                     d.setState(Data.State.NORMAL);
                     return d;
                 }
                 else {
-                    nameMapped = Server.getArg(this.getDriverName().getString(),this.getDriverName().getString());
+                    String driverName = this.getDriverName().getString();
+                    nameMapped = Server.getArg(driverName,driverName);
                     if (com.SIMRacingApps.SIMPlugins.iRacing.SessionDataCache.SessionDataCars._isMatching(this, teamspeakName, nameMapped)) {
                         d.setValue("TEAMSPEAK");
                         d.setState(Data.State.NORMAL);

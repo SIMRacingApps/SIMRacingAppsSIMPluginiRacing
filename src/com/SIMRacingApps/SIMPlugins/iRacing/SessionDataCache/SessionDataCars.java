@@ -105,8 +105,8 @@ public class SessionDataCars extends SessionData {
 
     //make static so iRacingCar class can call it.
     public static boolean _isMatching( iRacingCar car, String name, String nameMapped) {
-        String name2 = name.replaceAll("#\\d[ \t-_=]", "").replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
-        String nameMapped2 = name.replaceAll("#\\d[ \\t-_=]", "").replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
+        String name2 = name.replaceAll("#\\d[ \t-_=]", "").replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", "").trim(); //remove punctuation and trailing numbers
+        String nameMapped2 = nameMapped.replaceAll("#\\d[ \\t-_=]", "").replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", "").trim(); //remove punctuation and trailing numbers
         
         String driverName = car.getDriverName(true).getString().replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
         String driverNameNotMapped = car.getDriverName(false).getString().replaceAll("[\\-_=\\*<>]", "").replaceAll("\\d.?$", ""); //remove punctuation and trailing numbers
