@@ -1878,6 +1878,26 @@ else
         return super.getLatitude(UOM);
     }
     
+    @Override
+    public Data getLatitudeAcceleration(String UOM) {
+        Data d = super.getLatitudeAcceleration(UOM);
+        if (isME()) {
+            double accel = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("LatAccel");
+            d.setValue(accel,"m/s2",Data.State.NORMAL);
+        }
+        return d.convertUOM(UOM);
+    }
+
+    @Override
+    public Data getLongitudeAcceleration(String UOM) {
+        Data d = super.getLongitudeAcceleration(UOM);
+        if (isME()) {
+            double accel = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("LongAccel");
+            d.setValue(accel,"m/s2",Data.State.NORMAL);
+        }
+        return d.convertUOM(UOM);
+    }
+    
     /**
      * iRacing only outputs this value in the IBT files for ME.
      * This code checks to see if it exists before returning it, otherwise it calls the base class.

@@ -40,10 +40,12 @@ public class WaterPressure extends iRacingGauge {
                     //TODO: Need a way to get the "normal" water pressure for all cars if not 68 PSI
                     double Capacity = m_car._getGauge(Gauge.Type.WATERLEVEL).getCapacityMaximum().getDouble();
 
-                    d.setValue((Level/Capacity) * (new Data("68psi",68.0,"psi")).convertUOM(getUOM().getString()).getDouble());
+                    Data fakePressure = (new Data("68psi",68.0,"psi")).convertUOM(getUOM().getString());
+                    d.setValue((Level/Capacity) * fakePressure.getDouble());
                     if (d.getDouble() < 0.0)
                         d.setValue(0.0);
                 }
+                d.setUOM(getUOM().getString());
                 if (m_IODriver.getVars().getDouble("Voltage") == 0.0)
                     d.setState(Data.State.OFF);
                 else
