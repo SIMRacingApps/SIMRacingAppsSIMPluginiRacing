@@ -23,6 +23,13 @@
             }
         },
         "Tachometer": {
+            "default": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6500.0, "End": 7300.0},
+                    "SHIFT":       {"Start": 7300.0, "End": 7500.0},
+                    "SHIFTBLINK":  {"Start": 7500.0, "End": 99999999.0}
+                }
+            },
             "homestead_oval": {
                 "RPMPitRoadSpeed":   4200.0
             },
