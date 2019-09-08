@@ -3716,6 +3716,7 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.HYSDISABLEBOOSTHOLD,          this, track, IODriver, "dcHysNoBoostToggle", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.HYSREGENGAIN,                 this, track, IODriver, "dcMGUKRegenGain", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.INLAPMODE,                    this, track, IODriver, "dcInLapToggle", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.LAUNCHRPM,                    this, track, IODriver, "dcLaunchRPM", "rpm", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.LOWFUELACCEPT,                this, track, IODriver, "dcLowFuelAccept", "", null, null));
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpLRWedgeAdj") != null)
                 _setGauge(new Changeables(Gauge.Type.LRWEDGEADJUSTMENT,         this, track, IODriver, "dpLRWedgeAdj", "mm", null, null));

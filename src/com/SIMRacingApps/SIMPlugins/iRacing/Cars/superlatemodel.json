@@ -87,7 +87,10 @@
         },
         "Tape": {
             "default": {
-                "Reader": "DataVarTape4"
+                "States": {
+                    "0": {"Start":  0.0, "End": 1.0, "Name": "Car/Gauge/Gear", "Value": "RACE"},
+                    "1": {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/Gear", "Value": "QUAL"}
+                }
             }
         }
     }

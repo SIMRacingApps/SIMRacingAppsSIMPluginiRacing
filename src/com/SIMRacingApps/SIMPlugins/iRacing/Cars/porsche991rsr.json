@@ -97,7 +97,7 @@
                 "MajorIncrement":    10.0,
                 "MinorIncrement":    5.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   100.0,
+                "CapacityMaximum":   99.0,
                 "CapacityIncrement": 1.0,
                 "IsFixed":           false,
                 "IsChangable":       true,
