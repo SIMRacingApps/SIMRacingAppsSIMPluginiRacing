@@ -2989,12 +2989,6 @@ else
             }
         }
 
-        //so if we just left the pits and we haven't reached the merge point
-        //yet iRacing says we're on the track, set the next status back to leaving pits.
-        //This will help the track map logic keep the car on the apron or access road longer.
-        //The merge point reference is our position when we left pit road. Tracks with multiple pit roads will have multiple merge points.
-        m_mergePoint = m_iRacingSIMPlugin.getSession().getTrack().getMergePoint(m_mergePointReference * 100.0) / 100.0;
-
 //if (isME()) {
 //    if (m_prevStatus.equals(iRacingCar.Status.LEAVINGPITS)
 //    &&  (nextStatus.equals(iRacingCar.Status.ONTRACK) || nextStatus.equals(iRacingCar.Status.OFFTRACK))
@@ -3003,6 +2997,7 @@ else
 //            m_mergePoint=m_mergePoint;
 //    }
 //}
+        m_mergePoint = m_iRacingSIMPlugin.getSession().getTrack()._getMergePoint(m_mergePointReference * 100.0) / 100.0;
 
         if (m_prevStatus.equals(iRacingCar.Status.LEAVINGPITS)
         &&  (nextStatus.equals(iRacingCar.Status.ONTRACK) || nextStatus.equals(iRacingCar.Status.OFFTRACK))
@@ -3022,6 +3017,11 @@ else
         ) {
             nextStatus.setState(iRacingCar.Status.LEAVINGPITS,m_sessionTime);
             m_mergePointReference = m_lapCompletedPercent; //save our position of where we left the pits as the reference for determining the merge point
+            //so if we just left the pits and we haven't reached the merge point
+            //yet iRacing says we're on the track, set the next status back to leaving pits.
+            //This will help the track map logic keep the car on the apron or access road longer.
+            //The merge point reference is our position when we left pit road. Tracks with multiple pit roads will have multiple merge points.
+
         }
 
         //if the if the user is reseting pit box, then we have to wait until they are done before we can
