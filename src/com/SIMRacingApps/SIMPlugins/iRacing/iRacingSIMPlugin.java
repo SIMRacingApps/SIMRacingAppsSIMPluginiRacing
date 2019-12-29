@@ -161,7 +161,8 @@ public class iRacingSIMPlugin extends SIMPlugin {
     @Override
     public boolean isConnected() {
         if (!_init()) return false;
-        return (m_IODriver.getHeader().getStatus() & StatusField.stConnected) != 0;
+        int status = m_IODriver.getHeader().getStatus();
+        return (status & StatusField.stConnected) != 0;
     }
 
     private Long m_startingVersion = null;

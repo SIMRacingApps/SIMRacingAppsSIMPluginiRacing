@@ -110,7 +110,7 @@ public class iRacingCar extends Car {
     }
 
     public iRacingCar(iRacingSIMPlugin SIMPlugin, Integer id, String name, Integer driversIdx) {
-        super(SIMPlugin, id, name, "com/SIMRacingApps/SIMPlugins/iRacing/Cars/"+name.replaceAll("[ ]", "_")+".json");
+        super(SIMPlugin, id, name, "com/SIMRacingApps/SIMPlugins/iRacing/Cars/"+Server.getArg(name.replaceAll("[ ]", "_"),name.replaceAll("[ ]", "_"))+".json");
         m_iRacingSIMPlugin = SIMPlugin;
         m_driversIdx = driversIdx;
         _initialize();
@@ -1078,6 +1078,8 @@ else
     @Override
     public Data getHasAutomaticPitCommands() {
         Data d = super.getHasAutomaticPitCommands();
+//if (m_id != -1 && m_id ==  m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarIdx"))
+//    m_id = m_id * 1;
         if (isME()) {
             if (!m_enableSIMSetupCommands)
                 Server.logger().info(String.format("%s.getHasAutomaticPitCommands() is returning Y",this.getClass().getName()));
@@ -3090,15 +3092,15 @@ else
         //If lapCompletedPercent is > 1.0, the current lap doesn't, so we increment it
         //It appears there is a delay of these 2 variables and they are not in sync.
         //Also, the low level driver is not normalizing the pct, so we would have to change that also.
-        if (lapCompletedPercent >= 1.0) {
+        if (lapCompletedPercent >= m_iRacingSIMPlugin.getSession().getTrack()._maxPercentage()) {
             currentLap++;
-            lapCompletedPercent -= 1.0;
+            lapCompletedPercent -= m_iRacingSIMPlugin.getSession().getTrack()._maxPercentage();
         }
 
         //I've seen this be negative, but when it is, the current lap has not incremented
         //so, adjust it to be positive.
-        if (lapCompletedPercent < 0.0 && lapCompletedPercent > -1.0)
-            lapCompletedPercent += 1.0;
+        if (lapCompletedPercent < 0.0 && lapCompletedPercent > -m_iRacingSIMPlugin.getSession().getTrack()._maxPercentage())
+            lapCompletedPercent += m_iRacingSIMPlugin.getSession().getTrack()._maxPercentage();
 
 //if (isME()) //just to have a place to put a breakpoint
 //    m_lapCompletedPercent = lapCompletedPercent;

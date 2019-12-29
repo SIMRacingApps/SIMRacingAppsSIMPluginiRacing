@@ -27,13 +27,22 @@ public class FastRepairs extends iRacingGauge {
     Data m_valueBeforePitting;
     
     public FastRepairs(String type, iRacingCar car, Track track, IODriver IODriver) {
-        super(type, car, track, IODriver, "FastRepairsRemaining" /*TODO: Just a guess, doesn't exist*/, "", null,null);
+        super(type, car, track, IODriver, "FastRepairAvailable", "", null,null);
 
         m_prevStatus     = new State(Car.Status.OFFTRACK,0.0);
         m_lapsHistorical = 0;
         m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
         m_valueBeforePitting = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
         m_usedCount = 0;    //don't count these until they are used
+        
+        //get the maximum value from the weekend options. Available as of 2019 Dec build.
+        String s = m_IODriver.getSessionInfo().getString("WeekendInfo","WeekendOptions","FastRepairsLimit");
+        if (!s.isEmpty()) {
+            if (s.equals("unlimited"))
+                this._setMaximum(255, "");
+            else
+                this._setMaximum(Integer.parseInt(s), "");
+        }
     }
 
     @Override
@@ -46,7 +55,7 @@ public class FastRepairs extends iRacingGauge {
         
         return this._getReturnValue(d, UOM);
     }
-    
+
     @Override
     public Data setChangeFlag(boolean flag) {
         if (

@@ -36,17 +36,22 @@ public abstract class SessionData extends Data {
     }
     
     protected boolean _needsUpdating() {
+        
         //if we're not connected, no update available
-        if (!m_SIMPlugin.isConnected())
+        if (!m_SIMPlugin.isConnected()) {
+            m_sessionUniqueId = -1;
             return false;
+        }
+        
+        int sessionId = m_SIMPlugin.getIODriver().getVars().getInteger("SessionUniqueID");
         
         //See if the session data changed
-        if (m_sessionUniqueId == m_SIMPlugin.getIODriver().getVars().getInteger("SessionUniqueID")
+        if (m_sessionUniqueId == sessionId
         &&  m_sessionVersion  == m_SIMPlugin.getIODriver().getHeader().getSessionInfoUpdate()
         )
             return false;
         
-        m_sessionUniqueId = m_SIMPlugin.getIODriver().getVars().getInteger("SessionUniqueID");
+        m_sessionUniqueId = sessionId;
         m_sessionVersion  = m_SIMPlugin.getIODriver().getHeader().getSessionInfoUpdate();
         return true;
     }
