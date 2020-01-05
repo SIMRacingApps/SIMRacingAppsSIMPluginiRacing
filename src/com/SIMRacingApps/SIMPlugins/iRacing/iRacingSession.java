@@ -52,7 +52,10 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     private int                                      m_sessionUniqueID;
     private int                                      m_dataVersion;
     private int                                      m_sessionVersion;
+    private int                                      m_previousSessionNumber = -1;
     private boolean                                  m_connected = false;
+    private boolean                                  m_seenGreen = false;
+    private String                                   m_status = Status.UNKNOWN;
     private boolean                                  m_hasIncidents;
     private iRacingTrack                             m_track;
     private SessionDataCars                          m_cars;
@@ -1590,6 +1593,42 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
+    public Data getStatus() {
+        Data d = super.getStatus();
+        d.setState(Data.State.OFF);
+        
+        if (m_SIMPlugin.isConnected()) {
+            if (this.getIsCheckeredFlag().getBoolean())
+                d.setValue(Status.FINISHED);
+            else
+            if (this.getIsWhiteFlag().getBoolean())
+                d.setValue(Status.GREEN);
+            else
+            if (this.getIsCautionFlag().getBoolean())
+                d.setValue(Status.CAUTION);
+            else
+            if (this.getIsRedFlag().getBoolean())
+                d.setValue(Status.RED);
+            else
+            if (getType().equals(Type.LONE_QUALIFY)
+            ||  getType().equals(Type.OPEN_QUALIFY)
+            ||  getType().equals(Type.RACE)
+            ) {
+                if (m_seenGreen)
+                    d.setValue(Status.GREEN);
+                else
+                    d.setValue(m_status);
+            }
+            else {
+                d.setValue(Session.Status.GREEN);
+            }
+            m_status = d.getString();
+            d.setState(Data.State.NORMAL);
+        }
+        return d;
+    }
+    
+    @Override
     public Data getStrengthOfField() {
         Data d = super.getStrengthOfField();
         d.setState(Data.State.OFF);
@@ -2049,7 +2088,26 @@ public class iRacingSession extends com.SIMRacingApps.Session {
                 if (idx > 0)
                     m_SIMPlugin.getSession().setReferenceCar("I"+idx.toString());
             }
-            
+
+            //when the session changes, set the initial status to engines started.
+            //it will stay that way until it changes.
+            if (m_previousSessionNumber != m_SIMPlugin.getIODriver().getVars().getInteger("SessionNum"))
+                m_status = Status.ENGINES_STARTED;
+
+            //help out the getStatus() method by tracking when track is green.
+            if (this.getIsCautionFlag().getBoolean()
+            ||  this.getIsRedFlag().getBoolean()
+            ||  this.getIsCheckeredFlag().getBoolean()
+            ||  m_previousSessionNumber != m_SIMPlugin.getIODriver().getVars().getInteger("SessionNum")
+            ) {
+                m_seenGreen = false;
+            }
+            else
+            if (this.getIsGreenFlag().getBoolean()) {
+                m_seenGreen = true;
+            }
+
+            m_previousSessionNumber = m_SIMPlugin.getIODriver().getVars().getInteger("SessionNum");
             m_cars.onDataVersionChange();
             
         } //end of data version changed
