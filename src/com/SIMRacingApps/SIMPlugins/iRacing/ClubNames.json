@@ -35,6 +35,7 @@
     "Michigan":                 { "id": 28, "region": 6 },
     "New Jersey":               { "id": 19, "region": 6 },
     "Western Canada":           { "id": 35, "region": 6 },
+    "Africa/South Africa":      { "id": 50, "region": 7 },
     "Asia":                     { "id": 47, "region": 7 },
     "Celtic":                   { "id": 37, "region": 7 },
     "Hispanoam":                { "id": 24, "region": 7 },
