@@ -971,7 +971,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             int count = getRadioChannels().getInteger();
             if (channel >= 0 && channel < count) {
                 String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("RadioInfo","Radios","0","Frequencies",Integer.toString(channel),"FrequencyName");
-                d.setValue(s.startsWith("@") ? s.substring(1) : s);
+                d.setValue(s);
                 d.setState(Data.State.NORMAL);
             }
         }
