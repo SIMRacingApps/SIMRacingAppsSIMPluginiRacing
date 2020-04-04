@@ -132,4 +132,15 @@ public class SessionInfo {
     public String getString(String ... args) {
         return getString(getObject(args));
     }
+    
+    public int getInteger(Object p_o) {
+        String s = getString(p_o);
+        if (!s.isEmpty())
+            return Integer.parseInt(s);
+        return -1;
+    }
+    
+    public int getInteger(String ... args) {
+        return getInteger(getObject(args));
+    }
 }

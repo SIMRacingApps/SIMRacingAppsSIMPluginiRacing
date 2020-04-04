@@ -90,12 +90,17 @@ public class iRacingCar extends Car {
     private double  m_mergePoint            = 0.0;
     private int     m_lastKnownRadio        = 0;
     private int     m_lastKnownFrequency    = 0;    //Keep track of the last frequency they transmitted on.
-    private int     m_lastKnownIncidents    = 0;
-    private int     m_lastKnownIncidentsTeam= 0;
     private Map<Integer,Integer> m_runningAverageSincePittingLaps = new HashMap<Integer,Integer>();
     private Map<Integer,Integer> m_averageSincePittingLaps = new HashMap<Integer,Integer>();
     private Map<Integer,Double> m_runningAverageSincePittingTime = new HashMap<Integer,Double>();
     private Map<Integer,Double> m_averageSincePittingTime = new HashMap<Integer,Double>();
+    
+    private ArrayList<Integer> m_myIncidentsLap     = new ArrayList<Integer>(); //indexed by current lap, zero based (e.g. Lap 1 = index 0)
+    private int m_myIncidents                       = 0;
+    private ArrayList<Integer> m_driverIncidentsLap = new ArrayList<Integer>(); //indexed by current lap, zero based (e.g. Lap 1 = index 0)
+    private int m_driverIncidents                   = 0;
+    private ArrayList<Integer> m_teamIncidentsLap   = new ArrayList<Integer>(); //indexed by current lap, zero based (e.g. Lap 1 = index 0)
+    private int m_teamIncidents                     = 0;
 
 //    private VarDataDouble m_fuelReader;
 //    private VarDataDoubleSpeed m_speedReader;
@@ -190,7 +195,6 @@ public class iRacingCar extends Car {
         private int     m_lapBest               = 0;    public int getLapBest()        { _refresh(); return m_lapBest; }
         private int     m_lapCompleted          = 0;    public int getLapCompleted()   { _refresh(); return m_lapCompleted; }
         private int     m_lapsLed               = 0;    public int getLapsLed()        { _refresh(); return m_lapsLed; }
-        private int     m_incidents             = 0;    public int getIncidents()      { _refresh(); return m_incidents; }
         private int     m_highestPosition       = 999;  public int getPositionHighest(){ _refresh(); return m_highestPosition == 999 ? 0 : m_highestPosition; }
         private int     m_highestPositionClass  = 999;  public int getPositionHighestClass(){ _refresh(); return m_highestPositionClass == 999 ? 0 : m_highestPositionClass; }
         private int     m_lowestPosition        = 0;    public int getPositionLowest(){ _refresh(); return m_lowestPosition; }
@@ -201,17 +205,23 @@ public class iRacingCar extends Car {
         private ArrayList<Integer> m_positions       = new ArrayList<Integer>(); public ArrayList<Integer> getPositions()      { _refresh(); return m_positions; } //indexed by lap completed, zero based (e.g. Lap 1 = index 0)
         private ArrayList<Integer> m_positionsClass  = new ArrayList<Integer>(); public ArrayList<Integer> getPositionsClass() { _refresh(); return m_positionsClass; } //indexed by lap completed, zero based (e.g. Lap 1 = index 0)
 
-        private Map<String,Double>  m_lapTimeBestDriver = new HashMap<String,Double>();
-        private Map<String,Integer> m_lapBestDriver     = new HashMap<String,Integer>();
+        private Map<String,Double>  m_lapTimeBestDriver       = new HashMap<String,Double>();
         public double getLapTimeBestDriver(String driverName) { 
             _refresh();
             Double lapTime = m_lapTimeBestDriver.get(driverName);
             return lapTime == null ? 0.0 : lapTime.doubleValue(); 
         }
+        private Map<String,Integer> m_lapBestDriver           = new HashMap<String,Integer>();
         public double getLapBestDriver(String driverName) { 
             _refresh();
             Integer lap = m_lapBestDriver.get(driverName);
             return lap == null ? 0 : lap.intValue(); 
+        }
+        private Map<String,Double>  m_lapTimeBestCleanDriver  = new HashMap<String,Double>();
+        public double getLapTimeBestCleanDriver(String driverName) { 
+            _refresh();
+            Double lapTime = m_lapTimeBestCleanDriver.get(driverName);
+            return lapTime == null ? 0.0 : lapTime.doubleValue(); 
         }
         
         public _Results() {}
@@ -296,7 +306,6 @@ public class iRacingCar extends Car {
                         m_lapBest         = 0;
                         m_lapCompleted    = 0;
                         m_lapsLed         = 0;
-                        m_incidents       = 0;
                         m_lapTimes        = new ArrayList<Double>();
                         m_positions       = new ArrayList<Integer>();
                         m_positionsClass  = new ArrayList<Integer>();
@@ -377,12 +386,10 @@ public class iRacingCar extends Car {
                                 m_lapsLed = Integer.parseInt(s);
                         }
                         
-                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"Incidents");
-                        if (!s.isEmpty() && Integer.parseInt(s) >= 0) {
-                            m_incidents = Integer.parseInt(s);
-                        }
-
-                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"LastTime");
+                        if (isME())
+                            s = m_iRacingSIMPlugin.getIODriver().getVars().getString("LapLastLapTime");
+                        if (!isME() || s.isEmpty())
+                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"LastTime");
                         if (!s.isEmpty() /* && Double.parseDouble(s) > 0.0 *can get zero if meatball is out*/) {
                             m_lapTimeLast = Double.parseDouble(s);
                             
@@ -417,7 +424,16 @@ public class iRacingCar extends Car {
                             m_lapTimeBestDriver.replace(getDriverName(false).getString(), m_lapTimeLast);
                             m_lapBestDriver.replace(getDriverName(false).getString(), m_lapCompleted);
                         }
-                        
+
+                        lapTime = m_lapTimeBestCleanDriver.get(getDriverName(false).getString());
+                        if (m_lapTimeLast > 0.0 && lapTime == null && m_driverIncidentsLap.get(m_lapCompleted-1) == 0) {
+                            m_lapTimeBestCleanDriver.put(getDriverName(false).getString(), m_lapTimeLast);
+                        }
+                        else
+                        if (m_lapTimeLast > 0.0 && m_lapTimeLast < lapTime && m_driverIncidentsLap.get(m_lapCompleted-1) == 0) {
+                            m_lapTimeBestCleanDriver.replace(getDriverName(false).getString(), m_lapTimeLast);
+                        }
+
                     }
                 }
                 else {
@@ -426,7 +442,6 @@ public class iRacingCar extends Car {
                         m_positionClass = m_resultsQualifying.getPositionClass();
                         m_lapTimeBest   = m_resultsQualifying.getLapTimeBest();
                         m_lapBest       = m_resultsQualifying.getLapBest();
-                        m_incidents     = m_resultsQualifying.getIncidents();
 //                    }
                 }
                 
@@ -439,8 +454,6 @@ public class iRacingCar extends Car {
                     m_lowestPositionClass  = Math.max(m_lowestPositionClass, m_positionClass);
                 }
                 
-                if (m_id != m_ME)
-                    ((iRacingSession)m_iRacingSIMPlugin.getSession())._setHasIncidents(m_incidents);
             }  
             catch (IndexOutOfBoundsException e) {}
             catch (NumberFormatException e) {}
@@ -1175,43 +1188,53 @@ else
     @Override
     public Data getIncidents() {
         Data d = super.getIncidents();
-        if (isME()) {
-            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarDriverIncidentCount") != null) {
-                d.setState(Data.State.OFF);
-    
-                if (isValid()) {
-                    int i = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarDriverIncidentCount");
-                    if (i >= 0)
-                        m_lastKnownIncidents = i;
-                    d.setValue(m_lastKnownIncidents,d.getUOM(),Data.State.NORMAL);
-                }
-            }
-        }
-        else {
-            //if we've seen any incidents from other cars, either end of race or admin
-            if (((iRacingSession)m_iRacingSIMPlugin.getSession())._getHasIncidents()) {
-                d.setValue(m_results.getIncidents(),d.getUOM(),Data.State.NORMAL);
-            }
-        }
+//        if (isME()) {
+//            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarDriverIncidentCount") != null) {
+//                d.setState(Data.State.OFF);
+//    
+//                if (isValid()) {
+//                    int i = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarDriverIncidentCount");
+//                    if (i >= 0)
+//                        m_lastKnownIncidents = i;
+//                    d.setValue(m_lastKnownIncidents,d.getUOM(),Data.State.NORMAL);
+//                }
+//            }
+//        }
+//        else {
+//            //if we've seen any incidents from other cars, either end of race or admin
+//            if (((iRacingSession)m_iRacingSIMPlugin.getSession())._getHasIncidents()) {
+//                d.setValue(m_results.getIncidents(),d.getUOM(),Data.State.NORMAL);
+//            }
+//        }
+        d.setValue(m_driverIncidents,d.getUOM(),Data.State.NORMAL);
         return d;
     }
 
     @Override
     public Data getIncidentsTeam() {
         Data d = super.getIncidentsTeam();
-        //only return a value if in a team session
-        if (isME() && m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarTeamIncidentCount") != null) {
-            d.setState(Data.State.OFF);
-            
-            if (isValid()) {
-                if (!getTeamName().getString().isEmpty()) {
-                    int i = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarTeamIncidentCount");
-                    if (i >= 0)
-                        m_lastKnownIncidentsTeam = i;
-                    d.setValue(m_lastKnownIncidentsTeam,d.getUOM(),Data.State.NORMAL);
-                }
-            }
-        }
+//        //only return a value if in a team session
+//        if (isME()) {
+//            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarTeamIncidentCount") != null) {
+//                d.setState(Data.State.OFF);
+//                
+//                if (isValid()) {
+//                    if (!getTeamName().getString().isEmpty()) {
+//                        int i = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarTeamIncidentCount");
+//                        if (i >= 0)
+//                            m_lastKnownIncidentsTeam = i;
+//                        d.setValue(m_lastKnownIncidentsTeam,d.getUOM(),Data.State.NORMAL);
+//                    }
+//                }
+//            }
+//        }
+//        else {
+//            //if we've seen any incidents from other cars, either end of race or admin
+//            if (((iRacingSession)m_iRacingSIMPlugin.getSession())._getHasIncidents()) {
+//                d.setValue(m_results.getIncidentsTeam(),d.getUOM(),Data.State.NORMAL);
+//            }
+//        }
+        d.setValue(m_teamIncidents,d.getUOM(),Data.State.NORMAL);
         return d;
     }
 
@@ -1814,7 +1837,7 @@ else
             d.setValue(t.getValue(),t.getUOM(),t.getState());
         }
         else {
-            d.setValue(m_results.getLapTimeBestDriver(getDriverName(false).getString()));
+            d.setValue(m_results.getLapTimeBestCleanDriver(getDriverName(false).getString()));
             if (d.getDouble() > 0.0)
                 d.setState(Data.State.NORMAL);
         }
@@ -2808,6 +2831,57 @@ else
         
         if (currentLap == 2 && (m_sessionFlags & SessionFlags.green) != 0)
             currentLap = 1;
+        
+        //track the incidents by lap. This uses the var version for ME, else rely on session for others.
+        int myIncidents = isME()
+                        ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarMyIncidentCount")
+                        : m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("DriverInfo","Drivers",m_driversIdx.toString(),"CurDriverIncidentCount");
+                        
+        //first build up the array
+        while (m_myIncidentsLap.size() < currentLap) {
+            m_myIncidentsLap.add(0);
+        }
+        if (myIncidents > 0) {
+            //if it has changed, add it to the current lap
+            if (myIncidents > m_myIncidents)
+                m_myIncidentsLap.set(currentLap-1,m_myIncidentsLap.get(currentLap-1) + (myIncidents - m_myIncidents));
+            m_myIncidents = myIncidents;
+        }
+        
+        //now do the driver
+        int driverIncidents = isME()
+                            ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarDriverIncidentCount")
+                            : m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("DriverInfo","Drivers",m_driversIdx.toString(),"CurDriverIncidentCount");
+                            
+        //first build up the array
+        while (m_driverIncidentsLap.size() < currentLap) {
+            m_driverIncidentsLap.add(0);
+        }
+        if (driverIncidents > 0) {
+            //if it has changed, add it to the current lap
+            if (driverIncidents > m_driverIncidents)
+                m_driverIncidentsLap.set(currentLap-1,m_driverIncidentsLap.get(currentLap-1) + (driverIncidents - m_driverIncidents));
+            m_driverIncidents = driverIncidents;
+        }
+        
+        //now do the team
+        int teamIncidents = isME()
+                          ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarTeamIncidentCount")
+                          : m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("DriverInfo","Drivers",m_driversIdx.toString(),"TeamIncidentCount");
+                          
+        //first build up the array
+        while (m_teamIncidentsLap.size() < currentLap) {
+            m_teamIncidentsLap.add(0);
+        }
+        if (teamIncidents > 0) {
+            //if it has changed, add it to the current lap
+            if (teamIncidents > m_teamIncidents)
+                m_teamIncidentsLap.set(currentLap-1,m_teamIncidentsLap.get(currentLap-1) + (teamIncidents - m_teamIncidents));
+            m_teamIncidents = teamIncidents;
+            if (m_id != m_ME)
+                ((iRacingSession)m_iRacingSIMPlugin.getSession())._setHasIncidents(m_teamIncidents);
+        }
+        
         
         if (isME()) {
             fuelLevel = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("FuelLevel");
