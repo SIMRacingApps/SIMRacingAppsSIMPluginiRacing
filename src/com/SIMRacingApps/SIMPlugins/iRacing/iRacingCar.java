@@ -386,9 +386,8 @@ public class iRacingCar extends Car {
                                 m_lapsLed = Integer.parseInt(s);
                         }
                         
-                        if (isME())
-                            s = m_iRacingSIMPlugin.getIODriver().getVars().getString("LapLastLapTime");
-                        if (!isME() || s.isEmpty())
+                        s = m_iRacingSIMPlugin.getIODriver().getVars().getString("LapLastLapTime");
+                        if (!isME() || s.isEmpty() || s.equals("-1"))
                             s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"LastTime");
                         if (!s.isEmpty() /* && Double.parseDouble(s) > 0.0 *can get zero if meatball is out*/) {
                             m_lapTimeLast = Double.parseDouble(s);
@@ -1206,35 +1205,21 @@ else
 //                d.setValue(m_results.getIncidents(),d.getUOM(),Data.State.NORMAL);
 //            }
 //        }
-        d.setValue(m_driverIncidents,d.getUOM(),Data.State.NORMAL);
+        if (isME() || ((iRacingSession)m_iRacingSIMPlugin.getSession())._getHasIncidents()) {
+            d.setValue(m_driverIncidents,d.getUOM(),Data.State.NORMAL);
+        }
         return d;
     }
 
     @Override
     public Data getIncidentsTeam() {
         Data d = super.getIncidentsTeam();
-//        //only return a value if in a team session
-//        if (isME()) {
-//            if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PlayerCarTeamIncidentCount") != null) {
-//                d.setState(Data.State.OFF);
-//                
-//                if (isValid()) {
-//                    if (!getTeamName().getString().isEmpty()) {
-//                        int i = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarTeamIncidentCount");
-//                        if (i >= 0)
-//                            m_lastKnownIncidentsTeam = i;
-//                        d.setValue(m_lastKnownIncidentsTeam,d.getUOM(),Data.State.NORMAL);
-//                    }
-//                }
-//            }
-//        }
-//        else {
-//            //if we've seen any incidents from other cars, either end of race or admin
-//            if (((iRacingSession)m_iRacingSIMPlugin.getSession())._getHasIncidents()) {
-//                d.setValue(m_results.getIncidentsTeam(),d.getUOM(),Data.State.NORMAL);
-//            }
-//        }
-        d.setValue(m_teamIncidents,d.getUOM(),Data.State.NORMAL);
+        if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("WeekendInfo","TeamRacing") > 0) {
+            //if we've seen any incidents from other cars, either end of race or admin
+            if (isME() || ((iRacingSession)m_iRacingSIMPlugin.getSession())._getHasIncidents()) {
+                d.setValue(m_teamIncidents,d.getUOM(),Data.State.NORMAL);
+            }
+        }
         return d;
     }
 
@@ -2862,6 +2847,8 @@ else
             if (driverIncidents > m_driverIncidents)
                 m_driverIncidentsLap.set(currentLap-1,m_driverIncidentsLap.get(currentLap-1) + (driverIncidents - m_driverIncidents));
             m_driverIncidents = driverIncidents;
+            if (m_id != m_ME)
+                ((iRacingSession)m_iRacingSIMPlugin.getSession())._setHasIncidents(m_driverIncidents);
         }
         
         //now do the team
@@ -2878,8 +2865,6 @@ else
             if (teamIncidents > m_teamIncidents)
                 m_teamIncidentsLap.set(currentLap-1,m_teamIncidentsLap.get(currentLap-1) + (teamIncidents - m_teamIncidents));
             m_teamIncidents = teamIncidents;
-            if (m_id != m_ME)
-                ((iRacingSession)m_iRacingSIMPlugin.getSession())._setHasIncidents(m_teamIncidents);
         }
         
         
