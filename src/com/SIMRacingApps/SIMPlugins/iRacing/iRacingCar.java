@@ -2818,55 +2818,56 @@ else
             currentLap = 1;
         
         //track the incidents by lap. This uses the var version for ME, else rely on session for others.
-        int myIncidents = isME()
-                        ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarMyIncidentCount")
-                        : m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("DriverInfo","Drivers",m_driversIdx.toString(),"CurDriverIncidentCount");
-                        
-        //first build up the array
-        while (m_myIncidentsLap.size() < currentLap) {
-            m_myIncidentsLap.add(0);
-        }
-        if (myIncidents > 0) {
-            //if it has changed, add it to the current lap
-            if (myIncidents > m_myIncidents)
-                m_myIncidentsLap.set(currentLap-1,m_myIncidentsLap.get(currentLap-1) + (myIncidents - m_myIncidents));
-            m_myIncidents = myIncidents;
-        }
-        
-        //now do the driver
-        int driverIncidents = isME()
-                            ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarDriverIncidentCount")
+        if (currentLap > 0) {
+            int myIncidents = isME()
+                            ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarMyIncidentCount")
                             : m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("DriverInfo","Drivers",m_driversIdx.toString(),"CurDriverIncidentCount");
                             
-        //first build up the array
-        while (m_driverIncidentsLap.size() < currentLap) {
-            m_driverIncidentsLap.add(0);
-        }
-        if (driverIncidents > 0) {
-            //if it has changed, add it to the current lap
-            if (driverIncidents > m_driverIncidents)
-                m_driverIncidentsLap.set(currentLap-1,m_driverIncidentsLap.get(currentLap-1) + (driverIncidents - m_driverIncidents));
-            m_driverIncidents = driverIncidents;
-            if (m_id != m_ME)
-                ((iRacingSession)m_iRacingSIMPlugin.getSession())._setHasIncidents(m_driverIncidents);
-        }
-        
-        //now do the team
-        int teamIncidents = isME()
-                          ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarTeamIncidentCount")
-                          : m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("DriverInfo","Drivers",m_driversIdx.toString(),"TeamIncidentCount");
-                          
-        //first build up the array
-        while (m_teamIncidentsLap.size() < currentLap) {
-            m_teamIncidentsLap.add(0);
-        }
-        if (teamIncidents > 0) {
-            //if it has changed, add it to the current lap
-            if (teamIncidents > m_teamIncidents)
-                m_teamIncidentsLap.set(currentLap-1,m_teamIncidentsLap.get(currentLap-1) + (teamIncidents - m_teamIncidents));
-            m_teamIncidents = teamIncidents;
-        }
-        
+            //first build up the array
+            while (m_myIncidentsLap.size() < currentLap) {
+                m_myIncidentsLap.add(0);
+            }
+            if (myIncidents > 0) {
+                //if it has changed, add it to the current lap
+                if (myIncidents > m_myIncidents)
+                    m_myIncidentsLap.set(currentLap-1,m_myIncidentsLap.get(currentLap-1) + (myIncidents - m_myIncidents));
+                m_myIncidents = myIncidents;
+            }
+            
+            //now do the driver
+            int driverIncidents = isME()
+                                ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarDriverIncidentCount")
+                                : m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("DriverInfo","Drivers",m_driversIdx.toString(),"CurDriverIncidentCount");
+                                
+            //first build up the array
+            while (m_driverIncidentsLap.size() < currentLap) {
+                m_driverIncidentsLap.add(0);
+            }
+            if (driverIncidents > 0) {
+                //if it has changed, add it to the current lap
+                if (driverIncidents > m_driverIncidents)
+                    m_driverIncidentsLap.set(currentLap-1,m_driverIncidentsLap.get(currentLap-1) + (driverIncidents - m_driverIncidents));
+                m_driverIncidents = driverIncidents;
+                if (m_id != m_ME)
+                    ((iRacingSession)m_iRacingSIMPlugin.getSession())._setHasIncidents(m_driverIncidents);
+            }
+            
+            //now do the team
+            int teamIncidents = isME()
+                              ? m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarTeamIncidentCount")
+                              : m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("DriverInfo","Drivers",m_driversIdx.toString(),"TeamIncidentCount");
+                              
+            //first build up the array
+            while (m_teamIncidentsLap.size() < currentLap) {
+                m_teamIncidentsLap.add(0);
+            }
+            if (teamIncidents > 0) {
+                //if it has changed, add it to the current lap
+                if (teamIncidents > m_teamIncidents)
+                    m_teamIncidentsLap.set(currentLap-1,m_teamIncidentsLap.get(currentLap-1) + (teamIncidents - m_teamIncidents));
+                m_teamIncidents = teamIncidents;
+            }
+        }        
         
         if (isME()) {
             fuelLevel = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("FuelLevel");
