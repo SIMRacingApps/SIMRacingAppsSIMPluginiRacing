@@ -17,7 +17,7 @@
     "Texas":                    { "id": 30, "region": 3 },
     "UK and I":                 { "id": 36, "region": 3 },
     "West":                     { "id": 32, "region": 3 },
-    "Central-Easter-Europe":    { "id": 46, "region": 4 },
+    "Central-Eastern Europe":   { "id": 46, "region": 4 },
     "Great Plains":             { "id": 31, "region": 4 },
     "Plains":                   { "id": 31, "region": 4 },
     "Iberia":                   { "id": 38, "region": 4 },
