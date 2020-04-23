@@ -1,10 +1,12 @@
 package com.SIMRacingApps.SIMPlugins.iRacing.SessionDataCache;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.SIMRacingApps.Car;
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Session;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
@@ -21,7 +23,7 @@ public class SessionDataCars extends SessionData {
     private int m_maxCars = 64;
     private Map<Integer,iRacingCar> m_cars = new HashMap<Integer,iRacingCar>();
     private int m_numberOfCars = 0;
-    private int m_SOF = 0;
+    private double m_SOF = 0;
     private iRacingCar m_fastestCar;    //car who's last lap was the fastest
     private iRacingCar m_bestCar;       //car who's got the best lap overall
     
@@ -68,7 +70,7 @@ public class SessionDataCars extends SessionData {
     
     public int getSOF() { 
         this._update();
-        return m_SOF; 
+        return (int)Math.floor(m_SOF + 0.5); 
     }
 
     public iRacingCar getBest() {
@@ -203,6 +205,20 @@ public class SessionDataCars extends SessionData {
         double iRatingExp   = 0.0;
         double ln           = 1600.0 / Math.log(2);
         
+        //things to track by class name in a multiclass race.
+        class ClassName {
+            String name = "";
+            int didNotStart = 0;
+            double changeStartersSum = 0.0;
+            double expectedScoreNonStartersSum = 0.0;
+            int iRatingCount    = 0;
+            double iRatingExp   = 0.0;
+            double SOF = 0.0;
+        }
+        Map<String,ClassName> byClass = new HashMap<String,ClassName>();
+        
+        String classOverride = "";
+        
         for (int driversIdx=0; driversIdx < m_maxCars; driversIdx++) {
             String sDriversIdx = Integer.toString(driversIdx);
 
@@ -214,6 +230,12 @@ public class SessionDataCars extends SessionData {
 
                 iRacingCar car = m_cars.get(carIdx);
 
+                String className = !classOverride.isEmpty() ? classOverride : car.getClassName().getString();
+                if (!byClass.containsKey(className)) {
+                    byClass.put(className, new ClassName());
+                    byClass.get(className).name = className;
+                }
+
                 //as new cars pop in or it's not the same car, update the cache.
                 if (!car.isValid(carIdx,driversIdx)) {  //if car has not been initialized or needs reinitializing
                     String carpath   = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",sDriversIdx,"CarPath");
@@ -223,6 +245,11 @@ public class SessionDataCars extends SessionData {
                         car = new iRacingCar(m_SIMPlugin,carIdx,carpath,driversIdx);
 
                         m_cars.put(carIdx, car);
+                        className = !classOverride.isEmpty() ? classOverride : car.getClassName().getString();
+                        if (!byClass.containsKey(className)) {
+                            byClass.put(className, new ClassName());
+                            byClass.get(className).name = className;
+                        }
                     }
                 }
 
@@ -230,9 +257,17 @@ public class SessionDataCars extends SessionData {
                 if (car.isValid() && !car.getIsEqual("PACECAR").getBoolean() && !car.getIsSpectator().getBoolean()) {
                     String iRating = m_SIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",sDriversIdx,"IRating");
                     if (!iRating.isEmpty()) {
-                        m_SOF += Integer.parseInt(iRating);
-                        iRatingExp += Math.exp(-Double.parseDouble(iRating) / ln);
+                        car.m_dynamicIRating.m_iRating = Double.parseDouble(iRating); 
+                        m_SOF += car.m_dynamicIRating.m_iRating;
+                        byClass.get(className).SOF += car.m_dynamicIRating.m_iRating;
+                        //from cell BR1
+                        car.m_dynamicIRating.m_iRatingExp = Math.exp(-car.m_dynamicIRating.m_iRating / ln);
+                        //from cell BS3:BSxx
+                        //iRatingExp += Math.exp(-Double.parseDouble(iRating) / ln);
+                        iRatingExp += car.m_dynamicIRating.m_iRatingExp;
+                        byClass.get(className).iRatingExp += car.m_dynamicIRating.m_iRatingExp;
                         iRatingCount++;
+                        byClass.get(className).iRatingCount++;
                     }
                     m_numberOfCars++;
 
@@ -244,22 +279,81 @@ public class SessionDataCars extends SessionData {
         }
 
         if (iRatingCount > 0) {
+            //old way was a simple average
             //m_SOF = m_SOF / iRatingCount;
             
             //got this from the iRacing forum
             m_SOF = (int)Math.round(ln * Math.log((double)iRatingCount / iRatingExp));
+            Server.logger().finest(String.format("Class[%s] SOF=%f, Count=%d, exp=%f", "ALL", m_SOF, iRatingCount, iRatingExp));
         }
 
+        for (Iterator<Entry<String, ClassName>> itr = byClass.entrySet().iterator(); itr.hasNext();) {
+            ClassName c = itr.next().getValue();
+            c.SOF = (int)Math.round(ln * Math.log((double)c.iRatingCount / c.iRatingExp));
+            Server.logger().finest(String.format("Class[%s] SOF=%f, Count=%d, exp=%f", c.name, c.SOF, c.iRatingCount, c.iRatingExp));
+        }
+        
+        
         //if it's a race
-        if (m_SIMPlugin.getSession().getType().getString().equalsIgnoreCase(Session.Type.RACE))
+        boolean isRace = m_SIMPlugin.getSession().getType().getString().equalsIgnoreCase(Session.Type.RACE); 
+        if (isRace)
             minLaps -= 2;  //only those up to 2 laps down will get considered for the fastest last lap.
         else
             minLaps = 0;
         
+        
         for (Iterator<Entry<Integer, iRacingCar>> itr = m_cars.entrySet().iterator(); itr.hasNext();) {
             iRacingCar car = itr.next().getValue();
-            
-            if (car.isValid() && !car.getIsEqual("PACECAR").getBoolean() && !car.getIsSpectator().getBoolean()) {
+
+//if (car.getId().getInteger() == 16)
+//    car = car;
+            if (car.isValid() && !car.getIsEqual("PITSTALL").getBoolean() && !car.getIsEqual("PACECAR").getBoolean() && !car.getIsSpectator().getBoolean()) {
+                String className = !classOverride.isEmpty() ? classOverride : car.getClassName().getString();
+                int position = classOverride.isEmpty() ? car.getPositionClass().getInteger() : car.getPositionClass().getInteger();
+                
+                if (isRace) {
+                    car.m_dynamicIRating.m_expectedScore = 0.0;
+                    for (Iterator<Entry<Integer, iRacingCar>> itr2 = m_cars.entrySet().iterator(); itr2.hasNext();) {
+                        iRacingCar car2 = itr2.next().getValue();
+                        if (car2.isValid() && !car2.getIsEqual("PITSTALL").getBoolean() && !car2.getIsEqual("PACECAR").getBoolean() && !car2.getIsSpectator().getBoolean()) {
+                            String className2 = !classOverride.isEmpty() ? classOverride : car.getClassName().getString();
+                            
+                            //calculate the score only if in the same class
+                            if (className.equals(className2)) {
+                                //From cell AA:3   
+                                //             (1   - EXP(-$B3/$BR$1))                   * EXP(-AA$2/$BR$1)                   / ( (1   - EXP(-AA$2/$BR$1))                   * EXP(-$B3/$BR$1)                   + (1   - EXP(-$B3/$BR$1))                   * EXP(-AA$2/$BR$1))
+                                double score = (1.0 - car.m_dynamicIRating.m_iRatingExp) * car2.m_dynamicIRating.m_iRatingExp / ( (1.0 - car2.m_dynamicIRating.m_iRatingExp) * car.m_dynamicIRating.m_iRatingExp + (1.0 - car.m_dynamicIRating.m_iRatingExp) * car2.m_dynamicIRating.m_iRatingExp);
+                                car.m_dynamicIRating.m_expectedScore += score;
+                            }
+                        }
+                    }
+                    
+                    //SUM(AA3:BQ3)-0.5
+                    car.m_dynamicIRating.m_expectedScore -= 0.5;
+                    
+                    //until at least 1 lap is completed, they are considered as did not start
+                    if (false && car.getLap(Car.LapType.COMPLETED).getInteger() < 1) {
+                        byClass.get(className).didNotStart++;
+                        car.m_dynamicIRating.m_fudgeFactor = 0.0;
+                        car.m_dynamicIRating.m_changeStarters = 0.0;
+                        car.m_dynamicIRating.m_expectedScoreNonStarter = car.m_dynamicIRating.m_expectedScore;
+                        
+                        byClass.get(className).expectedScoreNonStartersSum += car.m_dynamicIRating.m_expectedScoreNonStarter;
+                        
+                    }
+                    else {
+                        //                                   (($BS$1                               - ($BT$1/2))                              / 2 - A3      ) / 100
+                        car.m_dynamicIRating.m_fudgeFactor = ((byClass.get(className).iRatingCount - (byClass.get(className).didNotStart/2)) / 2 - position) / 100.0;
+                        
+                        //                                      ($BS$1                               - A3       - BS3                                  - BT3                               ) * 200 / ($BS$1                               - $BT$1      )
+                        car.m_dynamicIRating.m_changeStarters = (byClass.get(className).iRatingCount - position - car.m_dynamicIRating.m_expectedScore - car.m_dynamicIRating.m_fudgeFactor) * 200 / (byClass.get(className).iRatingCount - byClass.get(className).didNotStart);
+    
+                        byClass.get(className).changeStartersSum += car.m_dynamicIRating.m_changeStarters;
+                        
+                        car.m_dynamicIRating.m_expectedScoreNonStarter = 0.0;
+                    }
+                }
+                
                 double time = car.getLapTime(iRacingCar.LapType.SESSIONLAST).getDouble();
                 if (time > 0.0 && car.getLap().getInteger() >= minLaps && time < fastestTime) {
                     fastestTime   = time;
@@ -275,5 +369,47 @@ public class SessionDataCars extends SessionData {
             }
         }
         
+        if (isRace) {
+            for (Iterator<Entry<Integer, iRacingCar>> itr = m_cars.entrySet().iterator(); itr.hasNext();) {
+                iRacingCar car = itr.next().getValue();
+                if (car.isValid() && !car.getIsEqual("PITSTALL").getBoolean() && !car.getIsEqual("PACECAR").getBoolean() && !car.getIsSpectator().getBoolean()) {
+                    String className = !classOverride.isEmpty() ? classOverride : car.getClassName().getString();
+                    
+                    if (byClass.get(className).didNotStart > 0 && byClass.get(className).expectedScoreNonStartersSum > 0.0)
+                        //                                         -SUM(BU$3:BU$45)                          / BT$1                               * BV3                                                                   / AVERAGE(BV$3:BV$45)
+                        car.m_dynamicIRating.m_changeNonStarters = -byClass.get(className).changeStartersSum / byClass.get(className).didNotStart * car.m_dynamicIRating.m_expectedScoreNonStarter / (byClass.get(className).expectedScoreNonStartersSum/byClass.get(className).didNotStart);
+                    else
+                        car.m_dynamicIRating.m_changeNonStarters = 0.0;
+                    
+                    if (false && car.getLap(Car.LapType.COMPLETED).getInteger() < 1) {
+                        car.m_dynamicIRating.m_change = car.m_dynamicIRating.m_changeNonStarters;
+//                        car.m_dynamicIRating.m_points = 0.0;
+                    }
+                    else {
+                        car.m_dynamicIRating.m_change = car.m_dynamicIRating.m_changeStarters;
+                    
+//                        //IF($B4="",0.5*1.06*B$1/16,($BS$1/($BS$1+1)*1.06*B$1/16*($BS$1-$A3)/($BS$1-1)))
+//                        String carIdentifier = "P";
+//                        Integer position = car.getPosition().getInteger() + 1;
+//                        carIdentifier.concat(position.toString());
+//                        
+//                        //if there is a car in the position behind this one and there's more than one car (avoid divide by zero)
+//                        if (m_SIMPlugin.getSession().getCar(carIdentifier).getId().getInteger() != -1 && iRatingCount > 1) {
+//                            //                              ($BS$1        / ($BS$1        + 1) * 1.06 * B$1   / 16   * ($BS$1        - $A3         ) / ($BS$1        - 1))
+//                            car.m_dynamicIRating.m_points = (iRatingCount / (iRatingCount + 1) * 1.06 * byClass.get(className).SOF / 16.0 * (iRatingCount - position - 1) / (iRatingCount - 1));
+//                        }
+//                        else {
+//                            //                              0.5 * 1.06 * B$1   / 16
+//                            car.m_dynamicIRating.m_points = 0.5 * 1.06 * byClass.get(className).SOF / 16.0;
+//                        }
+                    }
+                    
+                    if (byClass.get(className).iRatingCount > 1)
+                        car.m_dynamicIRating.m_newIRating = (int)Math.floor(car.m_dynamicIRating.m_iRating + car.m_dynamicIRating.m_change + 0.5);
+                    else
+                        car.m_dynamicIRating.m_newIRating = car.m_dynamicIRating.m_iRating;
+                }
+            }
+        }
     }
 }

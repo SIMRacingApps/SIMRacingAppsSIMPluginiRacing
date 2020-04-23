@@ -107,6 +107,24 @@ public class iRacingCar extends Car {
     
     protected _Results m_results = new _Results();
     protected _ResultsQualifying m_resultsQualifying = new _ResultsQualifying();
+    
+//=========================  
+//temporary variables for SessionDataCars class to store data
+    static public class dynamicIRating {
+        public double m_iRatingExp = 0.0;
+        public double m_fudgeFactor = 0.0;
+        public double m_change = 0.0;
+//        public double m_points = 0.0;
+        public double m_newIRating = 0;
+        public double m_iRating = 0;
+        public double m_expectedScore = 0.0;
+        public double m_changeStarters = 0.0;
+        public double m_expectedScoreNonStarter = 0.0;
+        public double m_changeNonStarters = 0.0;
+    }
+    
+    public dynamicIRating m_dynamicIRating = new dynamicIRating();
+//=========================  
 
     public iRacingCar(iRacingSIMPlugin SIMPlugin) {
         super(SIMPlugin);
@@ -995,7 +1013,13 @@ else
                 String[] licStr = {"R", "D", "C", "B", "A", "P", "WC"};
                 l = licStr[licNum];
     
-                d.setValue(String.format("%s-%s%.2f",iRating,l,LicSubLevel/100.0));
+                if (this.m_dynamicIRating.m_newIRating > 0 
+                && Server.getArg("dynamic-irating", true)
+                && (this.m_SIMPlugin.getSession().getNumberOfCarClasses().getInteger() <= 1 || Server.getArg("dynamic-irating-multiclass", false))
+                )
+                    d.setValue(String.format("%s(%+.0f)%s%.2f",iRating,this.m_dynamicIRating.m_change,l,LicSubLevel/100.0));
+                else
+                    d.setValue(String.format("%s-%s%.2f",iRating,l,LicSubLevel/100.0));
                 d.setState(Data.State.NORMAL);
             }
         } catch (NumberFormatException e) {}
