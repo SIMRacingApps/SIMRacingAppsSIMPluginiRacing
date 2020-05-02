@@ -1515,7 +1515,19 @@ else
         }
         else
         if (r.equals(Car.LapType.SINCEPITTING)) {
-            d.setValue((m_lapCompleted + 1) - m_lapPitted + 1);
+            if (Server.getArg("laps-since-pitting-valid-only", false)) {
+                int laps = m_results.getLapTimes().size();
+                int c = 0;
+                for (int i=m_lapPitted-1; i < laps; i++) {
+                    if (i < m_invalidLaps.size() && !m_invalidLaps.get(i)) {
+                        c++;
+                    }
+                }
+                d.setValue(c);
+            }
+            else {
+                d.setValue((m_lapCompleted + 1) - m_lapPitted + 1);
+            }
             if (d.getInteger() > m_lapCompleted + 1)
                 d.setValue(m_lapCompleted + 1);
             d.setState(Data.State.NORMAL);
