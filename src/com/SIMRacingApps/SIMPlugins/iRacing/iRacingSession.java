@@ -25,6 +25,7 @@ import com.SIMRacingApps.Track;
 import com.SIMRacingApps.SIMPlugin.SIMPluginException;
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Windows;
+import com.SIMRacingApps.SIMPlugins.iRacing.BroadcastMsg.ReloadTexturesMode;
 import com.SIMRacingApps.SIMPlugins.iRacing.SessionDataCache.*;
 import com.SIMRacingApps.Util.FindFile;
 import com.SIMRacingApps.Util.SendKeys;
@@ -1956,6 +1957,19 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         
         d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "YELLOW")).getString());
         d.setState(Data.State.NORMAL);
+        return d;
+    }
+
+    @Override    
+    public    Data setReloadPaint() {
+        Data d = super.setReloadPaint();
+
+        if (m_SIMPlugin.isConnected()) {
+            m_SIMPlugin.getIODriver().broadcastMsg(BroadcastMsg.BroadcastReloadTextures,ReloadTexturesMode.ReloadTextures_All,0);
+            d.setValue("Reloading All Textures (i.e. Paints)");
+            d.setState(Data.State.NORMAL);
+            Server.logger().info(d.getString());
+        }
         return d;
     }
 

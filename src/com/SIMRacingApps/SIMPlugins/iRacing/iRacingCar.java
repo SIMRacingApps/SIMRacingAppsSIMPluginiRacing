@@ -19,6 +19,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.Gauges.*;
 import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 import com.SIMRacingApps.SIMPlugins.iRacing.SessionFlags;
 import com.SIMRacingApps.SIMPlugins.iRacing.TrackSurface;
+import com.SIMRacingApps.SIMPlugins.iRacing.BroadcastMsg.ReloadTexturesMode;
 import com.SIMRacingApps.SIMPlugins.iRacing.VarHeaders.VarHeader;
 import com.SIMRacingApps.Session.Type;
 import com.SIMRacingApps.Util.FindFile;
@@ -1020,6 +1021,26 @@ else
                     d.setValue(String.format("%s(%+.0f)%s%.2f",iRating,this.m_dynamicIRating.m_change,l,LicSubLevel/100.0));
                 else
                     d.setValue(String.format("%s-%s%.2f",iRating,l,LicSubLevel/100.0));
+                d.setState(Data.State.NORMAL);
+            }
+        } catch (NumberFormatException e) {}
+        return d;
+    }
+
+    @Override
+    public Data getDriverRatingDelta() {
+        Data d = super.getDriverRatingDelta();
+        d.setState(Data.State.OFF);
+
+        try {
+            if (isValid()) {
+                if (this.m_dynamicIRating.m_newIRating > 0 
+                && Server.getArg("dynamic-irating", true)
+                && (this.m_SIMPlugin.getSession().getNumberOfCarClasses().getInteger() <= 1 || Server.getArg("dynamic-irating-multiclass", false))
+                )
+                    d.setValue(String.format("%+.0f",this.m_dynamicIRating.m_change));
+                else
+                    d.setValue("0");
                 d.setState(Data.State.NORMAL);
             }
         } catch (NumberFormatException e) {}
@@ -2681,6 +2702,19 @@ else
         return d;
     }
 
+    @Override    
+    public    Data setReloadPaint() {
+        Data d = super.setReloadPaint();
+
+        if (isValid()) {
+            m_iRacingSIMPlugin.getIODriver().broadcastMsg(BroadcastMsg.BroadcastReloadTextures,ReloadTexturesMode.ReloadTextures_CarIdx,this.m_id);
+            d.setValue(String.format("Reloading Texture (i.e. Paint) for #%s", m_number));
+            d.setState(Data.State.NORMAL);
+            Server.logger().info(d.getString());
+        }
+        return d;
+    }
+    
     @Override
     public    Data setRemoveFlag() {
         Data d = super.setRemoveFlag();
