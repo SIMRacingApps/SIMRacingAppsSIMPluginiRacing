@@ -448,7 +448,7 @@ public class iRacingCar extends Car {
                             m_lapTimeBestCleanDriver.put(getDriverName(false).getString(), m_lapTimeLast);
                         }
                         else
-                        if (m_lapTimeLast > 0.0 && m_lapTimeLast < lapTime && m_driverIncidentsLap.get(m_lapCompleted-1) == 0) {
+                        if (m_lapTimeLast > 0.0 && m_lapTimeLast < lapTime && m_lapCompleted > 0 && m_lapCompleted <= m_driverIncidentsLap.size() && m_driverIncidentsLap.get(m_lapCompleted-1) == 0) {
                             m_lapTimeBestCleanDriver.replace(getDriverName(false).getString(), m_lapTimeLast);
                         }
 
