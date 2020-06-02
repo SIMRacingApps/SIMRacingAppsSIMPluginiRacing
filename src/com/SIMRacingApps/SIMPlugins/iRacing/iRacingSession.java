@@ -795,7 +795,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             &&  !getType().equals(Session.Type.OFFLINE_TESTING)
             &&  (flags & SessionFlags.checkered) == 0     //iRacing is setting the one to go when the checkered is out
             )                                             { flagnames.append(";"); flagnames.append(Session.Message.ONELAPTOGREEN); }
-            if ((flags & SessionFlags.greenHeld) > 0)     { flagnames.append(";"); flagnames.append(Session.Message.GREENHELD); }
+//In the May 2020 build, this flag was changed to indicate the restart is pending
+//            if ((flags & SessionFlags.greenHeld) > 0)     { flagnames.append(";"); flagnames.append(Session.Message.GREENHELD); }
             if ((flags & SessionFlags.startReady) > 0)    { flagnames.append(";"); flagnames.append(Session.Message.STARTREADY); }
             if ((flags & SessionFlags.startSet) > 0)      { flagnames.append(";"); flagnames.append(Session.Message.STARTSET); }
             if ((flags & SessionFlags.startGo) > 0)       { flagnames.append(";"); flagnames.append(Session.Message.STARTGO); }
