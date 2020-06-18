@@ -21,6 +21,7 @@ import com.SIMRacingApps.Util.State;
  */
 public class WindshieldTearoff extends iRacingGauge {
     int m_lapsHistorical;
+    int m_usedCount = 1;
 
     public WindshieldTearoff(String type, iRacingCar car, Track track, IODriver IODriver) {
         super(type, car, track, IODriver, "WindshieldTearoff", "", null, null);

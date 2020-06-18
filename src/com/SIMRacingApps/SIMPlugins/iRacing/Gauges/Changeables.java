@@ -30,6 +30,7 @@ public class Changeables extends iRacingGauge {
     Data m_valueNext;
     Data m_valueHistorical;
     int m_lapsHistorical;
+    int m_usedCount = 1;
 
     public Changeables(String type, iRacingCar car, Track track,
             IODriver IODriver, String varName, String defaultUOM, 
@@ -155,5 +156,12 @@ public class Changeables extends iRacingGauge {
             //TODO: Do I retrofit the old logic here somehow just to support my recorded files?
             //      I don't think any of the users have recorded a file.
         }
+    }
+
+    @Override
+    public Data getCount() {
+        Data d = super.getCount();
+        d.setValue(m_usedCount,"",Data.State.NORMAL);
+        return d;
     }
 }

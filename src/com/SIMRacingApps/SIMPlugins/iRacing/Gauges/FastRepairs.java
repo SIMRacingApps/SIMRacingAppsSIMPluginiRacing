@@ -25,6 +25,8 @@ public class FastRepairs extends iRacingGauge {
     Data m_valueHistorical;
     int m_lapsHistorical;
     Data m_valueBeforePitting;
+    int m_usedCount;
+    int m_maxCount;
     
     public FastRepairs(String type, iRacingCar car, Track track, IODriver IODriver) {
         super(type, car, track, IODriver, "FastRepairAvailable", "", null,null);
@@ -34,6 +36,7 @@ public class FastRepairs extends iRacingGauge {
         m_valueHistorical = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
         m_valueBeforePitting = new Data(m_varName,0.0,m_iRacingUOM,Data.State.NOTAVAILABLE);
         m_usedCount = 0;    //don't count these until they are used
+        m_maxCount = -1;
         
         //get the maximum value from the weekend options. Available as of 2019 Dec build.
         String s = m_IODriver.getSessionInfo().getString("WeekendInfo","WeekendOptions","FastRepairsLimit");
@@ -41,7 +44,7 @@ public class FastRepairs extends iRacingGauge {
             if (s.equals("unlimited"))
                 this._setMaximum(255, "");
             else
-                this._setMaximum(Integer.parseInt(s), "");
+                this._setMaximum(m_maxCount = Integer.parseInt(s), "");
         }
     }
 
@@ -133,8 +136,9 @@ public class FastRepairs extends iRacingGauge {
                         m_usedCount++;                                  //count the uses
                         
                         Server.logger().info(String.format(
-                                "FastRepair: used %d",
-                                m_usedCount
+                                "FastRepair: used %d out of %d",
+                                m_usedCount,
+                                m_maxCount
                         ));
                     }
                 }
@@ -150,5 +154,20 @@ public class FastRepairs extends iRacingGauge {
         }
         
         m_prevStatus = new State(status);
+    }
+
+    @Override
+    public Data getCount() {
+        Data d = super.getCount();
+        d.setValue(m_usedCount,"",Data.State.NORMAL);
+        return d;
+    }
+    
+    @Override
+    public Data getMaxCount() {
+        Data d = super.getMaxCount();
+        if (m_maxCount >= 0)
+            d.setValue(m_maxCount,"",Data.State.NORMAL);
+        return d;
     }
 }

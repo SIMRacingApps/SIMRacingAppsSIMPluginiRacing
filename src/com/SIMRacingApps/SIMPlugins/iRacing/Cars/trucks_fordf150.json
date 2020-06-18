@@ -1,0 +1,46 @@
+{
+    "Description": "Ford F150",
+    "Copyright":   "Copyright (C) 2015 - 2020 Jeffrey Gilliam",
+    "MfrLogo":     "com/SIMRacingApps/Cars/ford.png",
+    "Gauges": {
+        "FuelPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          15.0,
+                "MajorIncrement":   3.0,
+                "MinorIncrement":   1.5,
+                "States": {
+                    "CRITICAL": { "Start": 0.0, "End": 2.0 },
+                    "WARNING":  { "Start": 2.0, "End": 4.0 }
+                }
+            }
+        },
+        "OilTemp": {
+            "default": {
+                "States": {
+                    "CRITICAL": { "Start": 275.0, "End": 999999.0 }
+                }
+            }
+        },
+        "Tachometer": {
+            "default": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6500.0, "End": 7300.0},
+                    "SHIFT":       {"Start": 7300.0, "End": 7500.0},
+                    "SHIFTBLINK":  {"Start": 7500.0, "End": 99999999.0}
+                }
+            },
+            "homestead_oval": {
+                "RPMPitRoadSpeed":   4200.0
+            },
+            "talladega": {
+                "RPMPitRoadSpeed":   4490.0
+            }
+        },
+        "Tape": {
+            "default": {
+                "Reader": "DataVarTapePct"
+            }
+        }
+    }
+}

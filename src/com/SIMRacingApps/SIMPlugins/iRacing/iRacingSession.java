@@ -58,6 +58,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     private boolean                                  m_seenGreen = false;
     private String                                   m_status = Status.UNKNOWN;
     private boolean                                  m_hasIncidents;
+    private boolean                                  m_isOfficial;
     private iRacingTrack                             m_track;
     private SessionDataCars                          m_cars;
     private SessionDataCarsByCarNumber               m_carsByCarNumber;
@@ -79,6 +80,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         m_sessionVersion                 = -1;
         m_connected                      = false;
         m_hasIncidents                   = false;
+        m_isOfficial                     = m_SIMPlugin.getIODriver().getSessionInfo().getBoolean("WeekendInfo","Official");
         m_track                          = new iRacingTrack(m_SIMPlugin);
         m_cars                           = new SessionDataCars(m_SIMPlugin);
         m_carsByCarNumber                = new SessionDataCarsByCarNumber(m_SIMPlugin,m_cars);
@@ -102,6 +104,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         SendKeys.setDelay(0);
     }
 
+    public boolean _isOfficial() { return m_isOfficial; }
+    
     @Override
     public Track getTrack() {
         return m_track;
@@ -830,6 +834,22 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         return d;
     }
 
+    @Override
+    public Data getName(String session) {
+        Data d = super.getName(session);
+        
+        if (m_SIMPlugin.isConnected()) {
+            if (session.isEmpty()) {
+                int i = m_SIMPlugin.getIODriver().getVars().getInteger("SessionNum");
+                session = Integer.toString(i);
+            }
+            String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",session,"SessionName");
+            d.setValue(s);
+            d.setState(Data.State.NORMAL);
+        }
+        return d;
+    }
+    
     @Override
     public    Data    getNumberOfCarClasses() {
         Data d = super.getNumberOfCarClasses();

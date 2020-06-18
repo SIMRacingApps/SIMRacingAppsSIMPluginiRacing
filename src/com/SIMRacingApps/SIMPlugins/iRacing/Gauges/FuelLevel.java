@@ -26,6 +26,7 @@ public class FuelLevel extends iRacingGauge {
     Data m_valueNext;
     Data m_valueHistorical;
     int m_lapsHistorical;
+    int m_usedCount = 1;
     double m_kgPerLiter;
 
     //add the non standard conversions from volume to weight
@@ -272,5 +273,12 @@ public class FuelLevel extends iRacingGauge {
         }
         
         m_prevStatus = new State(status);
+    }
+
+    @Override
+    public Data getCount() {
+        Data d = super.getCount();
+        d.setValue(m_usedCount,"",Data.State.NORMAL);
+        return d;
     }
 }

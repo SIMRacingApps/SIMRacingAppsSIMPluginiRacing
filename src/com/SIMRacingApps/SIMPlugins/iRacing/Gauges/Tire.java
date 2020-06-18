@@ -4,6 +4,7 @@
 package com.SIMRacingApps.SIMPlugins.iRacing.Gauges;
 
 import com.SIMRacingApps.Data;
+import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Track;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingGauge;
@@ -24,6 +25,7 @@ public class Tire extends iRacingGauge {
     Data m_valueNext;
     Data m_valueHistorical;
     int m_lapsHistorical;
+    protected int m_usedCount = 1;
     
     public Tire(String type, iRacingCar car, Track track, IODriver IODriver,
             String varName, String defaultUOM, String tire) {
@@ -59,6 +61,58 @@ public class Tire extends iRacingGauge {
     public Data getLapsHistorical() {
         Data d = super.getLapsHistorical();
         d.setValue(m_lapsHistorical);
+        return d;
+    }
+    
+    @Override
+    public Data getCount() {
+        Data d = super.getCount();
+        Data maxTires = this.m_car._getDataPublisherMaxTires();     //get the max tires from the plugin
+        
+        d.setValue(m_usedCount,"",Data.State.NORMAL);               //default to our counter
+        
+        if (maxTires == null) {                                     //if not publishing max tires from the plugin, try iRacing
+            
+            //as of June 2020, iRacing has tire counts. Use them instead of our own count
+            //only can use them if max tires is defined for this session
+            maxTires = getMaxCount();
+            
+            if (!maxTires.getState().equals(Data.State.NOTAVAILABLE) && Server.getArg("use-iRacing-tire-limit", true)) {
+                Data count = this._readVar(m_tire + "TiresAvailable");   //has the remaining tires, calculate used
+                
+                if (!count.getState().equals(Data.State.NOTAVAILABLE) && !maxTires.getState().equals(Data.State.NOTAVAILABLE)) {
+                    d.setValue(maxTires.getInteger() - count.getInteger(),"",Data.State.NORMAL);
+                }
+            }
+        }
+        return d;
+    }
+    
+    @Override
+    public Data getMaxCount() {
+        Data d = super.getMaxCount();
+        String session = this._readVar("SessionNum").getStringFormatted("%.0f");
+        String sessionType = this.m_IODriver.getSessionInfo().getString("SessionInfo","Sessions",session,"SessionType").toUpperCase();
+        
+        if (sessionType.equals("RACE")) {
+            Data maxTires = this.m_car._getDataPublisherMaxTires();    //get the default max tires from the plugin
+
+            if (maxTires != null) {  //if plugin not active, use iRacing's values
+                d.setValue(maxTires.getValue(),"",maxTires.getState());
+            }
+            else {
+                //as of June 2020, iRacing has max tire counts per tire
+                if (Server.getArg("use-iRacing-tire-limit", true)) {
+                    Data count = this._readVar("PlayerCarDryTireSetLimit");
+                    
+                    //greater than zero means limit is in place for this session
+                    if (!count.getState().equals(Data.State.NOTAVAILABLE) && count.getInteger() > 0) {
+                        d.setValue(count.getInteger(),"",Data.State.NORMAL);
+                    }
+                }
+            }
+        }
+        
         return d;
     }
 }

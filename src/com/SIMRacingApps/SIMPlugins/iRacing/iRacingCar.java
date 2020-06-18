@@ -595,6 +595,12 @@ public class iRacingCar extends Car {
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(),BroadcastMsg.PitCommandMode.PitCommand_FR);
                 removeTearoff = true;
             }
+            else //keep existing setting
+            if (fastRepair._getSIMCommandTimestamp() == 0.0 && fastRepair.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",fastRepair.getType().getString())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_FR);
+                removeTearoff = true;
+            }
             
             if (removeTearoff) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setChangeFlag/Y",tearoff.getType().getString())));
@@ -1016,6 +1022,7 @@ else
     
                 if (this.m_dynamicIRating.m_newIRating > 0 
                 && Server.getArg("dynamic-irating", true)
+                && ((iRacingSession)this.m_SIMPlugin.getSession())._isOfficial()
                 && (this.m_SIMPlugin.getSession().getNumberOfCarClasses().getInteger() <= 1 || Server.getArg("dynamic-irating-multiclass", false))
                 )
                     d.setValue(String.format("%s(%+.0f)%s%.2f",iRating,this.m_dynamicIRating.m_change,l,LicSubLevel/100.0));
@@ -1978,7 +1985,27 @@ else
         }
         return super.getLongitude(UOM);
     }
-    
+
+    @Override
+    public Data getMaxTires() {
+        Data d = super.getMaxTires();
+        //If the parent has not found any max tires through the plugin logic, then use one of the tires from iRacing
+        if (!d.getState().equals(Data.State.NORMAL) && Server.getArg("use-iRacing-tire-limit", true)) {
+            if (m_iRacingSIMPlugin.isConnected()) {
+                String sessionType = m_SIMPlugin.getSession().getType().getString();
+                if (sessionType.equals(Session.Type.RACE) && isME()) {
+                    int maxTires = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("PlayerCarDryTireSetLimit");
+
+                    if (maxTires > 0) {
+                        d.setValue(maxTires);
+                        d.setState(Data.State.NORMAL);
+                    }
+                }
+            }
+        }
+        return d;
+    }
+
     @Override
     public Data getMergePoint() {
         Data d = super.getMergePoint();
@@ -2749,15 +2776,15 @@ else
             ((iRacingGauge)_getGauge(Gauge.Type.WINDSHIELDTEAROFF))._resetDetected();
             ((iRacingGauge)_getGauge(Gauge.Type.FASTREPAIRS))._resetDetected();
             
-            //Loop through the gauges and if a Changeables class, reset it
-            Iterator<Entry<String, Gauge>> itr = m_gauges.entrySet().iterator();
-            while (itr.hasNext()) {
-                Entry<String, Gauge> gaugeEntry = itr.next();
-                Gauge gauge = gaugeEntry.getValue();
-                if (gauge instanceof Changeables) {
-                    ((iRacingGauge)gauge)._resetDetected();
-                }
-            }
+//            //Loop through the gauges and if a Changeables class, reset it
+//            Iterator<Entry<String, Gauge>> itr = m_gauges.entrySet().iterator();
+//            while (itr.hasNext()) {
+//                Entry<String, Gauge> gaugeEntry = itr.next();
+//                Gauge gauge = gaugeEntry.getValue();
+//                if (gauge instanceof Changeables) {
+//                    ((iRacingGauge)gauge)._resetDetected();
+//                }
+//            }
         }
     }
     
@@ -2794,7 +2821,7 @@ else
                 SessionFlags.crossed        |
 //                SessionFlags.yellowWaving   |
                 SessionFlags.oneLapToGreen  |
-                SessionFlags.greenHeld      |
+//                SessionFlags.greenHeld      |
                 SessionFlags.tenToGo        |
                 SessionFlags.fiveToGo       |
                 SessionFlags.caution        |

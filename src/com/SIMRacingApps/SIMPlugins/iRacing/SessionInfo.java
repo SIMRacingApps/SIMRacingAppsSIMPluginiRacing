@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.Util.State;
 import com.owlike.genson.Genson;
@@ -142,5 +143,16 @@ public class SessionInfo {
     
     public int getInteger(String ... args) {
         return getInteger(getObject(args));
+    }
+
+    public boolean getBoolean(Object p_o) {
+        String s = getString(p_o);
+        if (!s.isEmpty())
+            return new Data("",s).getBoolean();
+        return false;
+    }
+    
+    public boolean getBoolean(String ... args) {
+        return getBoolean(getObject(args));
     }
 }

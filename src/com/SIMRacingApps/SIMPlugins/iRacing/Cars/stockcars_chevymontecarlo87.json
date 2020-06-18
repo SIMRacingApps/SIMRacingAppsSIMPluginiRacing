@@ -1,0 +1,109 @@
+{
+    "Description": "Chevrolet Montecarlo 1987",
+    "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
+    "Copyright": "Copyright (C) 2015 - 2020 Jeffrey Gilliam",
+    "Gauges" : {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rev/min",
+                "imperial":          "rev/min",
+                "metric":            "rev/min",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "iRacing":           "First=8000, Shift=8250, Last=8500, Blink=8750, RedLine=7650",
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7000.0, "End": 7500.0},
+                    "SHIFT":       {"Start": 7500.0, "End": 7600.0},
+                    "SHIFTBLINK":  {"Start": 7600.0, "End": 99999999.0}
+                }
+            }
+        },
+        "FuelPressure": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "imperial":          "psi",
+                "metric":            "kpa",
+                "Minimum":           0.0,
+                "Maximum":           15.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   15.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 4.0},
+                    "WARNING":  {"Start": 4.0, "End": 8.0}
+                }
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "imperial":          "psi",
+                "metric":            "kpa",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    20.0,
+                "MinorIncrement":    10.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   100.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 10.0},
+                    "WARNING":  {"Start": 10.0, "End": 20.0}
+                }
+            }
+        },
+        "Voltage": {
+            "default": {
+                "Name":              "VOLT",
+                "TypeName":          "",
+                "UOM":               "v",
+                "imperial":          "v",
+                "metric":            "v",
+                "Minimum":           10.0,
+                "Maximum":           16.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    0.2,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   12.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 6.0},
+                    "WARNING":  {"Start": 6.0, "End": 10.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "gal",
+                "Minimum":           0.0,
+                "Maximum":           22.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    0.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   22.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 3.0},
+                    "WARNING":  {"Start": 3.0, "End": 6.0}
+                }
+            }
+        }
+    }
+}

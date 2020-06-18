@@ -43,6 +43,8 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
         
         if (m_SIMPlugin.isConnected()) {
             String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","Category");
+            if (!((iRacingSession)m_SIMPlugin.getSession())._isOfficial())
+                s = s + " (Unofficial)";
             d.setValue(s);
             d.setState(Data.State.NORMAL);
         }
