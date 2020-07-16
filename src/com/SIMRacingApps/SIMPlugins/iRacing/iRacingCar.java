@@ -405,11 +405,11 @@ public class iRacingCar extends Car {
                                 m_lapsLed = Integer.parseInt(s);
                         }
                         
-                        s = m_iRacingSIMPlugin.getIODriver().getVars().getString("LapLastLapTime");
-                        if (!isME() || s.isEmpty() || s.equals("-1"))
-                            s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"LastTime");
-                        if (!s.isEmpty() /* && Double.parseDouble(s) > 0.0 *can get zero if meatball is out*/) {
-                            m_lapTimeLast = Double.parseDouble(s);
+                        Double d = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("LapLastLapTime");
+                        if (!isME() || d <= 0.0)
+                            d = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getDouble("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"LastTime");
+                        if (d > 0.0 /* && Double.parseDouble(s) > 0.0 *can get zero if meatball is out*/) {
+                            m_lapTimeLast = d;
                             
                             //if not recording laps, make it obvious
 //                            if (m_lapTimeLast <= 0.0)
@@ -423,9 +423,9 @@ public class iRacingCar extends Car {
                                 m_lapTimes.set(m_lapCompleted - 1,m_lapTimeLast);    //keep updating the last lap in case iRacing changes it at a different tick than the lap counter
                         }
 
-                        s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"FastestTime");
-                        if (!s.isEmpty() && Double.parseDouble(s) > 0.0) {
-                            m_lapTimeBest   = Double.parseDouble(s);
+                        d = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getDouble("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"FastestTime");
+                        if (d > 0.0) {
+                            m_lapTimeBest   = d;
                             s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("SessionInfo","Sessions",sessionNum,"ResultsPositions",Integer.toString(index),"FastestLap");
                             if (!s.isEmpty())
                                 m_lapBest       = Integer.parseInt(s);
@@ -438,7 +438,7 @@ public class iRacingCar extends Car {
                             m_lapBestDriver.put(getDriverName(false).getString(), m_lapCompleted);
                         }
                         else
-                        if (m_lapTimeLast > 0.0 && m_lapTimeLast < lapTime) {
+                        if (m_lapTimeLast > 0.0 && (lapTime == null || m_lapTimeLast < lapTime)) {
                             m_lapTimeBestDriver.replace(getDriverName(false).getString(), m_lapTimeLast);
                             m_lapBestDriver.replace(getDriverName(false).getString(), m_lapCompleted);
                         }
@@ -448,7 +448,7 @@ public class iRacingCar extends Car {
                             m_lapTimeBestCleanDriver.put(getDriverName(false).getString(), m_lapTimeLast);
                         }
                         else
-                        if (m_lapTimeLast > 0.0 && m_lapTimeLast < lapTime && m_lapCompleted > 0 && m_lapCompleted <= m_driverIncidentsLap.size() && m_driverIncidentsLap.get(m_lapCompleted-1) == 0) {
+                        if (m_lapTimeLast > 0.0 && (lapTime == null || m_lapTimeLast < lapTime) && m_lapCompleted > 0 && m_lapCompleted <= m_driverIncidentsLap.size() && m_driverIncidentsLap.get(m_lapCompleted-1) == 0) {
                             m_lapTimeBestCleanDriver.replace(getDriverName(false).getString(), m_lapTimeLast);
                         }
 

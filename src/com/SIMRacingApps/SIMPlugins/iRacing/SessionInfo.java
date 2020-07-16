@@ -145,6 +145,17 @@ public class SessionInfo {
         return getInteger(getObject(args));
     }
 
+    public double getDouble(Object p_o) {
+        String s = getString(p_o);
+        if (!s.isEmpty())
+            return Double.parseDouble(s);
+        return -1.0;
+    }
+    
+    public double getDouble(String ... args) {
+        return getDouble(getObject(args));
+    }
+
     public boolean getBoolean(Object p_o) {
         String s = getString(p_o);
         if (!s.isEmpty())
