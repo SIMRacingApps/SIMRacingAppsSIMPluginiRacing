@@ -15,7 +15,13 @@
                 "Minimum":           0.0,
                 "Maximum":           13.0,
                 "MajorIncrement":    1.0,
-                "MinorIncrement":    0.2
+                "MinorIncrement":    0.2,
+                "iRacing":           "First=9500, Shift=11700, Last=11825, Blink=11950, RedLine=12030",
+                "States": {
+                    "SHIFTLIGHTS":  {"Start": 9550.0,  "End": 11650.0},
+                    "SHIFT":        {"Start": 11650.0, "End": 11825.0},
+                    "SHIFTBLINK":   {"Start": 11825.0,  "End": 99999999.0}
+                }
             }
         },
         "Gear": {

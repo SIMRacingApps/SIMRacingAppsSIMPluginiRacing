@@ -2656,8 +2656,12 @@ else
         if (!m_number.isEmpty()) {
             if (uom.equalsIgnoreCase("lap"))
                 d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "BLACK").replace("[DRIVER]", m_number).replace("[TIME]", String.format("L%d", quantity))).getString());
-            else
-                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "BLACK").replace("[DRIVER]", m_number).replace("[TIME]", String.format("%d", quantity))).getString());
+            else {
+                if (quantity < 0)
+                    d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "BLACK").replace("[DRIVER]", m_number).replace("[TIME]", "D")).getString());  //drive through
+                else
+                    d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "BLACK").replace("[DRIVER]", m_number).replace("[TIME]", String.format("%d", quantity))).getString());
+            }
     
             d.setState(Data.State.NORMAL);
         }
