@@ -1,0 +1,183 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2020 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "Dallara IR18",
+    "MfrLogo":     "com/SIMRacingApps/Cars/dallara.png",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rev/min",
+                "imperial":          "rev/min",
+                "metric":            "rev/min",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           9.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "iRacing":           "First=8500, Shift=8800, Last=8750, Blink=8850, RedLine=8700"
+            },
+            "default-R": {
+                "States": {
+                    "SHIFTLIGHTS":  {"Start": 2000.0,  "End": 7000.0},
+                    "SHIFT":        {"Start": 7000.0,  "End": 7100.0},
+                    "SHIFTBLINK":   {"Start": 7100.0,  "End": 99999999.0}
+                }
+            },
+            "default-N": {
+                "States": {
+                    "SHIFTLIGHTS":  {"Start": 2000.0,  "End": 2400.0},
+                    "SHIFT":        {"Start": 2400.0,  "End": 2450.0},
+                    "SHIFTBLINK":   {"Start": 2450.0,  "End": 99999999.0}
+                }
+            },
+            "default-1": {
+                "States": {
+                    "SHIFTLIGHTS":  {"Start": 6800.0,  "End": 8200.0},
+                    "SHIFT":        {"Start": 8200.0,  "End": 8250.0},
+                    "SHIFTBLINK":   {"Start": 8250.0,  "End": 99999999.0}
+                }
+            },
+            "default-2": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7000.0, "End": 8350.0},
+                    "SHIFT":       {"Start": 8350.0, "End": 8400.0},
+                    "SHIFTBLINK":  {"Start": 8400.0, "End": 99999999.0}
+                }
+            },
+            "default-3": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7000.0, "End": 8400.0},
+                    "SHIFT":       {"Start": 8400.0, "End": 8450.0},
+                    "SHIFTBLINK":  {"Start": 8450.0, "End": 99999999.0}
+                }
+            },
+            "default-4": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7450.0, "End": 8450.0},
+                    "SHIFT":       {"Start": 8450.0, "End": 8500.0},
+                    "SHIFTBLINK":  {"Start": 8500.0, "End": 99999999.0}
+                }
+            },
+            "default-5": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7600.0, "End": 8500.0},
+                    "SHIFT":       {"Start": 8500.0, "End": 8550.0},
+                    "SHIFTBLINK":  {"Start": 8550.0, "End": 99999999.0}
+                }
+            },
+            "default-6": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7600.0, "End": 8500.0},
+                    "SHIFT":       {"Start": 8500.0, "End": 8700.0},
+                    "SHIFTBLINK":  {"Start": 8700.0, "End": 99999999.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Maximum":           6.0,
+                "CapacityMaximum":   6.0
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "imperial":          "qt",
+                "metric":            "l",
+                "Minimum":           0.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   7.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "imperial":          "qt",
+                "metric":            "l",
+                "Minimum":           0.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   8.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           80.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   75.0,
+                "CapacityIncrement": 0.5,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 5.0},
+                    "WARNING":  {"Start": 5.0, "End": 10.0}
+                }
+            }
+        },
+         "TractionControlRear": {
+            "default": {
+                "Name":              "TRACTION CONTROL",
+                "TypeName":          "GAIN",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   12.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        },
+        "TractionControlFront": {
+            "default": {
+                "Name":              "TRACTION CONTROL",
+                "TypeName":          "SLIP",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   12.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        }
+    }
+}
