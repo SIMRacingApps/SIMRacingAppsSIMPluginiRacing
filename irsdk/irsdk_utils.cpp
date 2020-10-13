@@ -260,6 +260,15 @@ const char *irsdk_getSessionInfoStr()
 	return NULL;
 }
 
+int irsdk_getSessionInfoStrUpdate()
+{
+	if(isInitialized)
+	{
+		return pHeader->sessionInfoUpdate;
+	}
+	return -1;
+}
+
 const irsdk_varHeader *irsdk_getVarHeaderPtr()
 {
 	if(isInitialized)
