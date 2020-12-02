@@ -3970,13 +3970,16 @@ else
             _setGauge(new TireWear(Gauge.Type.TIREWEARRRM,                      this, track, IODriver, "RR", "M"));
             _setGauge(new TireWear(Gauge.Type.TIREWEARRRR,                      this, track, IODriver, "RR", "R"));
             
+            _setGauge(new TireCompound(Gauge.Type.TIRECOMPOUND,                 this, track, IODriver));
+            
             _setGauge(new TirePressure(Gauge.Type.TIREPRESSURELF,               this, track, IODriver, "LF",
                  (TireTemp)_getGauge(Gauge.Type.TIRETEMPLFL),
                  (TireTemp)_getGauge(Gauge.Type.TIRETEMPLFM),
                  (TireTemp)_getGauge(Gauge.Type.TIRETEMPLFR),
                  (TireWear)_getGauge(Gauge.Type.TIREWEARLFL),
                  (TireWear)_getGauge(Gauge.Type.TIREWEARLFM),
-                 (TireWear)_getGauge(Gauge.Type.TIREWEARLFR)
+                 (TireWear)_getGauge(Gauge.Type.TIREWEARLFR),
+                 (TireCompound)_getGauge(Gauge.Type.TIRECOMPOUND)
             ));
             _setGauge(new TirePressure(Gauge.Type.TIREPRESSURERF,               this, track, IODriver, "RF",
                     (TireTemp)_getGauge(Gauge.Type.TIRETEMPRFL),
@@ -3984,7 +3987,8 @@ else
                     (TireTemp)_getGauge(Gauge.Type.TIRETEMPRFR),
                     (TireWear)_getGauge(Gauge.Type.TIREWEARRFL),
                     (TireWear)_getGauge(Gauge.Type.TIREWEARRFM),
-                    (TireWear)_getGauge(Gauge.Type.TIREWEARRFR)
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARRFR),
+                    (TireCompound)_getGauge(Gauge.Type.TIRECOMPOUND)
             ));
             _setGauge(new TirePressure(Gauge.Type.TIREPRESSURELR,               this, track, IODriver, "LR",
                     (TireTemp)_getGauge(Gauge.Type.TIRETEMPLRL),
@@ -3992,7 +3996,8 @@ else
                     (TireTemp)_getGauge(Gauge.Type.TIRETEMPLRR),
                     (TireWear)_getGauge(Gauge.Type.TIREWEARLRL),
                     (TireWear)_getGauge(Gauge.Type.TIREWEARLRM),
-                    (TireWear)_getGauge(Gauge.Type.TIREWEARLRR)
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARLRR),
+                    (TireCompound)_getGauge(Gauge.Type.TIRECOMPOUND)
             ));
             _setGauge(new TirePressure(Gauge.Type.TIREPRESSURERR,               this, track, IODriver, "RR",
                     (TireTemp)_getGauge(Gauge.Type.TIRETEMPRRL),
@@ -4000,7 +4005,8 @@ else
                     (TireTemp)_getGauge(Gauge.Type.TIRETEMPRRR),
                     (TireWear)_getGauge(Gauge.Type.TIREWEARRRL),
                     (TireWear)_getGauge(Gauge.Type.TIREWEARRRM),
-                    (TireWear)_getGauge(Gauge.Type.TIREWEARRRR)
+                    (TireWear)_getGauge(Gauge.Type.TIREWEARRRR),
+                    (TireCompound)_getGauge(Gauge.Type.TIRECOMPOUND)
             ));
 
             _setGauge(new iRacingGauge(Gauge.Type.TOPWING,                      this, track, IODriver, "dcWingRear", "mm", null, null));

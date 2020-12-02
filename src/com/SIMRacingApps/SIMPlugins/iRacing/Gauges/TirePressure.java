@@ -39,6 +39,7 @@ public class TirePressure extends Tire {
     TireWear m_tireWearL;
     TireWear m_tireWearM;
     TireWear m_tireWearR;
+    TireCompound m_tireCompound;
 
     public TirePressure(String type, iRacingCar car, Track track,
             IODriver IODriver, String tire,
@@ -47,7 +48,8 @@ public class TirePressure extends Tire {
             TireTemp tireTempR,
             TireWear tireWearL,
             TireWear tireWearM,
-            TireWear tireWearR
+            TireWear tireWearR,
+            TireCompound tireCompound
             ) {
         super(type, car, track, IODriver, "PitSv" + tire + "P", "kPa", tire);
         m_tireTempL = tireTempL;
@@ -56,6 +58,7 @@ public class TirePressure extends Tire {
         m_tireWearL = tireWearL;
         m_tireWearM = tireWearM;
         m_tireWearR = tireWearR;
+        m_tireCompound = tireCompound;
     }
 
     @Override
@@ -154,6 +157,8 @@ public class TirePressure extends Tire {
                 //get the current var values
                 boolean changeFlag = ((m_IODriver.getVars().getBitfield("PitSvFlags") & PitSvFlags.getFlag(m_tire)) != 0);
                 Data    varValue   = _readVar();
+
+                m_tireCompound._tireCurrent(this);  //keep the TireCompound Gauge up to date
                 
                 //if current is not set, then initialize it with the first value we see
                 //otherwise, it should not change until the tire is changed
@@ -167,7 +172,8 @@ public class TirePressure extends Tire {
                 }
 
                 if (varValue.getState().equals(Data.State.NORMAL)) {
-	                //If the tire was changed because we requested to be changed
+
+                    //If the tire was changed because we requested to be changed
 	                //and the flags changed while in the pit stall
 	                //before we read the var value, see if the tire was changed
 	                //then save off the value that was on the car
@@ -198,6 +204,7 @@ public class TirePressure extends Tire {
 	                        m_tireWearL._tireChanged(this);
 	                        m_tireWearM._tireChanged(this);
 	                        m_tireWearR._tireChanged(this);
+	                        m_tireCompound._tireChanged(this);
 	                    }
 	                    
 	                    m_valueCurrent    = new Data(varValue);             //save the current tire pressure

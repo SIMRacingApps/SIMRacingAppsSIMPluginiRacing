@@ -194,6 +194,9 @@ public class iRacingGauge extends Gauge {
         if (varName.equals("Gear") && d.getDouble() == 0.0)
             d.setValue("N");
         else
+        if (varName.equals("CarIdxTireCompound") && d.getDouble() == 0.0)
+            d.setValue("");
+        else
         //Turn the gauge off if the car is turned off
         if (!d.getState().equals(Data.State.NOTAVAILABLE) && m_IODriver.getVars().getDouble("Voltage") == 0.0) {
             d.setState(Data.State.OFF);
