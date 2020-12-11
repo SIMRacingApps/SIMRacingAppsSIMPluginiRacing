@@ -1,7 +1,7 @@
 {
     "Copyright":   "Copyright (C) 2015 - 2020 Jeffrey Gilliam",
     "License":     "Apache License 2.0",
-    "Description": "Dallara IR18",
+    "Description": "Dallara IR-01",
     "MfrLogo":     "com/SIMRacingApps/Cars/dallara.png",
     "Gauges": {
         "Tachometer": {
@@ -13,21 +13,21 @@
                 "metric":            "rev/min",
                 "Multiplier":        0.001,
                 "Minimum":           0.0,
-                "Maximum":           13.0,
-                "MajorIncrement":    1.0,
-                "MinorIncrement":    0.2,
-                "iRacing":           "First=9500, Shift=11700, Last=11825, Blink=11950, RedLine=12030",
+                "Maximum":           20.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    0.5,
+                "iRacing":           "First=15000, Shift=18500, Last=19000, Blink=19200, RedLine=20000",
                 "States": {
-                    "SHIFTLIGHTS":  {"Start": 9550.0,  "End": 11650.0},
-                    "SHIFT":        {"Start": 11650.0, "End": 11825.0},
-                    "SHIFTBLINK":   {"Start": 11825.0,  "End": 99999999.0}
+                    "SHIFTLIGHTS":  {"Start": 17000.0,  "End": 19700.0},
+                    "SHIFT":        {"Start": 19700.0,  "End": 19800.0},
+                    "SHIFTBLINK":   {"Start": 19800.0,  "End": 99999999.0}
                 }
             }
         },
         "Gear": {
             "default": {
-                "Maximum":           6.0,
-                "CapacityMaximum":   6.0
+                "Maximum":           7.0,
+                "CapacityMaximum":   7.0
             }
         },
         "TireCompound": {
@@ -38,11 +38,11 @@
                 "imperial":          "",
                 "metric":            "",
                 "Minimum":           0.0,
-                "Maximum":           1.0,
+                "Maximum":           2.0,
                 "MajorIncrement":    1.0,
                 "MinorIncrement":    1.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   1.0,
+                "CapacityMaximum":   2.0,
                 "CapacityIncrement": 1.0,
                 "StateAscending":    true,
                 "OnResetChange":     true,
@@ -50,9 +50,10 @@
                 "IsChangable":       true,
                 "States": {
                     "0": {"Start":  -1.0, "End": 0.0, "Name": "Car/Gauge/TireCompound", "Value": ""},
-                    "1": {"Start":   0.0, "End": 1.0, "Name": "Car/Gauge/TireCompound", "Value": "P"},
-                    "2": {"Start":   1.0, "End": 2.0, "Name": "Car/Gauge/TireCompound", "Value": "A"},
-                    "3": {"Start":   3.0, "End": 9999.0, "Name": "Car/Gauge/TireCompound", "Value": ""}
+                    "1": {"Start":   0.0, "End": 1.0, "Name": "Car/Gauge/TireCompound", "Value": "S"},
+                    "2": {"Start":   1.0, "End": 2.0, "Name": "Car/Gauge/TireCompound", "Value": "M"},
+                    "3": {"Start":   2.0, "End": 3.0, "Name": "Car/Gauge/TireCompound", "Value": "H"},
+                    "4": {"Start":   3.0, "End": 9999.0, "Name": "Car/Gauge/TireCompound", "Value": ""}
                 }
             }
         },
@@ -68,7 +69,7 @@
                 "MajorIncrement":    2.0,
                 "MinorIncrement":    1.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   10.6,
+                "CapacityMaximum":   5.2,
                 "StateAscending":    false,
                 "States": {
                     "CRITICAL": {"Start": 0.0, "End": 2.0},
@@ -88,7 +89,7 @@
                 "MajorIncrement":    2.0,
                 "MinorIncrement":    1.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   13.5,
+                "CapacityMaximum":   8.0,
                 "StateAscending":    false,
                 "States": {
                     "CRITICAL": {"Start": 0.0, "End": 2.0},
@@ -100,21 +101,21 @@
             "default": {
                 "Name":              "FUEL",
                 "TypeName":          "LEVEL",
-                "UOM":               "gal",
+                "UOM":               "l",
                 "Minimum":           0.0,
-                "Maximum":           20.0,
-                "MajorIncrement":    2.0,
-                "MinorIncrement":    1.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    2.5,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   18.5010255,
-                "CapacityIncrement": 0.5,
+                "CapacityMaximum":   100.0,
+                "CapacityIncrement": 1.0,
                 "IsFixed":           false,
                 "IsChangable":       true,
                 "OnResetChange":     true,
                 "StateAscending":    false,
                 "States": {
-                    "CRITICAL": {"Start": 0.0, "End": 3.0},
-                    "WARNING":  {"Start": 3.0, "End": 6.0}
+                    "CRITICAL": {"Start": 0.0, "End": 15.0},
+                    "WARNING":  {"Start": 15.0, "End": 30.0}
                 }
             }
         },
