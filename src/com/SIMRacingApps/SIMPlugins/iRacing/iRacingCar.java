@@ -3934,6 +3934,7 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.STARTER,                      this, track, IODriver, "dcStarter", "", null, null));
             _setGauge(new Steering(Gauge.Type.STEERING,                         this, track, IODriver, "SteeringWheelAngle", "rad"));
             _setGauge(new Tachometer(Gauge.Type.TACHOMETER,                     this, track, IODriver, "RPM", "rev/min", simGaugesBefore));
+            _setGauge(new Accelometer(Gauge.Type.ACCELOMETER,                   this, track, IODriver, "RPM", "rev/min"));
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpQtape") != null)
                 _setGauge(new Changeables(Gauge.Type.TAPE,                          this, track, IODriver, "dpQtape", "%", null, null));
             else
