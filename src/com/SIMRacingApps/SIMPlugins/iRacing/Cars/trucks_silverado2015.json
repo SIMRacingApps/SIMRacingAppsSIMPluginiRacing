@@ -1,6 +1,6 @@
 {
     "Description": "Chevrolet Silverado 2015",
-    "Copyright":   "Copyright (C) 2015 - 2020 Jeffrey Gilliam",
+    "Copyright":   "Copyright (C) 2015 - 2021 Jeffrey Gilliam",
     "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
     "Gauges": {
         "FuelPressure": {

@@ -1,7 +1,7 @@
 {
     "Description": "Street Stock",
     "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
-    "Copyright": "Copyright (C) 2015 - 2020 Jeffrey Gilliam",
+    "Copyright": "Copyright (C) 2015 - 2021 Jeffrey Gilliam",
     "Gauges" : {
         "FuelLevel": {
             "default": {

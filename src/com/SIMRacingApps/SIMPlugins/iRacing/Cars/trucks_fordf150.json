@@ -1,6 +1,6 @@
 {
     "Description": "Ford F150",
-    "Copyright":   "Copyright (C) 2015 - 2020 Jeffrey Gilliam",
+    "Copyright":   "Copyright (C) 2015 - 2021 Jeffrey Gilliam",
     "MfrLogo":     "com/SIMRacingApps/Cars/ford.png",
     "Gauges": {
         "FuelPressure": {
