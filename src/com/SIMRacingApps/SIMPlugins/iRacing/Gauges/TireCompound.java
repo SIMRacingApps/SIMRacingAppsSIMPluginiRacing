@@ -5,6 +5,7 @@ package com.SIMRacingApps.SIMPlugins.iRacing.Gauges;
 
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Track;
+import com.SIMRacingApps.SIMPlugins.iRacing.PitSvFlags;
 import com.SIMRacingApps.SIMPlugins.iRacing.iRacingCar;
 import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
 
@@ -27,7 +28,11 @@ public class TireCompound extends Tire {
     
     public void _tireCurrent(Tire tire) {
         this.m_valueCurrent = _readVar();
-        this.m_valueNext    = this.m_valueCurrent;  //do this until iRacing provides it in the telemetry
+        if (this.m_car.isME())
+            this.m_valueNext    = _readVar("PitSvTireCompound");
+        else
+            this.m_valueNext    = this.m_valueCurrent;  //do this until iRacing provides it in the telemetry for the other cars
+        this.m_isDirty = this.m_valueCurrent.getDouble() != this.m_valueNext.getDouble(); 
     }
 
     public void _tireChanged(Tire tire) {
