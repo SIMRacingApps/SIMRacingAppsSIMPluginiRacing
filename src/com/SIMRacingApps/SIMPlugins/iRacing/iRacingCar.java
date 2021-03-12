@@ -1166,6 +1166,96 @@ else
         return d;
     }
 
+    /*
+     * https://members.iracing.com/jforum/posts/list/3794777.page#12413480
+     * 
+     * // support custom paints
+     * pk_car.png - render the car
+     * pk_body.png - render our new user avatar (suit, hed, helmet)
+     * pk_suit.png - render just the suit without helmet or head
+     * pk_helmet.png - render a helmet
+     * 
+     * // don't support custom paints
+     * pk_head.png - pre-rendered view of the avatars face
+     * pk_number.png - render a car's number stamp, can render any number.
+     * pk_club.png - all club logos
+     * pk_sponsor.png - all sponsor decals.
+     * 
+     * There are a series of optional arguments that control how the render works.  Each of these below can be passed for any pk_XXX.png entry, although not all make sense in all cases.  Most can be skipped, a reasonable default will be filled in for you.
+     * 
+     * // shared
+     * size=d // size of the image to show
+     * view=d // alternate rendered view of image
+     * 
+     * // stamp layers
+     * licCol=x // hex color FFFFFF
+     * club=d // club decal
+     * sponsors=s1,s2,s3,s4,s5 // support up to 5 sponsors, currently only first 2 used
+     * name=s   // driver/team name, not yet implemented but renders name on windshield
+     * stampShow=d // optionally force club/sponsors off
+     * 
+     * // number, like a stamp but handled separately
+     * numPat=d  // for fixed font cars use a -carId to render the correct font
+     * numCol=x,x,x // hex as in FFFFFF,FFFFFF,FFFFFF
+     * numSlnt=d // (0)normal, (1)left, (2)right, (3)forward, (4)back
+     * number=s  //(ie 001, 23, etc)
+     * numShow=d // turn off display of number
+     * 
+     * // car
+     * carPath=s // rt2000, etc
+     * carPat=d // web pattern number
+     * carCol=x,x,x // hex colors
+     * carCustPaint=s // full path to .tga file on disk, forces sponsor/club off and replaces web paint
+     * 
+     * // car wheel rim
+     * carRimType=d // (0)matt, (1)chrome, (2)brushed aluminum, (3)glossy
+     * carRimCol=x,x,x // hex colors
+     * 
+     * // suit
+     * suitType=d // suit (body) model
+     * suitPat=d  // web pattern number
+     * suitCol=x,x,x // hex colors
+     * suitCustPaint=s // full path to .tga file on disk
+     * 
+     * // helmet
+     * hlmtType=d // helmet model
+     * hlmtPat=d // web pattern number
+     * hlmtCol=x,x,x // hex colors
+     * hlmtCustPaint=s // full path to .tga file on disk
+     * 
+     * // face
+     * faceType=d // face (head) model
+     * 
+     * 
+     * Here are some sample calls.  
+     * Note that on members you have to pass &view=1 to get my more advanced car rendering code to work, 
+     * otherwise custom paints won't work.  
+     * And for club/sponsors the view controls the stamp type (rectangle/square)
+     * 
+     * // Custom paint on a car
+     * http://localhost:32034/pk_car.png?size=2&view=1&ca...nmartin%20dbr9\test_helmet.tga
+     * 
+     * // and the rest
+     * http://localhost:32034/pk_car.png?size=0&view=1&li...FFFF&carRimType=2&carRimCol=3F
+     * 
+     * http://localhost:32034/pk_car.png?size=2&view=1&li...carRimCol=3FFF00,232323,FF0000
+     * 
+     * http://localhost:32034/pk_body.png?size=1&view=2&s...46699,000055,9900FF&faceType=6
+     * 
+     * http://localhost:32034/pk_suit.png?size=1&suitPat=...32100,FF77FF&view=0&suitType=0
+     * 
+     * http://localhost:32034/pk_helmet.png?size=2&hlmtPa...32100,FF77FF&view=0&hlmtType=0
+     * 
+     * http://localhost:32034/pk_head.png?size=1&view=0&s...03366,432100,FF77FF&faceType=6
+     * 
+     * http://localhost:32034/pk_number.png?view=1&number...2FFF00,FFFF00,00FF00&numSlnt=1
+     * 
+     * http://localhost:32034/pk_club.png?&club=13&view=0
+     * 
+     * http://localhost:32034/pk_sponsor.png?&sponsors=3&view=1
+     * 
+     * @see com.SIMRacingApps.Car#getImageUrl()
+     */
     @Override
     public Data getImageUrl() {
         Data d = super.getImageUrl();
@@ -1175,6 +1265,7 @@ else
             if (isValid()) {
                 //http://127.0.0.1:32034/car.png?dirpath=trucks%5Csilverado2015&size=2&pat=23&lic=feec04&car_number=1&colors=000000,cfcfcf,ff0600
     
+                String UserID = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"UserID");
                 String CarDesignStr = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarDesignStr");
                 String CarNumberDesignStr = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
                 
@@ -1206,9 +1297,21 @@ else
                     String numparts[] = CarNumberDesignStr.split("[,;]");
                     String car_number = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumber").replace("\"", "");
                     //String car_number = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberRaw").replace("\"", "");
-                    String numfont = numparts.length > 0 ? numparts[0] : "0";
-                    String numslant = numparts.length > 1 ? numparts[1] : "0";
-                    String numcolors = numparts.length > 4 ? numparts[2]+","+numparts[3]+","+numparts[4] : "ffffff,777777,000000";
+
+                    String numfont   = "0";
+                    String numslant  = "0";
+                    String numcolors = "ffffff,777777,000000";
+                    
+                    if (numparts.length > 4) {
+                        numfont   = numparts[0];
+                        numslant  = numparts[1];
+                        numcolors = numparts[2]+","+numparts[3]+","+numparts[4];
+                    }
+                    else 
+                    if (numparts.length > 3) {
+                        numfont   = numparts[0];
+                        numcolors = numparts[1]+","+numparts[2]+","+numparts[3];
+                    }
                     
                     //the caller must replace iRacing with the hostname and port of the iRacing server
                     //if running on the same machine, then it is 127.0.0.1::32034
@@ -1219,14 +1322,36 @@ else
                             + "&lic="+lic
                             + "&car_number="+car_number
                             + "&carnumber="+car_number
+                            + "&numPat="+numfont
                             + "&numfont="+numfont
                             + "&numslant="+numslant
+                            + "&numSlnt="+numslant
                             + "&numcolors="+numcolors
                             + "&colors="+colors
                             + "&sponsors="+sponsors
                             + "&club="+club
                             + "&wheels="+wheels
                     ;
+
+                    //if I can find the custom car paint file, use it
+                    try {
+                        FindFile customPaint = new FindFile(Server.getArg("iRacing-Paint",FindFile.getUserDocumentsPath() + "\\iRacing\\paint") + "\\" + this.getName().getString() + "\\car_" + UserID + ".tga");
+                        
+                        // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
+                        url = "iRacing/pk_car.png"
+                                + "?view=1"
+                                + "&size=2"
+                                + "&carPath="+dirpath
+                                + "&number="+car_number
+                                + "&numPat="+numfont
+                                + "&numfont="+numfont
+                                + "&numSlnt="+numslant
+                                + "&numcol="+numcolors
+                                + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
+                        ;
+                    }
+                    catch (FileNotFoundException e) {}
+                    Server.logger().finest(url);
                     d.setValue(url);
                     d.setState(Data.State.NORMAL);
                 }
