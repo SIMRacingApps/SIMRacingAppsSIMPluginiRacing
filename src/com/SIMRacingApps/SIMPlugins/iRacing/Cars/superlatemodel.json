@@ -23,7 +23,7 @@
                 "MajorIncrement":   2.0,
                 "MinorIncrement":   1.0,
                 "CapacityMinimum":  0.0,
-                "CapacityMaximum":  22.2,
+                "CapacityMaximum":  21.99,
                 "CapacityIncrement":1.0,
                 "States": {
                     "CRITICAL": { "Start": 0.0, "End": 1.0 },

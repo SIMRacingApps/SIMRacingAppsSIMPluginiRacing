@@ -15,7 +15,14 @@
                 "Maximum":           8.0,
                 "MajorIncrement":    1.0,
                 "MinorIncrement":    0.2,
-                "StateAscending":    true
+                "StateAscending":    true,
+                "iRacing":           "7100, Shift=7400, Last=7400, Blink=7600, RedLine=7600",
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6750.0, "End": 7500.0},
+                    "SHIFT":       {"Start": 7500.0, "End": 7550.0},
+                    "SHIFTBLINK":  {"Start": 7550.0, "End": 7550.0},
+                    "CRITICAL":    {"Start": 7550.0, "End": 99999.0}
+                }
             }
         },
         "Gear": {
