@@ -624,6 +624,22 @@ public class IODriver {
         m_dos = null;
     }
 
+    public String dataDir() {
+        //first get the My Documents location from the registry
+        //At the time of this writing 2015, you can only change the folder found in the documents folder
+        //with the datadir.txt file. iRacing does not support it being in another location.
+        //if you do change the location, or your an iRacing tester, then you need to pass in the
+        //iracing-datadir option to tell me where the folder is you are testing.
+        
+        String s = FindFile.getUserDocumentsPath();
+        if (s != null && !s.isEmpty()) {
+            //TODO: Can I automate this by looking for the iRacingService.exe process path and open the datadir.txt file?
+            String datadir = Server.getArg("iracing-datadir","iRacing");
+            return s + "\\" + datadir;
+        }
+        return null;
+    }
+    
     Properties m_app = null;
 
     public String readOption(String key) {
@@ -635,18 +651,10 @@ public class IODriver {
             if (m_app == null) {
                 m_app = new Properties();
 
-                //first get the My Documents location from the registry
-                //At the time of this writing 2015, you can only change the folder found in the documents folder
-                //with the datadir.txt file. iRacing does not support it being in another location.
-                //if you do change the location, or your an iRacing tester, then you need to pass in the
-                //iracing-datadir option to tell me where the folder is you are testing.
-                
-                String s = FindFile.getUserDocumentsPath();
+                String s = dataDir();
                 if (s != null && !s.isEmpty()) {
-                    //TODO: Can I automate this by looking for the iRacingService.exe process path and open the datadir.txt file?
-                    String datadir = Server.getArg("iracing-datadir","iRacing");
                     
-                    String path = s + "\\"+datadir+"\\app.ini";
+                    String path = s + "\\app.ini";
                     try {
                         FileInputStream in = new FileInputStream(path);
                         Server.logger().info("iRacing.IODriver.Loading: "+path);
@@ -699,6 +707,18 @@ public class IODriver {
         }
 
         return 1; //default if you can't read the file
+    }
+
+    public int getHideCarNum() {
+        try {
+            String s = readOption("hideCarNum");
+            if (!s.isEmpty()) {
+                return Integer.parseInt(s);
+            }
+        } catch (NumberFormatException e) {
+        }
+
+        return 0; //iRacingDefault if you can't read the file
     }
 
     public void finalize() throws Throwable {

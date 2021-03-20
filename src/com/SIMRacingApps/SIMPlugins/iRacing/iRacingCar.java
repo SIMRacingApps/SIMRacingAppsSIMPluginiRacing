@@ -64,6 +64,7 @@ public class iRacingCar extends Car {
     private Integer m_driversIdx            = -1;   //The index of the car in the DriverInfo.Drivers[] array.
     private String  m_number                = "";
     private Integer m_numberRaw             = -1;
+    private String  m_url                   = "";
 
     private State   m_prevStatus            = new State(Car.Status.INVALID,0.0);
     private State   m_surfacelocation       = new State("",0.0);
@@ -1335,7 +1336,7 @@ else
 
                     //if I can find the custom car paint file, use it
                     try {
-                        FindFile customPaint = new FindFile(Server.getArg("iRacing-Paint",FindFile.getUserDocumentsPath() + "\\iRacing\\paint") + "\\" + this.getName().getString() + "\\car_" + UserID + ".tga");
+                        FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_" + UserID + ".tga");
                         
                         // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
                         url = "iRacing/pk_car.png"
@@ -1351,8 +1352,111 @@ else
                         ;
                     }
                     catch (FileNotFoundException e) {}
-                    Server.logger().finest(url);
-                    d.setValue(url);
+                    
+//                    //if I can find the custom car paint file, use it
+//                    try {
+//                        FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_spec_" + UserID + ".mip");
+//                        
+//                        // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
+//                        url = "iRacing/pk_car.png"
+//                                + "?view=1"
+//                                + "&size=2"
+//                                + "&carPath="+dirpath
+//                                + "&number="+car_number
+//                                + "&numPat="+numfont
+//                                + "&numfont="+numfont
+//                                + "&numSlnt="+numslant
+//                                + "&numcol="+numcolors
+//                                + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
+//                        ;
+//                    }
+//                    catch (FileNotFoundException e) {}
+
+                    //If user is hiding the car numbers, see if I can find a car_num file.
+                    if (m_iRacingSIMPlugin.getIODriver().getHideCarNum() != 0
+                    //&& !((iRacingSession)this.m_SIMPlugin.getSession())._isOfficial()
+                    ) {
+                        //if I can find the custom car paint file with a number, use it
+                        try {
+                            FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_num_" + UserID + ".tga");
+                            
+                            // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
+                            url = "iRacing/pk_car.png"
+                                    + "?view=1"
+                                    + "&size=2"
+                                    + "&carPath="+dirpath
+                                    //+ "&number="+car_number
+                                    //+ "&numPat="+numfont
+                                    //+ "&numfont="+numfont
+                                    //+ "&numSlnt="+numslant
+                                    //+ "&numcol="+numcolors
+                                    + "&numShow=0"
+                                    + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
+                            ;
+                        }
+                        catch (FileNotFoundException e) {}
+                    }
+                    
+                    //if a team even, then see if you have a team paint
+                    //WeekendInfo.TeamRacing > 0
+                    //DriverInfo.Drivers[idx].TeamID > 0
+                    if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("WeekendInfo","TeamRacing") > 0) {
+                        String teamID = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"TeamID");
+                        if (!teamID.equals("0") && !teamID.isEmpty()) {
+                            try {
+                                FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_team_" + teamID + ".tga");
+                                
+                                // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
+                                url = "iRacing/pk_car.png"
+                                        + "?view=1"
+                                        + "&size=2"
+                                        + "&carPath="+dirpath
+                                        + "&number="+car_number
+                                        + "&numPat="+numfont
+                                        + "&numfont="+numfont
+                                        + "&numSlnt="+numslant
+                                        + "&numcol="+numcolors
+                                        + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
+                                ;
+                            }
+                            catch (FileNotFoundException e) {}
+                        }
+                    }                    
+                    
+                    if (m_iRacingSIMPlugin.getIODriver().getHideCarNum() != 0
+                    //&& !((iRacingSession)this.m_SIMPlugin.getSession())._isOfficial()
+                    ) {
+                        if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("WeekendInfo","TeamRacing") > 0) {
+                            String teamID = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"TeamID");
+                            if (!teamID.equals("0") && !teamID.isEmpty()) {
+                                //if I can find the custom car paint file with a number, use it
+                                try {
+                                    FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_team_num_" + teamID + ".tga");
+                                    
+                                    // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
+                                    url = "iRacing/pk_car.png"
+                                            + "?view=1"
+                                            + "&size=2"
+                                            + "&carPath="+dirpath
+                                            //+ "&number="+car_number
+                                            //+ "&numPat="+numfont
+                                            //+ "&numfont="+numfont
+                                            //+ "&numSlnt="+numslant
+                                            //+ "&numcol="+numcolors
+                                            + "&numShow=0"
+                                            + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
+                                    ;
+                                }
+                                catch (FileNotFoundException e) {}
+                            }
+                        }
+                    }
+                    
+                    if (!m_url.equals(url)) {
+                        Server.logger().fine(m_url);
+                        m_url = url;
+                    }
+                    d.setValue(m_url);
                     d.setState(Data.State.NORMAL);
                 }
             }
