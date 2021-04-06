@@ -1811,7 +1811,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         Data d = super.setChat(text);
 
         //Need to make iRacing is focused, then send the keys.
-//        if (Windows.setForegroundWindow(null,Server.getArg("iracing-title",IRACING_TITLE))) {
+        Windows.setForegroundWindow(null,Server.getArg("iracing-title",IRACING_TITLE));
             //get into chat mode.
             //SendKeys.sendKeys("{DELAY 500}{ESCAPE}t{DELAY 100}");
             m_SIMPlugin.getIODriver().broadcastMsg(BroadcastMsg.BroadcastChatComand,BroadcastMsg.ChatCommandMode.ChatCommand_BeginChat,0);
@@ -1822,7 +1822,6 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             d.setValue("ChatSent: " + sentText);
             d.setState(Data.State.NORMAL);
             Server.logger().info(d.getString());
-//        }
         return d;
     }
     
@@ -1832,7 +1831,7 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         d.setState(Data.State.OFF);
 
         //Need to make iRacing is focused, then send the keys.
-        if (Windows.setForegroundWindow(null,Server.getArg("iracing-title",IRACING_TITLE))) {        
+        Windows.setForegroundWindow(null,Server.getArg("iracing-title",IRACING_TITLE));        
             //get into chat reply mode.
             //SendKeys.sendKeys("{DELAY 500}{ESCAPE}r{DELAY 100}");
             m_SIMPlugin.getIODriver().broadcastMsg(BroadcastMsg.BroadcastChatComand,BroadcastMsg.ChatCommandMode.ChatCommand_Reply,0);
@@ -1843,7 +1842,6 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             d.setValue("ChatReplySent: " + sentText);
             d.setState(Data.State.NORMAL);
             Server.logger().info(d.getString());
-        }
         return d;
     }
     
