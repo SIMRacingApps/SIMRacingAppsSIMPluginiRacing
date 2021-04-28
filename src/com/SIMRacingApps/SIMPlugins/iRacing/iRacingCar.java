@@ -767,7 +767,7 @@ else
             String cardesign = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarDesignStr");
             String s2[]    = cardesign.split(",");
             if (s2.length > 3) {
-                if (d.getInteger() == Integer.decode("0x"+s[3]))
+                if (d.getInteger() == Integer.decode("0x"+s2[3]))
                     d.setValue(d.getInteger() ^ 0xffffff);
             }
         }
