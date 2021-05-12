@@ -1818,6 +1818,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             SendKeys.delay(Integer.parseInt(Server.getArg("iracing-chatmodedelay","200")));
         
             String sentText = this.getSendKeys("CHAT", "ALL").replace("[TEXT]", text);
+            if (Server.getArg("sendkeys-testmode",false))
+                sentText = "testmode="+sentText;
             SendKeys.sendKeys(sentText);
             d.setValue("ChatSent: " + sentText);
             d.setState(Data.State.NORMAL);
@@ -1838,6 +1840,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             SendKeys.delay(Integer.parseInt(Server.getArg("iracing-chatmodedelay","200")));
         
             String sentText = this.getSendKeys("CHAT", "REPLY").replace("[TEXT]", text);
+            if (Server.getArg("sendkeys-testmode",false))
+                sentText = "testmode="+sentText;
             SendKeys.sendKeys(sentText);
             d.setValue("ChatReplySent: " + sentText);
             d.setState(Data.State.NORMAL);

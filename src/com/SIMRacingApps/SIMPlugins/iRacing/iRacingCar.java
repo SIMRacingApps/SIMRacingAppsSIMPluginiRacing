@@ -721,10 +721,12 @@ else
         // the color of the car is the 2nd number.
 
         if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
-            String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarDesignStr");
-            String s[]    = design.split("[,;]");
-            if (s.length > 1)
-                d.setValue(Integer.decode("0x"+s[1]),"RGB",Data.State.NORMAL);
+            try {
+                String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarDesignStr");
+                String s[]    = design.split("[,;.]");
+                if (s.length > 1)
+                    d.setValue(Integer.decode("0x"+s[1]),"RGB",Data.State.NORMAL);
+            } catch (NumberFormatException e) {}
         }
         return d;
     }
@@ -737,15 +739,17 @@ else
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The color of the number is the 3rd number.
         if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
-            String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-            String s[]    = design.split("[,;]");
-            if (s.length > 2) {
-                int color = Integer.decode("0x"+s[2]);
-//                //if the Car Color and the Number Color is the same, invert it so we can see it
-//                if (color == getColor().getInteger())
-//                    color = getColor().getInteger() ^ 0xffffff;
-                d.setValue(color,"RGB",Data.State.NORMAL);
-            }
+            try {
+                String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
+                String s[]    = design.split("[,;.]");
+                if (s.length > 2) {
+                    int color = Integer.decode("0x"+s[2]);
+    //                //if the Car Color and the Number Color is the same, invert it so we can see it
+    //                if (color == getColor().getInteger())
+    //                    color = getColor().getInteger() ^ 0xffffff;
+                    d.setValue(color,"RGB",Data.State.NORMAL);
+                }
+            } catch (NumberFormatException e) {}
         }
         return d;
     }
@@ -758,18 +762,22 @@ else
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The color of the number's background is the 5th number.
         if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
-            String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-            String s[]    = design.split("[,;]");
-            if (s.length > 4) {
-                d.setValue(Integer.decode("0x"+s[4]),"RGB",Data.State.NORMAL);
-            }
-            //if the Car Color background is the same as car's background invert the numbers background
-            String cardesign = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarDesignStr");
-            String s2[]    = cardesign.split("[,;]");
-            if (s2.length > 3) {
-                if (d.getInteger() == Integer.decode("0x"+s2[3]))
-                    d.setValue(d.getInteger() ^ 0xffffff);
-            }
+            try {
+                String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
+                String s[]    = design.split("[,;.]");
+                if (s.length > 4) {
+                    d.setValue(Integer.decode("0x"+s[4]),"RGB",Data.State.NORMAL);
+                }
+                //if the Car Color background is the same as car's background invert the numbers background
+                String cardesign = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarDesignStr");
+                String s2[]    = cardesign.split("[,;.]");
+                if (s2.length > 3) {
+                    try {
+                        if (d.getInteger() == Integer.decode("0x"+s2[3]))
+                            d.setValue(d.getInteger() ^ 0xffffff);
+                    } catch (NumberFormatException e) {}
+                }
+            } catch (NumberFormatException e) {}
         }
         return d;
     }
@@ -782,11 +790,13 @@ else
         // CarNumberDesignStr: 0,0,ffffff,777777,000000
         //The color of the number's outline is the 4th number.
         if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
-            String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-            String s[]    = design.split("[,;]");
-            if (s.length > 3) {
-                d.setValue(Integer.decode("0x"+s[3]),"RGB",Data.State.NORMAL);
-            }
+            try {
+                String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
+                String s[]    = design.split("[,;.]");
+                if (s.length > 3) {
+                    d.setValue(Integer.decode("0x"+s[3]),"RGB",Data.State.NORMAL);
+                }
+            } catch (NumberFormatException e) {}
         }
         return d;
     }
@@ -1276,7 +1286,7 @@ else
                 if (CarNumberDesignStr.isEmpty())
                     CarNumberDesignStr = "0,0,000000,ffffff,666666";    //a suitable default
                 
-                String parts[] = CarDesignStr.split("[,;]");
+                String parts[] = CarDesignStr.split("[,;.]");
                 
                 if (parts.length > 3) {
                     String dirpath = this.getName().getString().replace(" ","%5C");
@@ -1295,7 +1305,7 @@ else
                     
                     //had this commented out, but at some point iRacing defaults to showing the car number
                     //put it back so at least the colors are correct event if it is ignoring the carnumber passed in.
-                    String numparts[] = CarNumberDesignStr.split("[,;]");
+                    String numparts[] = CarNumberDesignStr.split("[,;.]");
                     String car_number = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumber").replace("\"", "");
                     //String car_number = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberRaw").replace("\"", "");
 
@@ -1453,7 +1463,7 @@ else
                     }
                     
                     if (!m_url.equals(url)) {
-                        Server.logger().fine(m_url);
+                        Server.logger().fine("image url="+m_url);
                         m_url = url;
                     }
                     d.setValue(m_url);
@@ -2331,7 +2341,7 @@ else
         //The font of the number is the 1st number.
         if (isValid() && !isPaceCar() && m_fontnames != null) {
             String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-            String s[]    = design.split("[,;]");
+            String s[]    = design.split("[,;.]");
             if (s.length > 0) {
 //s[0] = "35";                
                 String font_string = (String) m_fontnames.getJSON().get(s[0]);
@@ -2353,7 +2363,7 @@ else
         //0=normal, 1=left, 2=right, 3=forward, 4=backwards
         if (isValid() && !isPaceCar()) {
             String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-            String s[]    = design.split("[,;]");
+            String s[]    = design.split("[,;.]");
             if (s.length > 1) {
                 String slant_string = "normal";
                 try {
