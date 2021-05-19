@@ -1,0 +1,108 @@
+{
+    "Description": "Toyota Camry",
+    "MfrLogo":     "com/SIMRacingApps/Cars/toyota.png",
+    "Copyright": "Copyright (C) 2015 - 2021 Jeffrey Gilliam",
+    "Gauges" : {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rev/min",
+                "imperial":          "rev/min",
+                "metric":            "rev/min",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "iRacing": "First=8000, Shift=9000, Last=9000, Blink=9200, RedLine=9800",
+                "xStates": {
+                    "SHIFTLIGHTS": {"Start": 3880.0, "End": 4700.0},
+                    "SHIFT":       {"Start": 4700.0, "End": 4730.0},
+                    "SHIFTBLINK":  {"Start": 4730.0, "End": 99999999.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "Minimum":           -1.0,
+                "Maximum":           5.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   5.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true,
+                "States": {
+                    "R": {"Start": -1.0, "End": 0.0, "Name": "Car/Gauge/Gear", "Value": "R"},
+                    "N": {"Start":  0.0, "End": 1.0, "Name": "Car/Gauge/Gear", "Value": "N"},
+                    "1": {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/Gear", "Value": "1"},
+                    "2": {"Start":  2.0, "End": 3.0, "Name": "Car/Gauge/Gear", "Value": "2"},
+                    "3": {"Start":  3.0, "End": 4.0, "Name": "Car/Gauge/Gear", "Value": "3"},
+                    "4": {"Start":  4.0, "End": 5.0, "Name": "Car/Gauge/Gear", "Value": "4"},
+                    "5": {"Start":  5.0, "End": 6.0, "Name": "Car/Gauge/Gear", "Value": "5"}
+                }
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "imperial":          "psi",
+                "metric":            "kpa",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    25.0,
+                "MinorIncrement":    2.5,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 15.0},
+                    "WARNING":  {"Start": 15.0, "End": 30.0}
+                }
+            }
+        },
+        "WaterPressure": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "imperial":          "psi",
+                "metric":            "kpa",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    25.0,
+                "MinorIncrement":    2.5,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 20.0},
+                    "WARNING":  {"Start": 20.0, "End": 40.0}
+                }
+            }
+        },
+        "Voltage": {
+            "default": {
+                "Name":              "VOLT",
+                "TypeName":          "",
+                "UOM":               "v",
+                "imperial":          "v",
+                "metric":            "v",
+                "Minimum":           10.0,
+                "Maximum":           16.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 6.0},
+                    "WARNING":  {"Start": 6.0, "End": 10.0}
+                }
+            }
+        }
+    }
+}

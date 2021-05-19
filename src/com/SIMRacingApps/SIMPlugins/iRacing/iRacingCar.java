@@ -723,7 +723,7 @@ else
         if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
             try {
                 String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarDesignStr");
-                String s[]    = design.split("[,;.]");
+                String s[]    = design.split("[,;.-]");
                 if (s.length > 1)
                     d.setValue(Integer.decode("0x"+s[1]),"RGB",Data.State.NORMAL);
             } catch (NumberFormatException e) {}
@@ -741,7 +741,7 @@ else
         if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
             try {
                 String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-                String s[]    = design.split("[,;.]");
+                String s[]    = design.split("[,;.-]");
                 if (s.length > 2) {
                     int color = Integer.decode("0x"+s[2]);
     //                //if the Car Color and the Number Color is the same, invert it so we can see it
@@ -764,13 +764,13 @@ else
         if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
             try {
                 String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-                String s[]    = design.split("[,;.]");
+                String s[]    = design.split("[,;.-]");
                 if (s.length > 4) {
                     d.setValue(Integer.decode("0x"+s[4]),"RGB",Data.State.NORMAL);
                 }
                 //if the Car Color background is the same as car's background invert the numbers background
                 String cardesign = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarDesignStr");
-                String s2[]    = cardesign.split("[,;.]");
+                String s2[]    = cardesign.split("[,;.-]");
                 if (s2.length > 3) {
                     try {
                         if (d.getInteger() == Integer.decode("0x"+s2[3]))
@@ -792,7 +792,7 @@ else
         if (isValid() && !isPaceCar() && Server.getArg("use-sim-colors", true)) {
             try {
                 String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-                String s[]    = design.split("[,;.]");
+                String s[]    = design.split("[,;.-]");
                 if (s.length > 3) {
                     d.setValue(Integer.decode("0x"+s[3]),"RGB",Data.State.NORMAL);
                 }
@@ -1286,26 +1286,35 @@ else
                 if (CarNumberDesignStr.isEmpty())
                     CarNumberDesignStr = "0,0,000000,ffffff,666666";    //a suitable default
                 
-                String parts[] = CarDesignStr.split("[,;.]");
+                String parts[] = CarDesignStr.split("[,;.-]");
                 
                 if (parts.length > 3) {
                     String dirpath = this.getName().getString().replace(" ","%5C");
                     String pat = parts[0];
-                    String lic = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"LicColor");
-                    if (!lic.isEmpty()) 
-                        lic = String.format("%06x",Integer.parseUnsignedInt(lic));
+                    String lic = String.format("%06x",this.getDriverLicenseColor().getInteger());
+                    
+                    String name = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("WeekendInfo","TeamRacing") > 0
+                                ? this.getTeamName().getString().replace(" ", "%20")
+                                : this.getDriverNameShort().getString().replace(" ", "%20");
+                                
+                    if (name.contains(","))
+                        name = name.split(",")[0];
                     
                     String carSponser1 = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarSponsor_1");
                     String carSponser2 = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarSponsor_2");
                     String sponsors = (carSponser1.isEmpty() ? "0" : carSponser1) + "," + (carSponser2.isEmpty() ? "0" : carSponser2);
                     String club = Integer.toString(_getClubNumber(m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"ClubName")));
-                    String colors = parts[1]+","+parts[2]+","+parts[3];
-                    String wheeltype = "0"; //TODO: wheel type, matt or chrome, is not output by iRacing as of May 2015, so use matt
-                    String wheels = parts.length > 4 ? wheeltype + ","+parts[4] : wheeltype + ",000000";
+                    String colors = parts.length > 3 ? parts[1]+","+parts[2]+","+parts[3] : "";
+                    String wheeltype = parts.length <= 4          ? ""   //default 
+                                     : CarDesignStr.contains(";") ? "1"  //Chrome 
+                                     : CarDesignStr.contains(".") ? "2"  //Brushed aluminum 
+                                     : CarDesignStr.contains("-") ? "3"  //glossy
+                                     :                              "0"; //default to mat, delimiter not recognized or a comma
+                    String wheelColor = wheeltype.isEmpty() ? "" : parts[4];
                     
                     //had this commented out, but at some point iRacing defaults to showing the car number
                     //put it back so at least the colors are correct event if it is ignoring the carnumber passed in.
-                    String numparts[] = CarNumberDesignStr.split("[,;.]");
+                    String numparts[] = CarNumberDesignStr.split("[,;.-]");
                     String car_number = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumber").replace("\"", "");
                     //String car_number = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberRaw").replace("\"", "");
 
@@ -1324,6 +1333,9 @@ else
                         numcolors = numparts[1]+","+numparts[2]+","+numparts[3];
                     }
                     
+//if (car_number.equals("39"))
+//    car_number = car_number;
+
                     //the caller must replace iRacing with the hostname and port of the iRacing server
                     //if running on the same machine, then it is 127.0.0.1::32034
                     String url = "iRacing/car.png"
@@ -1341,123 +1353,146 @@ else
                             + "&colors="+colors
                             + "&sponsors="+sponsors
                             + "&club="+club
-                            + "&wheels="+wheels
+//                            + (wheeltype.isEmpty() ? "" : "&wheels=" + wheeltype + "," + wheelColor)
+                            + (wheeltype.isEmpty() ? "" : "&carRimType="+wheeltype)
+                            + (wheeltype.isEmpty() ? "" : "&carRimCol="+wheelColor)
                     ;
 
-                    //if I can find the custom car paint file, use it
-                    try {
-                        FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_" + UserID + ".tga");
-                        
-                        // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
-                        url = "iRacing/pk_car.png"
-                                + "?view=1"
-                                + "&size=2"
-                                + "&carPath="+dirpath
-                                + "&number="+car_number
-                                + "&numPat="+numfont
-                                + "&numfont="+numfont
-                                + "&numSlnt="+numslant
-                                + "&numcol="+numcolors
-                                + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
-                        ;
-                    }
-                    catch (FileNotFoundException e) {}
-                    
-//                    //if I can find the custom car paint file, use it
-//                    try {
-//                        FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_spec_" + UserID + ".mip");
-//                        
-//                        // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
-//                        url = "iRacing/pk_car.png"
-//                                + "?view=1"
-//                                + "&size=2"
-//                                + "&carPath="+dirpath
-//                                + "&number="+car_number
-//                                + "&numPat="+numfont
-//                                + "&numfont="+numfont
-//                                + "&numSlnt="+numslant
-//                                + "&numcol="+numcolors
-//                                + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
-//                        ;
-//                    }
-//                    catch (FileNotFoundException e) {}
+                    //override the old url with the new one for non-custom paints as well
+                    //did this to support the rim types
+                    url = "iRacing/pk_car.png"
+                            + "?view=1"
+                            + "&size=2"
+                            + "&carPath="+dirpath
+                            + "&carPat="+pat
+                            + "&carCol="+colors
+                            + (lic.isEmpty() ? "" : "&licCol="+lic)
+                            + "&number="+car_number
+                            + "&numPat="+numfont
+                            + "&numfont="+numfont
+                            + "&numSlnt="+numslant
+                            + "&numcol="+numcolors
+                            + "&numShow="+(m_iRacingSIMPlugin.getIODriver().getHideCarNum() != 0 ? "0" : "1")
+                            + (wheeltype.isEmpty() ? "" : "&carRimType="+wheeltype)
+                            + (wheeltype.isEmpty() ? "" : "&carRimCol="+wheelColor)
+                            + "&club="+club
+                            + "&sponsors="+sponsors
+                            + "&name="+name
+                    ;
 
-                    //If user is hiding the car numbers, see if I can find a car_num file.
-                    if (m_iRacingSIMPlugin.getIODriver().getHideCarNum() != 0
-                    //&& !((iRacingSession)this.m_SIMPlugin.getSession())._isOfficial()
-                    ) {
-                        //if I can find the custom car paint file with a number, use it
+                    if (Server.getArg("show-custom-paint", true)) {  //added version 1.17
+                        //if I can find the custom car paint file, use it
                         try {
-                            FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_num_" + UserID + ".tga");
+                            FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_" + UserID + ".tga");
                             
                             // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
                             url = "iRacing/pk_car.png"
                                     + "?view=1"
                                     + "&size=2"
                                     + "&carPath="+dirpath
-                                    //+ "&number="+car_number
-                                    //+ "&numPat="+numfont
-                                    //+ "&numfont="+numfont
-                                    //+ "&numSlnt="+numslant
-                                    //+ "&numcol="+numcolors
-                                    + "&numShow=0"
+                                    + "&number="+car_number
+                                    + (lic.isEmpty() ? "" : "&licCol="+lic)
+                                    + "&numPat="+numfont
+                                    + "&numfont="+numfont
+                                    + "&numSlnt="+numslant
+                                    + "&numcol="+numcolors
+                                    + (wheeltype.isEmpty() ? "" : "&carRimType="+wheeltype)
+                                    + (wheeltype.isEmpty() ? "" : "&carRimCol="+wheelColor)
+                                    + "&name="+name
                                     + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
                             ;
                         }
                         catch (FileNotFoundException e) {}
-                    }
-                    
-                    //if a team even, then see if you have a team paint
-                    //WeekendInfo.TeamRacing > 0
-                    //DriverInfo.Drivers[idx].TeamID > 0
-                    if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("WeekendInfo","TeamRacing") > 0) {
-                        String teamID = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"TeamID");
-                        if (!teamID.equals("0") && !teamID.isEmpty()) {
+                        
+                        //If user is hiding the car numbers, see if I can find a car_num file.
+                        if (m_iRacingSIMPlugin.getIODriver().getHideCarNum() != 0
+                        //&& !((iRacingSession)this.m_SIMPlugin.getSession())._isOfficial()
+                        ) {
+                            //if I can find the custom car paint file with a number, use it
                             try {
-                                FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_team_" + teamID + ".tga");
+                                FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_num_" + UserID + ".tga");
                                 
                                 // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
                                 url = "iRacing/pk_car.png"
                                         + "?view=1"
                                         + "&size=2"
                                         + "&carPath="+dirpath
-                                        + "&number="+car_number
-                                        + "&numPat="+numfont
-                                        + "&numfont="+numfont
-                                        + "&numSlnt="+numslant
-                                        + "&numcol="+numcolors
+                                        + (lic.isEmpty() ? "" : "&licCol="+lic)
+                                        //+ "&number="+car_number
+                                        //+ "&numPat="+numfont
+                                        //+ "&numfont="+numfont
+                                        //+ "&numSlnt="+numslant
+                                        //+ "&numcol="+numcolors
+                                        + "&numShow=0"
+                                        + (wheeltype.isEmpty() ? "" : "&carRimType="+wheeltype)
+                                        + (wheeltype.isEmpty() ? "" : "&carRimCol="+wheelColor)
+                                        + "&name="+name
                                         + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
                                 ;
                             }
                             catch (FileNotFoundException e) {}
                         }
-                    }                    
-                    
-                    if (m_iRacingSIMPlugin.getIODriver().getHideCarNum() != 0
-                    //&& !((iRacingSession)this.m_SIMPlugin.getSession())._isOfficial()
-                    ) {
+                        
+                        //if a team even, then see if you have a team paint
+                        //WeekendInfo.TeamRacing > 0
+                        //DriverInfo.Drivers[idx].TeamID > 0
                         if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("WeekendInfo","TeamRacing") > 0) {
                             String teamID = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"TeamID");
                             if (!teamID.equals("0") && !teamID.isEmpty()) {
-                                //if I can find the custom car paint file with a number, use it
                                 try {
-                                    FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_team_num_" + teamID + ".tga");
+                                    FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_team_" + teamID + ".tga");
                                     
                                     // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
                                     url = "iRacing/pk_car.png"
                                             + "?view=1"
                                             + "&size=2"
                                             + "&carPath="+dirpath
-                                            //+ "&number="+car_number
-                                            //+ "&numPat="+numfont
-                                            //+ "&numfont="+numfont
-                                            //+ "&numSlnt="+numslant
-                                            //+ "&numcol="+numcolors
-                                            + "&numShow=0"
+                                            + (lic.isEmpty() ? "" : "&licCol="+lic)
+                                            + "&number="+car_number
+                                            + "&numPat="+numfont
+                                            + "&numfont="+numfont
+                                            + "&numSlnt="+numslant
+                                            + "&numcol="+numcolors
+                                            + (wheeltype.isEmpty() ? "" : "&carRimType="+wheeltype)
+                                            + (wheeltype.isEmpty() ? "" : "&carRimCol="+wheelColor)
+                                            + "&name="+name
                                             + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
                                     ;
                                 }
                                 catch (FileNotFoundException e) {}
+                            }
+                        }                    
+                        
+                        if (m_iRacingSIMPlugin.getIODriver().getHideCarNum() != 0
+                        //&& !((iRacingSession)this.m_SIMPlugin.getSession())._isOfficial()
+                        ) {
+                            if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().getInteger("WeekendInfo","TeamRacing") > 0) {
+                                String teamID = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"TeamID");
+                                if (!teamID.equals("0") && !teamID.isEmpty()) {
+                                    //if I can find the custom car paint file with a number, use it
+                                    try {
+                                        FindFile customPaint = new FindFile(m_iRacingSIMPlugin.getIODriver().dataDir() + "\\paint" + "\\" + this.getName().getString() + "\\car_team_num_" + teamID + ".tga");
+                                        
+                                        // http://localhost:32034/pk_car.png?size=2&view=1&carPath=astonmartin\dbr9&number=32&carCustPaint=C:\Users\david\Documents\iRacing\paint\astonmartin%20dbr9\test_helmet.tga
+                                        url = "iRacing/pk_car.png"
+                                                + "?view=1"
+                                                + "&size=2"
+                                                + "&carPath="+dirpath
+                                                + (lic.isEmpty() ? "" : "&licCol="+lic)
+                                                //+ "&number="+car_number
+                                                //+ "&numPat="+numfont
+                                                //+ "&numfont="+numfont
+                                                //+ "&numSlnt="+numslant
+                                                //+ "&numcol="+numcolors
+                                                + "&numShow=0"
+                                                + (wheeltype.isEmpty() ? "" : "&carRimType="+wheeltype)
+                                                + (wheeltype.isEmpty() ? "" : "&carRimCol="+wheelColor)
+                                                + "&name="+name
+                                                + "&carCustPaint="+customPaint.getFileFound().replace(" ", "%20").replace("\\", "\\\\")
+                                        ;
+                                    }
+                                    catch (FileNotFoundException e) {}
+                                }
                             }
                         }
                     }
@@ -2341,7 +2376,7 @@ else
         //The font of the number is the 1st number.
         if (isValid() && !isPaceCar() && m_fontnames != null) {
             String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-            String s[]    = design.split("[,;.]");
+            String s[]    = design.split("[,;.-]");
             if (s.length > 0) {
 //s[0] = "35";                
                 String font_string = (String) m_fontnames.getJSON().get(s[0]);
@@ -2363,7 +2398,7 @@ else
         //0=normal, 1=left, 2=right, 3=forward, 4=backwards
         if (isValid() && !isPaceCar()) {
             String design = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberDesignStr");
-            String s[]    = design.split("[,;.]");
+            String s[]    = design.split("[,;.-]");
             if (s.length > 1) {
                 String slant_string = "normal";
                 try {
