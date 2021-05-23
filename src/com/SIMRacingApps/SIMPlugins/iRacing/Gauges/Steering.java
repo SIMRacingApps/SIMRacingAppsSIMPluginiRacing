@@ -28,8 +28,9 @@ public class Steering extends iRacingGauge {
     public Data getValueCurrent(String UOM) { 
         Data d = super.getValueCurrent(UOM);
         
+        double position = d.convertUOM("DEG").getDouble();
         //iRacing values go counter clockwise, convert to clockwise
-        d.setValue((Math.PI * 2.0) - d.getDouble());
+        d.setValue(0.0 - position,"DEG");
         
         return this._getReturnValue(d, UOM);
     }
