@@ -7,14 +7,22 @@
         "Tachometer": {
             "default": {
                 "Name":              "RPM",
-                "TypeName":          "100",
-                "UOM":               "rpm",
-                "Multiplier":        0.01,
+                "TypeName":          "x1000",
+                "UOM":               "rev/min",
+                "imperial":          "rev/min",
+                "metric":            "rev/min",
+                "Multiplier":        0.001,
                 "Minimum":           0.0,
-                "Maximum":           70.0,
-                "MajorIncrement":    10.0,
-                "MinorIncrement":    2.0,
-                "StateAscending":    true
+                "Maximum":           8.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "iRacing":           "First=5900, Shift=6700, Last=6700, Blink=6750, RedLine=6750",
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 5600.0, "End": 6600.0},
+                    "SHIFT":       {"Start": 6600.0, "End": 6700.0},
+                    "SHIFTBLINK":  {"Start": 6700.0, "End": 99999999.0}
+                }
             }
         },
         "Gear": {
@@ -23,11 +31,11 @@
                 "TypeName":          "",
                 "UOM":               "",
                 "Minimum":           -1.0,
-                "Maximum":           5.0,
+                "Maximum":           6.0,
                 "MajorIncrement":    1.0,
                 "MinorIncrement":    1.0,
                 "CapacityMinimum":   -1.0,
-                "CapacityMaximum":   5.0,
+                "CapacityMaximum":   6.0,
                 "CapacityIncrement": 1.0,
                 "StateAscending":    true
             }

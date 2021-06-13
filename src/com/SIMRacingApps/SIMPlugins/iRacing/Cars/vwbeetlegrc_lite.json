@@ -1,0 +1,122 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2021 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "VW Beetle GRC",
+    "MfrLogo":     "com/SIMRacingApps/Cars/vw.png",
+    "Comment":     "The defaults are based on the Gen6 Chevrolet SS at Texas Oval. A basic 1.5 mile track",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rev/min",
+                "imperial":          "rev/min",
+                "metric":            "rev/min",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           9.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "iRacing":           "rst=6200, Shift=7600, Last=7600, Blink=7650, RedLine=5250",
+                "States": {
+                    "SHIFTLIGHTS":  {"Start": 6200.0, "End": 7600.0},
+                    "SHIFT":        {"Start": 7600.0, "End": 7650.0},
+                    "SHIFTBLINK":   {"Start": 7650.0, "End": 8300.0},
+                    "CRITICAL":     {"Start": 8300.0, "End": 99999999.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "Minimum":           -1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true,
+                "States": {
+                    "R": {"Start": -1.0, "End": 0.0, "Name": "Car/Gauge/Gear", "Value": "R"},
+                    "N": {"Start":  0.0, "End": 1.0, "Name": "Car/Gauge/Gear", "Value": "N"},
+                    "1": {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/Gear", "Value": "1"},
+                    "2": {"Start":  2.0, "End": 3.0, "Name": "Car/Gauge/Gear", "Value": "2"},
+                    "3": {"Start":  3.0, "End": 4.0, "Name": "Car/Gauge/Gear", "Value": "3"},
+                    "4": {"Start":  4.0, "End": 5.0, "Name": "Car/Gauge/Gear", "Value": "4"},
+                    "5": {"Start":  5.0, "End": 6.0, "Name": "Car/Gauge/Gear", "Value": "5"},
+                    "6": {"Start":  6.0, "End": 7.0, "Name": "Car/Gauge/Gear", "Value": "6"}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "imperial":          "qt",
+                "metric":            "l",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   8.5,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "imperial":          "qt",
+                "metric":            "l",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   4.2,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "gal",
+                "imperial":          "gal",
+                "metric":            "l",
+                "Minimum":           0.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   6.6922706,
+                "CapacityIncrement": 0.35222941364145210486,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 0.5},
+                    "WARNING":  {"Start": 1.0, "End": 1.0}
+                }
+            }
+        }
+    }
+}
