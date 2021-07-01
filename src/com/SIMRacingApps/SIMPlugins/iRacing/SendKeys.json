@@ -16,7 +16,9 @@
         "NCHAT":     "!nchat [DRIVER]",
         "REMOVE":    "!remove [DRIVER]",
         "WAVEBY":    "!waveby [DRIVER]",
-        "YELLOW":    "!yellow"
+        "YELLOW":    "!yellow",
+        "PITCLOSE":  "!pitclose",
+        "PITOPEN":   "!pitopen"
     },
     "RADIO_COMMANDS": {
         "ADD":       "@add [NAME]",

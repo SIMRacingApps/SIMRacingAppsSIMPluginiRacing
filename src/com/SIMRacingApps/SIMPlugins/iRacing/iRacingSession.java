@@ -1983,6 +1983,24 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         return d;
     }
 
+    @Override
+    public    Data setPitClose() {
+        Data d = super.setPitClose();
+        
+        d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "PITCLOSE")).getString());
+        d.setState(Data.State.NORMAL);
+        return d;
+    }
+
+    @Override
+    public    Data setPitOpen() {
+        Data d = super.setPitOpen();
+        
+        d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "PITOPEN")).getString());
+        d.setState(Data.State.NORMAL);
+        return d;
+    }
+
     @Override    
     public    Data setReloadPaint() {
         Data d = super.setReloadPaint();
