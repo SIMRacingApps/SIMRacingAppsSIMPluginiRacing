@@ -1984,6 +1984,38 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
+    public    Data setCautionLapsAdjust(String laps) {
+        Data d = super.setCautionLapsAdjust(laps);
+        
+        //add a sign if missing to adjust laps
+        String s = laps.substring(0, 1).equals("-") 
+                 ? laps
+                 : (laps.substring(0, 1).equals("+")
+                    ? laps
+                    : "+" + laps);
+        
+        d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "PACELAPS").replace("[LAPS]",s)).getString());
+        d.setState(Data.State.NORMAL);
+        return d;
+    }
+
+    @Override
+    public    Data setCautionLaps(String laps) {
+        Data d = super.setCautionLapsAdjust(laps);
+        
+        //remove the sign to set the absolute laps
+        String s = laps.substring(0, 1).equals("-") 
+                 ? laps.substring(1)
+                 : (laps.substring(0, 1).equals("+")
+                    ? laps.substring(1)
+                    : laps);
+        
+        d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "PACELAPS").replace("[LAPS]",s)).getString());
+        d.setState(Data.State.NORMAL);
+        return d;
+    }
+
+    @Override
     public    Data setPitClose() {
         Data d = super.setPitClose();
         

@@ -18,7 +18,8 @@
         "WAVEBY":    "!waveby [DRIVER]",
         "YELLOW":    "!yellow",
         "PITCLOSE":  "!pitclose",
-        "PITOPEN":   "!pitopen"
+        "PITOPEN":   "!pitopen",
+        "PACELAPS":  "!pacelaps [LAPS]"
     },
     "RADIO_COMMANDS": {
         "ADD":       "@add [NAME]",
