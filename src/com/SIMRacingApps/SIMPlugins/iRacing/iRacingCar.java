@@ -3078,7 +3078,6 @@ else
                                        ? m_iRacingSIMPlugin.getIODriver().getVars().getDouble("CarIdxLapDistPct", m_id)
                                        : (isME() ? m_iRacingSIMPlugin.getIODriver().getVars().getDouble("LapDistPct") : -1.0);
         double prevFuelLevel           = m_fuelLevel;
-        double fuelLevel               = 0.0;
         int    prevSessionFlags        = m_sessionFlags;
         boolean isReset                = false;
 //        boolean isDriving              = isME() && m_iRacingSIMPlugin.getIODriver().getVars().getBoolean("IsOnTrack");   //This should be set when you are in the car and isME() is true.
@@ -3245,7 +3244,9 @@ else
         }        
         
         if (isME()) {
-            fuelLevel = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("FuelLevel");
+            double fuelLevel = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("FuelLevel");
+            if (fuelLevel >= 0.0)
+                m_fuelLevel = fuelLevel;
             if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().isDataParsed()) {
                 String s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","DriverPitTrkPct");
                 if (!s.isEmpty())
@@ -3258,7 +3259,7 @@ else
             //apparently iRacing resets the flag as it starts fueling.
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("PitSvFlags") != null
             &&  prevFuelLevel > -1.0
-            &&  fuelLevel > (prevFuelLevel + Server.getArg("fuel-level-reset-minimum-liters", 1.0)) //greater than you can fill since last tick. Using 1 liter for now.
+            &&  m_fuelLevel > (prevFuelLevel + Server.getArg("fuel-level-reset-minimum-liters", 1.0)) //greater than you can fill since last tick. Using 1 liter for now.
             && ((m_iRacingSIMPlugin.getIODriver().getVars().getBitfield("PitSvFlags") & PitSvFlags.FuelFill) == 0)
             ) {
                 m_isNewCar = true;
@@ -3266,7 +3267,7 @@ else
                         m_number,m_id,
                         (double)currentLap + this.m_lapCompletedPercent,
                         prevFuelLevel,
-                        fuelLevel,
+                        m_fuelLevel,
                         m_iRacingSIMPlugin.getSession().getDataVersion().getString() //getIODriver().getHeader().getLatest_VarBufTick()
                     ));
             }
@@ -3545,9 +3546,6 @@ else
        //help out our speed reader by sending this data to it every tick
 //       m_speedReader.onDataVersionChange(m_sessionTime, m_lapCompletedPercent, m_trackLength.getDouble());
        
-        if (fuelLevel >= 0.0)  //if fuel level is good
-            m_fuelLevel=fuelLevel;  //use it, else keep last know good one
-
 //        //did the car just cross the finish line?
 //        if (m_lapCompletedPercent   >= 0.0 && m_lapCompletedPercent   < 0.1
 //        &&  prevLapCompletedPercent >= 0.9 && prevLapCompletedPercent < 1.0
@@ -3712,7 +3710,7 @@ else
                         m_number, m_id,
                         m_prevStatus.getState(),
                         m_lapPitted,
-                        fuelLevel,prevFuelLevel,
+                        m_fuelLevel,prevFuelLevel,
                         this._getGauge(Gauge.Type.SPEEDOMETER).getValueCurrent().getDouble(),
                         m_iRacingSIMPlugin.getIODriver().getHeader().getLatest_VarBufTick()));
 //            }
@@ -3745,7 +3743,7 @@ else
             || (  //entered pits from PITROAD, but now has more fuel. Reset on PITROAD while not in a Race
                    nextStatus.equals(iRacingCar.Status.ENTERINGPITSTALL)
                 && m_prevStatus.equals(iRacingCar.Status.ONPITROAD)
-                && fuelLevel > prevFuelLevel
+                && m_fuelLevel > prevFuelLevel
                 && !m_sessionType.equalsIgnoreCase("RACE")
                )
            )
@@ -3779,7 +3777,6 @@ else
             m_repairTimeOptional = 0.0;
             m_repairTime = 0.0;
         }
-
 
         //here we want to keep the repair time because iRacing zero's it out when you leave the pits
         //even if you didn't complete the repairs
