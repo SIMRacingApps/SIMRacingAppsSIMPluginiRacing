@@ -1984,15 +1984,11 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
-    public    Data setCautionLapsAdjust(String laps) {
+    public    Data setCautionLapsAdjust(int laps) {
         Data d = super.setCautionLapsAdjust(laps);
         
-        //add a sign if missing to adjust laps
-        String s = laps.substring(0, 1).equals("-") 
-                 ? laps
-                 : (laps.substring(0, 1).equals("+")
-                    ? laps
-                    : "+" + laps);
+        //add a sign to adjust laps
+        String s = String.format("%+d", laps); 
         
         d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "PACELAPS").replace("[LAPS]",s)).getString());
         d.setState(Data.State.NORMAL);
@@ -2000,15 +1996,11 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
-    public    Data setCautionLaps(String laps) {
+    public    Data setCautionLaps(int laps) {
         Data d = super.setCautionLapsAdjust(laps);
         
         //remove the sign to set the absolute laps
-        String s = laps.substring(0, 1).equals("-") 
-                 ? laps.substring(1)
-                 : (laps.substring(0, 1).equals("+")
-                    ? laps.substring(1)
-                    : laps);
+        String s = String.format("%d", laps); 
         
         d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "PACELAPS").replace("[LAPS]",s)).getString());
         d.setState(Data.State.NORMAL);
