@@ -3249,8 +3249,11 @@ else
                 m_fuelLevel = fuelLevel;
             if (m_iRacingSIMPlugin.getIODriver().getSessionInfo().isDataParsed()) {
                 String s = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","DriverPitTrkPct");
-                if (!s.isEmpty())
+                if (!s.isEmpty()) {
                     m_pitLocation = Double.parseDouble(s);
+                    if (m_pitLocation < 0.0 || m_pitLocation > m_iRacingSIMPlugin.getSession().getTrack()._maxPercentage())
+                        m_pitLocation = 0.0;
+                }
             }
             //see below for setting the pit location for other cars when they eventually stop in their pit stall. 
                 
@@ -3524,6 +3527,12 @@ else
             
             return false;
         }
+        
+        //in iRacings Mount Washington Track, the percentages returned before the starting line
+        //is very high. Just set them to zero for now.
+        
+        if (lapCompletedPercent > 1.5) 
+            lapCompletedPercent = 0.0;
 
         //If lapCompletedPercent is > 1.0, the current lap doesn't, so we increment it
         //It appears there is a delay of these 2 variables and they are not in sync.
@@ -4028,6 +4037,11 @@ else
 
         //These values are used a lot, so go ahead and cache them
         m_number     = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumber");
+
+//for debugging
+//if (m_number.equals("xx"))
+//    m_number = m_number;
+
         String numberRaw  = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarNumberRaw");
         if (!numberRaw.isEmpty())
             m_numberRaw = Integer.parseInt(numberRaw);
