@@ -1,0 +1,85 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2021 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/hyundai.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           8.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "iRacing":           "First=5500, Shift=6750, Last=6800, Blink=6900, RedLine=7000",
+                "States": {
+                   "SHIFTLIGHTS":  {"Start": 5700.0,  "End": 6500.0},
+                    "SHIFT":       {"Start": 6500.0,  "End": 6600.0},
+                    "SHIFTBLINK":  {"Start": 6600.0,  "End": 99999999.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    20.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   100.0,
+                "CapacityIncrement": 1.3333333730697632,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 4.0},
+                    "WARNING":  {"Start": 4.0, "End": 12.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "imperial":          "qt",
+                "metric":            "l",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   7.4,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        }
+    }
+}

@@ -25,7 +25,7 @@ public class FastRepairs extends iRacingGauge {
     Data m_valueHistorical;
     int m_lapsHistorical;
     Data m_valueBeforePitting;
-    int m_usedCount;
+    int m_usedCount;            //TODO: Use CarIdxFastRepairsUsed
     int m_maxCount;
     
     public FastRepairs(String type, iRacingCar car, Track track, IODriver IODriver) {

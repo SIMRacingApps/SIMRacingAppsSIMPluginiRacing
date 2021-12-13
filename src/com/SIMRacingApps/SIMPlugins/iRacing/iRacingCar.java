@@ -626,10 +626,17 @@ public class iRacingCar extends Car {
     private static FindFile m_clubnames = null;
     
     @SuppressWarnings("unchecked")
-    private int _getClubNumber(String club) {
-        //I go this list from the Club drop down at http://members.iracing.com/membersite/member/statsseries.jsp
+    private String _getClubNumber() {
+        String clubID = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"ClubID");
+        
+        if (!clubID.isEmpty())
+            return clubID;
+        
+        String club = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"ClubName");
+        
+//I go this list from the Club drop down at http://members.iracing.com/membersite/member/statsseries.jsp
         if (club.isEmpty())
-            return 0;
+            return "0";
         
         if (m_clubnames == null) {
             try {
@@ -648,13 +655,13 @@ public class iRacingCar extends Car {
                 map = (Map<String,Long>)m_clubnames.getJSON().get(club);
             
             if (map != null) {
-                return map.get("id").intValue();
+                return map.get("id").toString();
             }
         }
         
         Server.logger().fine("Unknown Club Found, "+club);
         
-        return 0;
+        return "0";
     }
     
     @Override
@@ -1303,7 +1310,7 @@ else
                     String carSponser1 = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarSponsor_1");
                     String carSponser2 = m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"CarSponsor_2");
                     String sponsors = (carSponser1.isEmpty() ? "0" : carSponser1) + "," + (carSponser2.isEmpty() ? "0" : carSponser2);
-                    String club = Integer.toString(_getClubNumber(m_iRacingSIMPlugin.getIODriver().getSessionInfo().getString("DriverInfo","Drivers",m_driversIdx.toString(),"ClubName")));
+                    String club = _getClubNumber();
                     String colors = parts.length > 3 ? parts[1]+","+parts[2]+","+parts[3] : "";
                     String wheeltype = parts.length <= 4          ? ""   //default 
                                      : CarDesignStr.contains(";") ? "1"  //Chrome 
@@ -4124,6 +4131,7 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.ANTIROLLREAR,                 this, track, IODriver, "dcAntiRollRear", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.BRAKE,                        this, track, IODriver, "Brake", "%", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.BRAKEBIASADJUSTMENT,          this, track, IODriver, "dcBrakeBias", "%", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.BRAKEBIASFINEADJUSTMENT,      this, track, IODriver, "dcBrakeBiasFine", "", null, null));
             _setGauge(new BrakePressure(Gauge.Type.BRAKEPRESSURE,               this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.BOOSTLEVEL,                   this, track, IODriver, "dcBoostLevel", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.CLUTCH,                       this, track, IODriver, "Clutch", "%", null, null));
