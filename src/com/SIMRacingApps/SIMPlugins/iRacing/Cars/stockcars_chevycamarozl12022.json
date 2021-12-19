@@ -1,6 +1,6 @@
 {
-    "Description": "Toyota Camry",
-    "MfrLogo":     "com/SIMRacingApps/Cars/toyota.png",
+    "Description": "Chevolet Camaro",
+    "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
     "Copyright": "Copyright (C) 2015 - 2021 Jeffrey Gilliam",
     "Gauges" : {
         "Tachometer": {
