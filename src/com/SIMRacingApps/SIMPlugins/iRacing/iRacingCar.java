@@ -4130,7 +4130,7 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.ANTIROLLFRONT,                this, track, IODriver, "dcAntiRollFront", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.ANTIROLLREAR,                 this, track, IODriver, "dcAntiRollRear", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.BRAKE,                        this, track, IODriver, "Brake", "%", null, null));
-            _setGauge(new iRacingGauge(Gauge.Type.BRAKEBIASADJUSTMENT,          this, track, IODriver, "dcBrakeBias", "%", null, null));
+            _setGauge(new BrakeBias(Gauge.Type.BRAKEBIASADJUSTMENT,             this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.BRAKEBIASFINEADJUSTMENT,      this, track, IODriver, "dcBrakeBiasFine", "", null, null));
             _setGauge(new BrakePressure(Gauge.Type.BRAKEPRESSURE,               this, track, IODriver));
             _setGauge(new iRacingGauge(Gauge.Type.BOOSTLEVEL,                   this, track, IODriver, "dcBoostLevel", "", null, null));
