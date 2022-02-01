@@ -13,7 +13,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
  * Returns the Steering Angle.
  * 
  * @author Jeffrey Gilliam
- * @copyright Copyright (C) 2017 Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2022 Jeffrey Gilliam
  * @since 1.5
  * @license Apache License 2.0
  */

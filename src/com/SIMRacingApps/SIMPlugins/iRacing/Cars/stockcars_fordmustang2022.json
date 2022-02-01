@@ -1,7 +1,7 @@
 {
     "Description": "Ford Mustang",
     "MfrLogo":     "com/SIMRacingApps/Cars/ford.png",
-    "Copyright": "Copyright (C) 2015 - 2021 Jeffrey Gilliam",
+    "Copyright": "Copyright (C) 2015 - 2022 Jeffrey Gilliam",
     "Gauges" : {
         "Tachometer": {
             "default": {
