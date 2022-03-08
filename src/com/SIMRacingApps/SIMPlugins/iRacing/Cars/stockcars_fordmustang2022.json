@@ -60,7 +60,7 @@
                 "Minimum":           0.0,
                 "Maximum":           100.0,
                 "MajorIncrement":    25.0,
-                "MinorIncrement":    2.5,
+                "MinorIncrement":    12.5,
                 "StateAscending":    false,
                 "States": {
                     "CRITICAL": {"Start": 0.0,  "End": 15.0},
@@ -78,7 +78,7 @@
                 "Minimum":           0.0,
                 "Maximum":           100.0,
                 "MajorIncrement":    25.0,
-                "MinorIncrement":    2.5,
+                "MinorIncrement":    12.5,
                 "StateAscending":    false,
                 "States": {
                     "CRITICAL": {"Start": 0.0,  "End": 20.0},
