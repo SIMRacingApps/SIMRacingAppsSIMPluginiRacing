@@ -74,7 +74,27 @@
                 "MajorIncrement":    2.0,
                 "MinorIncrement":    1.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   7.4,
+                "CapacityMaximum":   7.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "qt",
+                "imperial":          "qt",
+                "metric":            "l",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   7.0,
                 "StateAscending":    false,
                 "States": {
                     "CRITICAL": {"Start": 0.0, "End": 2.0},

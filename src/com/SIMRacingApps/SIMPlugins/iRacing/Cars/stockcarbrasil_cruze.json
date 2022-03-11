@@ -2,7 +2,7 @@
     "Copyright":   "Copyright (C) 2015 - 2022 Jeffrey Gilliam",
     "License":     "Apache License 2.0",
     "Description": "",
-    "MfrLogo":     "com/SIMRacingApps/Cars/hyundai.png",
+    "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
     "Comment":     "Gauges not defined here are inherieted from Car.json",
     "Gauges": {
         "Tachometer": {
@@ -12,15 +12,15 @@
                 "UOM":               "rpm",
                 "Multiplier":        0.001,
                 "Minimum":           0.0,
-                "Maximum":           8.0,
+                "Maximum":           7.0,
                 "MajorIncrement":    1.0,
                 "MinorIncrement":    0.2,
                 "StateAscending":    true,
-                "iRacing":           "First=5500, Shift=6750, Last=6800, Blink=6900, RedLine=7000",
+                "iRacing":           "First=5400, Shift=5600, Last=5800, Blink=6000, RedLine=6250",
                 "States": {
-                   "SHIFTLIGHTS":  {"Start": 5700.0,  "End": 6500.0},
-                    "SHIFT":       {"Start": 6500.0,  "End": 6600.0},
-                    "SHIFTBLINK":  {"Start": 6600.0,  "End": 7000.0},
+                   "SHIFTLIGHTS":  {"Start": 5500.0,  "End": 6100.0},
+                    "SHIFT":       {"Start": 6100.0,  "End": 6200.0},
+                    "SHIFTBLINK":  {"Start": 6200.0,  "End": 7000.0},
                     "CRITICAL":    {"Start": 7000.0,  "End": 99999999.0}
                 }
             }
@@ -46,12 +46,12 @@
                 "TypeName":          "LEVEL",
                 "UOM":               "l",
                 "Minimum":           0.0,
-                "Maximum":           100.0,
+                "Maximum":           120.0,
                 "MajorIncrement":    20.0,
                 "MinorIncrement":    5.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   100.0,
-                "CapacityIncrement": 1.3333333730697632,
+                "CapacityMaximum":   114.0,
+                "CapacityIncrement": 0.5,
                 "IsFixed":           false,
                 "IsChangable":       true,
                 "OnResetChange":     true,
@@ -66,15 +66,35 @@
             "default": {
                 "Name":              "WATER",
                 "TypeName":          "LEVEL",
-                "UOM":               "qt",
+                "UOM":               "l",
                 "imperial":          "qt",
                 "metric":            "l",
                 "Minimum":           0.0,
-                "Maximum":           12.0,
-                "MajorIncrement":    2.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
                 "MinorIncrement":    1.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   7.4,
+                "CapacityMaximum":   14.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "imperial":          "qt",
+                "metric":            "l",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   8.5,
                 "StateAscending":    false,
                 "States": {
                     "CRITICAL": {"Start": 0.0, "End": 2.0},
