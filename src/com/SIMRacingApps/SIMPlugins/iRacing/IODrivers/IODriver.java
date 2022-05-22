@@ -641,6 +641,7 @@ public class IODriver {
     }
     
     Properties m_app = null;
+    Properties m_renderer = null;
 
     public String readOption(String key) {
 
@@ -654,11 +655,32 @@ public class IODriver {
                 String s = dataDir();
                 if (s != null && !s.isEmpty()) {
                     
-                    String path = s + "\\app.ini";
+                    String path = s + "\\" + Server.getArg("iracing-app-file","app.ini");
                     try {
                         FileInputStream in = new FileInputStream(path);
                         Server.logger().info("iRacing.IODriver.Loading: "+path);
                         m_app.load(in);
+                        in.close();
+                    } catch (FileNotFoundException e) {
+                        Server.logStackTrace(Level.WARNING,"FileNotFoundException",e);
+                    } catch (IOException e) {
+                        Server.logStackTrace(Level.SEVERE,"IOException",e);
+                    }
+                }
+            }
+
+            //if the rendererDX11.ini file has not been loaded
+            if (m_renderer == null) {
+                m_renderer = new Properties();
+
+                String s = dataDir();
+                if (s != null && !s.isEmpty()) {
+                    
+                    String path = s + "\\" + Server.getArg("iracing-renderer-file","rendererDX11Monitor.ini");
+                    try {
+                        FileInputStream in = new FileInputStream(path);
+                        Server.logger().info("iRacing.IODriver.Loading: "+path);
+                        m_renderer.load(in);
                         in.close();
                     } catch (FileNotFoundException e) {
                         Server.logStackTrace(Level.WARNING,"FileNotFoundException",e);
@@ -678,8 +700,20 @@ public class IODriver {
                     recordOption(key,m_options.get(key));
                 }
             }
-            else
-                m_options.put(key, "");
+            else {
+                s = m_renderer.getProperty(key);
+                if (s != null && !s.isEmpty()) {
+                    //remove the comments
+                    String a[] = s.split(";");
+                    if (a.length > 0) {
+                        m_options.put(key, a[0].trim());
+                        recordOption(key,m_options.get(key));
+                    }
+                }
+                else {
+                    m_options.put(key, "");
+                }
+            }
         }
 
         return m_options.get(key);
