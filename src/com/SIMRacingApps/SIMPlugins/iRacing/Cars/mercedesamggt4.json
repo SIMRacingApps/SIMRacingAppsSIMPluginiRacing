@@ -1,0 +1,176 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2022 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/mercedes.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           8.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "iRacing":           "First=5650, Shift=6750, Last=6700, Blink=6850, RedLine=6900",
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 3000.0, "End": 3400.0},
+                    "SHIFT":       {"Start": 3400.0, "End": 3500.0},
+                    "SHIFTBLINK":  {"Start": 3500.0, "End": 99999999.0}
+                }
+            },
+            "default-R": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 3000.0, "End": 3400.0},
+                    "SHIFT":       {"Start": 3400.0, "End": 3500.0},
+                    "SHIFTBLINK":  {"Start": 3500.0, "End": 99999999.0}
+                }
+            },
+            "default-N": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 3000.0, "End": 3400.0},
+                    "SHIFT":       {"Start": 3400.0, "End": 3500.0},
+                    "SHIFTBLINK":  {"Start": 3500.0, "End": 99999999.0}
+                }
+            },
+            "default-1": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 4050.0, "End": 5850.0},
+                    "SHIFT":       {"Start": 5850.0, "End": 6300.0},
+                    "SHIFTBLINK":  {"Start": 6300.0, "End": 99999999.0}
+                }
+            },
+            "default-2": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 4650.0, "End": 5850.0},
+                    "SHIFT":       {"Start": 6050.0, "End": 6400.0},
+                    "SHIFTBLINK":  {"Start": 6400.0, "End": 99999999.0}
+                }
+            },
+            "default-3": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 5800.0, "End": 6430.0},
+                    "SHIFT":       {"Start": 6430.0, "End": 6600.0},
+                    "SHIFTBLINK":  {"Start": 6600.0, "End": 99999999.0}
+                }
+            },
+            "default-4": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6330.0, "End": 6620.0},
+                    "SHIFT":       {"Start": 6620.0, "End": 6700.0},
+                    "SHIFTBLINK":  {"Start": 6600.0, "End": 99999999.0}
+                }
+            },
+            "default-5": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6580.0, "End": 6700.0},
+                    "SHIFT":       {"Start": 6700.0, "End": 6730.0},
+                    "SHIFTBLINK":  {"Start": 6730.0, "End": 99999999.0}
+                }
+            },
+            "default-6": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 5900.0, "End": 6500.0},
+                    "SHIFT":       {"Start": 6500.0, "End": 6800.0},
+                    "SHIFTBLINK":  {"Start": 6800.0, "End": 99999999.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   97.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 10.0},
+                    "WARNING":  {"Start": 10.0, "End": 20.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    2.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   18.6,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 10.0},
+                    "WARNING":  {"Start": 10.0, "End": 15.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    2.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   8.5,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 3.0},
+                    "WARNING":  {"Start": 3.0, "End": 5.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true,
+                "States": {
+                    "R": {"Start": -1.0, "End": 0.0, "Name": "Car/Gauge/Gear", "Value": "R"},
+                    "N": {"Start":  0.0, "End": 1.0, "Name": "Car/Gauge/Gear", "Value": "N"},
+                    "1": {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/Gear", "Value": "1"},
+                    "2": {"Start":  2.0, "End": 3.0, "Name": "Car/Gauge/Gear", "Value": "2"},
+                    "3": {"Start":  3.0, "End": 4.0, "Name": "Car/Gauge/Gear", "Value": "3"},
+                    "4": {"Start":  4.0, "End": 5.0, "Name": "Car/Gauge/Gear", "Value": "4"},
+                    "5": {"Start":  5.0, "End": 6.0, "Name": "Car/Gauge/Gear", "Value": "5"},
+                    "6": {"Start":  6.0, "End": 7.0, "Name": "Car/Gauge/Gear", "Value": "6"},
+                    "7": {"Start":  7.0, "End": 8.0, "Name": "Car/Gauge/Gear", "Value": "7"}
+                }
+            }
+        }
+    }
+}

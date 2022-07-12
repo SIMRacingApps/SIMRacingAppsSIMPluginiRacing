@@ -1503,7 +1503,15 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         }        
         return d;
     }
-    
+
+    @Override
+    public Data getSpotterPitCountDown() {
+        Data d = super.getSpotterPitCountDown();
+        int count = this.m_SIMPlugin.getIODriver().getReportPitBoxCount();
+        d.setValue(count > 0,"",Data.State.NORMAL);
+        return d;
+    }
+        
     @Override
     public Data getStartTime() {
         Data d = super.getStartTime();

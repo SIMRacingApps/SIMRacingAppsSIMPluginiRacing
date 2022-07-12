@@ -755,6 +755,18 @@ public class IODriver {
         return 0; //iRacingDefault if you can't read the file
     }
 
+    public int getReportPitBoxCount() {
+        try {
+            String s = readOption("reportPitboxCount");
+            if (!s.isEmpty()) {
+                return Integer.parseInt(s);
+            }
+        } catch (NumberFormatException e) {
+        }
+
+        return 1; //iRacingDefault if you can't read the file
+    }
+
     public void finalize() throws Throwable {
         close();
         super.finalize();

@@ -665,6 +665,23 @@ public class iRacingCar extends Car {
     }
     
     @Override
+    public Data getBearing(String UOM) {
+    	Data d = super.getBearing(UOM);
+    	if (isValid() && Server.getArg("bearing-uses-actual-yaw", true)) {
+    		double yawNorth = m_iRacingSIMPlugin.getIODriver().getVars().getDouble("YawNorth");
+    		if (yawNorth != -1) {
+    			d.setValue(yawNorth,"RAD");
+    			double bearing_deg = d.convertUOM("DEG").getDouble();
+    			bearing_deg += 270;
+    			if (bearing_deg >= 360.0) 
+    				bearing_deg -= 360;
+    			d.setValue(bearing_deg,"DEG");
+    		}
+    	}
+    	return d.convertUOM(UOM);
+    }
+    
+    @Override
     public Data getCautions() {
         Data d = super.getCautions();
         d.setValue(m_cautions,"int",Data.State.NORMAL);
