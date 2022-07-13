@@ -1,0 +1,39 @@
+{
+    "Description": "Toyota Tundra 2022",
+    "MfrLogo":     "com/SIMRacingApps/Cars/toyota.png",
+    "Copyright": "Copyright (C) 2015 - 2022 Jeffrey Gilliam",
+    "Gauges": {
+        "FuelPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          15.0,
+                "MajorIncrement":   3.0,
+                "MinorIncrement":   1.5,
+                "States": {
+                    "CRITICAL": { "Start": 0.0, "End": 2.0 },
+                    "WARNING":  { "Start": 2.0, "End": 4.0 }
+                }
+            }
+        },
+        "OilTemp": {
+            "default": {
+                "States": {
+                    "CRITICAL": { "Start": 275.0, "End": 999999.0 }
+                }
+            }
+        },
+        "Tachometer": {
+            "homestead_oval": {
+                "RPMPitRoadSpeed":   4200.0
+            },
+            "talladega": {
+                "RPMPitRoadSpeed":   4490.0
+            }
+        },
+        "Tape": {
+            "default": {
+                "Reader": "DataVarTapePct"
+            }
+        }
+    }
+}
