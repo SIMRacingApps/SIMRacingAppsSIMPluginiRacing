@@ -1,6 +1,11 @@
 package com.SIMRacingApps.SIMPlugins.iRacing;
 
 import com.SIMRacingApps.SIMPlugin.SIMPluginException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.SIMRacingApps.Data;
 import com.SIMRacingApps.Server;
 import com.SIMRacingApps.SIMPlugins.iRacing.VarHeaders.VarHeader;
@@ -13,7 +18,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.VarHeaders.VarHeader;
 
 public class iRacingTrack extends com.SIMRacingApps.Track {
 
-    iRacingSIMPlugin m_SIMPlugin;
+    private iRacingSIMPlugin m_SIMPlugin;
     
     public iRacingTrack(iRacingSIMPlugin SIMPlugin) {
         super(SIMPlugin);
@@ -169,6 +174,82 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
 //If the car's UOM is different from the tracks, the car will need to convert it.        
 //        d = d.convertUOM(m_SIMPlugin.getSession().getCar("REFERENCE").getGauge(Gauge.Type.SPEEDOMETER).getUOM().getString()).convertUOM(UOM);
         return d.convertUOM(UOM);
+    }
+    
+    
+    /*
+     * SplitTimeInfo:
+     *  Sectors:
+     *  - SectorNum: 0
+     *    SectorStartPct: 0.000
+     *  - SectorNum: 1
+     *    SectorStartPct: 0.414
+     *  - SectorNum: 2
+     *    SectorStartPct: 0.771
+     */
+    private Map<String,ArrayList<Double>> m_sectorsMap = new HashMap<String,ArrayList<Double>>();
+    
+    @Override
+    public Data getSectors(String sectorType, String UOM) {
+        Data d = super.getSectors(sectorType,UOM);
+
+        if (m_SIMPlugin.isConnected()) {
+            Integer i=0;
+            String s;
+            String key = sectorType+"."+UOM;
+            
+            if (!m_sectorsMap.containsKey(key)) {
+                ArrayList<Double> sectors = new ArrayList<Double>();
+                
+                do {
+                    s = m_SIMPlugin.getIODriver().getSessionInfo().getString("SplitTimeInfo","Sectors",i.toString(),"SectorStartPct");
+                    if (!s.isEmpty()) {
+                        Server.logger().info(String.format("Sector %d = %s%%", i, s));
+                        try {
+                            double start = Double.parseDouble(s) * 100.0;
+                            
+                            if (sectorType.equalsIgnoreCase(SectorType.COORDINATES)) {
+                                double lat = this.getLatitude(TrackLocation.ONTRACK, start, UOM).getDouble();
+                                double lon = this.getLongitude(TrackLocation.ONTRACK, start, UOM).getDouble();
+                                if (sectors.size() > 0) { //if we have values, need to add the end value
+                                    sectors.add(lat);
+                                    sectors.add(lon);                            
+                                }
+                                sectors.add(lat);
+                                sectors.add(lon);                            
+                            }
+                            else {
+                                if (sectors.size() > 0) //if we have values, need to add the end value
+                                    sectors.add(start);
+                                sectors.add(start);
+                            }
+                        }
+                        catch (NumberFormatException e) {s="";}
+                    }
+                    i++;
+                } while (!s.isEmpty());
+            
+                //if there are entries, terminate the last one
+                if (sectors.size() > 0) {
+                    if (sectorType.equalsIgnoreCase(SectorType.COORDINATES)) {
+                        double lat = this.getLatitude(TrackLocation.ONTRACK,  this._maxPercentage() * 100.0, UOM).getDouble();
+                        double lon = this.getLongitude(TrackLocation.ONTRACK, this._maxPercentage() * 100.0, UOM).getDouble();
+    
+                        sectors.add(lat);
+                        sectors.add(lon);                            
+                    }
+                    else {
+                        sectors.add(this._maxPercentage() * 100.0);
+                    }
+                    m_sectorsMap.put(key, sectors);
+                }
+            }
+            
+            if (m_sectorsMap.containsKey(key))
+                d.setValue(m_sectorsMap.get(key),UOM,Data.State.NORMAL);
+        }
+        
+        return d;
     }
 
     @Override
