@@ -1,0 +1,108 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2022 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "Porsche Mission R",
+    "MfrLogo":     "com/SIMRacingApps/Cars/porsche.png",
+    "Comment":     "The defaults are based on the Gen6 Chevrolet SS at Texas Oval. A basic 1.5 mile track",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rev/min",
+                "imperial":          "rev/min",
+                "metric":            "rev/min",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           40.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    1.0,
+                "StateAscending":    true,
+                "iRacing":           "First=38000, Shift=40000, Last=40000, Blink=40000, RedLine=30000",
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 30000.0, "End": 30000.0},
+                    "SHIFT":       {"Start": 30000.0, "End": 30000.0},
+                    "SHIFTBLINK":  {"Start": 30000.0, "End": 99999999.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "Minimum":           -1.0,
+                "Maximum":           1.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   1.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true,
+                "States": {
+                    "R": {"Start": -1.0, "End": 0.0, "Name": "Car/Gauge/Gear", "Value": "R"},
+                    "N": {"Start":  0.0, "End": 1.0, "Name": "Car/Gauge/Gear", "Value": "N"},
+                    "1": {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/Gear", "Value": "1"}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "kWh",
+                "imperial":          "kWh",
+                "metric":            "kWh",
+                "Minimum":           0.0,
+                "Maximum":           90.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   82.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 3.0},
+                    "WARNING":  {"Start": 3.0, "End": 6.0}
+                }
+            }
+        },
+        "Voltage": {
+            "default": {
+                "Name":              "VOLT",
+                "TypeName":          "",
+                "UOM":               "v",
+                "imperial":          "v",
+                "metric":            "v",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 6.0},
+                    "WARNING":  {"Start": 6.0, "End": 10.0}
+                }
+            }
+        },
+        "BrakePressure": {
+            "default": {
+                "Name":              "BRAKE",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",    
+                "imperial":          "psi",
+                "metric":            "kpa",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           1500.0,
+                "MajorIncrement":    200.0,
+                "MinorIncrement":    50.0
+            }
+        }
+    }
+}

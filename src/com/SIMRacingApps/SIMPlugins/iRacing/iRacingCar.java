@@ -519,6 +519,7 @@ public class iRacingCar extends Car {
             BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Clear);
             Server.logger().info(String.format("_sendSetupCommands() Clear"));
 
+            //NOTE: For the electric cars where they use kWh, this still works because there's no conversion to liter.
             if (fuellevel._getSIMCommandTimestamp() > 0.0 && fuellevel._getSIMCommandValue() > 0.0) {
                 Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/l",fuellevel.getType().getString(),fuellevel._getSIMCommandValue())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel._getSIMCommandValue());
@@ -526,7 +527,7 @@ public class iRacingCar extends Car {
             }
             else //keep existing setting
             if (fuellevel._getSIMCommandTimestamp() == 0.0 && fuellevel.getChangeFlag().getBoolean() && fuellevel.getValueNext().convertUOM("l").getInteger() > 0) {
-                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/kPa",RF.getType().getString(),fuellevel.getValueNext().convertUOM("l").getInteger())));
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d/l",fuellevel.getType().getString(),fuellevel.getValueNext().convertUOM("l").getInteger())));
                 BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_Fuel, fuellevel.getValueNext().convertUOM("l").getInteger());
                 removeTearoff = true;
             }
@@ -623,6 +624,10 @@ public class iRacingCar extends Car {
         return false;
     }
 
+    public String _getDriversIdx() {
+        return m_driversIdx.toString();
+    }
+    
     private static FindFile m_clubnames = null;
     
     @SuppressWarnings("unchecked")
@@ -2700,14 +2705,14 @@ else
             int warnings     = m_iRacingSIMPlugin.getIODriver().getVars().getInteger("EngineWarnings");
 
             StringBuffer s = new StringBuffer(String.format("%d;0x%X;",warnings,warnings));
-            if ((warnings & EngineWarnings.waterTempWarning) != 0)       s.append("WATERTEMPWARNING;") ;
-            if ((warnings & EngineWarnings.fuelPressureWarning) != 0)    s.append("FUELPRESSUREWARNING;") ;
-            if ((warnings & EngineWarnings.oilPressureWarning) != 0)     s.append("OILPRESSUREWARNING;") ;
-            if ((warnings & EngineWarnings.engineStalled) != 0)          s.append("ENGINESTALLED;") ;
-            if ((warnings & EngineWarnings.pitSpeedLimiter) != 0)        s.append("PITSPEEDLIMITER;") ;
-            if ((warnings & EngineWarnings.revLimiterActive) != 0)       s.append("REVLIMITER;") ;
-
-            if ((m_sessionFlags & SessionFlags.repair) != 0)             s.append("REPAIRSREQUIRED;");
+            if ((warnings & EngineWarnings.waterTempWarning) != 0)              s.append("WATERTEMPWARNING;") ;
+            if ((warnings & EngineWarnings.fuelPressureWarning) != 0)           s.append("FUELPRESSUREWARNING;") ;
+            if ((warnings & EngineWarnings.oilPressureWarning) != 0)            s.append("OILPRESSUREWARNING;") ;
+            if ((warnings & EngineWarnings.engineStalled) != 0)                 s.append("ENGINESTALLED;") ;
+            if ((warnings & EngineWarnings.pitSpeedLimiter) != 0 
+            &&  !m_iRacingSIMPlugin.getSession().getIsReplay().getBoolean())    s.append("PITSPEEDLIMITER;") ;   //don't turn this on while in a replay
+            if ((warnings & EngineWarnings.revLimiterActive) != 0)              s.append("REVLIMITER;") ;
+            if ((m_sessionFlags & SessionFlags.repair) != 0)                    s.append("REPAIRSREQUIRED;");
             /*
                 The following are not provided by iRacing, so we will derive them
                 and in some cases fine tune them by car.

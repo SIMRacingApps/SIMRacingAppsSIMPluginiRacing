@@ -8,70 +8,70 @@
         "Tachometer": {
             "default": {
                 "Maximum":           9.0,
-                "iRacing":           "First=7500, Shift=8500, Last=9300, Blink=9450, RedLine=8750"
+                "iRacing":           "First=7700, Shift=8200, Last=8400, Blink=8500, RedLine=8750"
             },
             "default-R": {
                 "Maximum":           9.0,
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 2900.0, "End": 6000.0},
-                    "SHIFT":       {"Start": 6000.0, "End": 6500.0},
-                    "SHIFTBLINK":  {"Start": 6500.0, "End": 9999999.0} 
+                    "SHIFTLIGHTS": {"Start": 3000.0, "End": 7050.0},
+                    "SHIFT":       {"Start": 7050.0, "End": 7800.0},
+                    "SHIFTBLINK":  {"Start": 7800.0, "End": 9999999.0} 
                 }
             },
             "default-N": {
                 "Maximum":           9.0,
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 2900.0, "End": 6000.0},
-                    "SHIFT":       {"Start": 6000.0, "End": 6500.0},
-                    "SHIFTBLINK":  {"Start": 6500.0, "End": 9999999.0} 
+                    "SHIFTLIGHTS": {"Start": 3000.0, "End": 7050.0},
+                    "SHIFT":       {"Start": 7050.0, "End": 7800.0},
+                    "SHIFTBLINK":  {"Start": 7800.0, "End": 9999999.0} 
                 }
             },
             "default-1": {
                 "Maximum":           9.0,
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 3000.0, "End": 6000.0},
-                    "SHIFT":       {"Start": 6000.0, "End": 6500.0},
-                    "SHIFTBLINK":  {"Start": 6500.0, "End": 9999999.0} 
+                    "SHIFTLIGHTS": {"Start": 3000.0, "End": 7050.0},
+                    "SHIFT":       {"Start": 7050.0, "End": 7800.0},
+                    "SHIFTBLINK":  {"Start": 7800.0, "End": 9999999.0} 
                 }
             },
             "default-2": {
                 "Maximum":           9.0,
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 4000.0, "End": 7500.0},
-                    "SHIFT":       {"Start": 7500.0, "End": 8000.0},
-                    "SHIFTBLINK":  {"Start": 8000.0, "End": 9999999.0} 
+                    "SHIFTLIGHTS": {"Start": 3900.0, "End": 7400.0},
+                    "SHIFT":       {"Start": 7400.0, "End": 7900.0},
+                    "SHIFTBLINK":  {"Start": 7900.0, "End": 9999999.0} 
                 }
             },
             "default-3": {
                 "Maximum":           9.0,
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 5200.0, "End": 8000.0},
-                    "SHIFT":       {"Start": 8000.0, "End": 8500.0},
-                    "SHIFTBLINK":  {"Start": 8500.0, "End": 9999999.0} 
+                    "SHIFTLIGHTS": {"Start": 4830.0, "End": 7630.0},
+                    "SHIFT":       {"Start": 7630.0, "End": 8130.0},
+                    "SHIFTBLINK":  {"Start": 8130.0, "End": 9999999.0} 
                 }
             },
             "default-4": {
                 "Maximum":           9.0,
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 6800.0, "End": 8300.0},
-                    "SHIFT":       {"Start": 8300.0, "End": 8500.0},
-                    "SHIFTBLINK":  {"Start": 8500.0, "End": 9999999.0} 
+                    "SHIFTLIGHTS": {"Start": 6430.0, "End": 7930.0},
+                    "SHIFT":       {"Start": 7930.0, "End": 8130.0},
+                    "SHIFTBLINK":  {"Start": 8130.0, "End": 9999999.0} 
                 }
             },
             "default-5": {
                 "Maximum":           9.0,
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 7700.0, "End": 8400.0},
-                    "SHIFT":       {"Start": 8400.0, "End": 8500.0},
-                    "SHIFTBLINK":  {"Start": 8500.0, "End": 9999999.0} 
+                    "SHIFTLIGHTS": {"Start": 7280.0, "End": 7980.0},
+                    "SHIFT":       {"Start": 7980.0, "End": 8080.0},
+                    "SHIFTBLINK":  {"Start": 8080.0, "End": 9999999.0} 
                 }
             },
             "default-6": {
                 "Maximum":           9.0,
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 8500.0, "End": 8500.0},
-                    "SHIFT":       {"Start": 8500.0, "End": 8500.0},
-                    "SHIFTBLINK":  {"Start": 8500.0, "End": 9999999.0} 
+                    "SHIFTLIGHTS": {"Start": 9500.0, "End": 9500.0},
+                    "SHIFT":       {"Start": 9500.0, "End": 9500.0},
+                    "SHIFTBLINK":  {"Start": 9500.0, "End": 9999999.0} 
                 }
             }
         },

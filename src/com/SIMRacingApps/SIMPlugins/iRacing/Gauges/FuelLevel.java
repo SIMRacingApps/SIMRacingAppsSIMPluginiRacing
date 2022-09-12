@@ -44,20 +44,32 @@ public class FuelLevel extends iRacingGauge {
         m_lapsHistorical  = 0;
         
         //save off the Kg per liter of fuel that  iRacing gives us to convert between volume and weight.
-        m_kgPerLiter = Double.parseDouble(IODriver.getSessionInfo().getString("DriverInfo","DriverCarFuelKgPerLtr"));
+        try {
+            m_kgPerLiter = Double.parseDouble(IODriver.getSessionInfo().getString("DriverInfo","DriverCarFuelKgPerLtr"));
+        }
+        catch (NumberFormatException e) {}
         
         //In the next build, after July 2015, David removed CarClassMaxFuel and replaced it with DriverCarFuelMaxLtr.
         //Currently, CarClassMaxFuel contains the percentage of fuel to use in this session
         
-        String maxfuel         = IODriver.getSessionInfo().getString("DriverInfo","DriverCarFuelMaxLtr"); //TODO: should ask David why max fuel not in Drivers per car class?
         String maxfuelpct      = IODriver.getSessionInfo().getString("DriverInfo","Drivers",driversIdx.toString(),"CarClassMaxFuelPct");
-        Data   capacityMaximum = getCapacityMaximum("l");
+        String maxfuel         = "";
+        
+        if (m_iRacingUOM.equals("kWh")) {
+            maxfuel         = IODriver.getSessionInfo().getString("DriverInfo","DriverCarFuelMaxKWh");
+        }
+        else {
+            maxfuel         = IODriver.getSessionInfo().getString("DriverInfo","DriverCarFuelMaxLtr"); //TODO: should ask David why max fuel not in Drivers per car class?
+        }
+        
+        Data   capacityMaximum = getCapacityMaximum(m_iRacingUOM);
+        
         double capacityPercent = 1.0;
         
         if (maxfuel.isEmpty()) //for older builds get the percentage out of CarClassMaxFuel
             maxfuel = IODriver.getSessionInfo().getString("DriverInfo","Drivers",driversIdx.toString(),"CarClassMaxFuel");
         else
-            maxfuel += " l"; //this is in liters with no UOM in the data
+            maxfuel += " " + m_iRacingUOM;
         
         if (!maxfuel.isEmpty()) {
             String s[] = maxfuel.split("[ ]");
@@ -67,7 +79,7 @@ public class FuelLevel extends iRacingGauge {
                 }
                 else {
                     //this assumes, if not a percentage, David could get the max fuel for each car.
-                    capacityMaximum = (new Data("",Double.parseDouble(s[0]),s[1])).convertUOM("l");
+                    capacityMaximum = (new Data("",Double.parseDouble(s[0]),s[1])).convertUOM(m_iRacingUOM);
                 }
             }
         }
@@ -81,7 +93,7 @@ public class FuelLevel extends iRacingGauge {
         }
         
         m_prevStatus         = new State(Car.Status.OFFTRACK,0.0);
-        m_valueBeforePitting = _setCapacityMaximum( capacityMaximum.getDouble() * capacityPercent, "l" );
+        m_valueBeforePitting = _setCapacityMaximum( capacityMaximum.getDouble() * capacityPercent, m_iRacingUOM );
     }
 
     /////// We have to override all the getters to add the conversions
