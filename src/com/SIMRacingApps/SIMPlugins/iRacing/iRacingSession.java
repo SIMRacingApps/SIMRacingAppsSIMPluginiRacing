@@ -709,14 +709,27 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         
         if (m_SIMPlugin.isConnected()) {
             boolean flag = m_SIMPlugin.getIODriver().getVars().getBoolean("IsReplayPlaying");
-            int frame = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayFrameNumEnd");
-            d.setValue(flag && frame != 1);
+            d.setValue(flag);
             d.setState(Data.State.NORMAL);
             
         }
         return d;
     }
     
+    @Override
+    public Data getIsReplayLive() {
+        Data d = super.getIsReplay();
+        d.setState(Data.State.OFF);
+        
+        if (m_SIMPlugin.isConnected() && getIsReplay().getBoolean()) {
+            int frame = m_SIMPlugin.getIODriver().getVars().getInteger("ReplayFrameNumEnd");
+            d.setValue(frame == 1);
+            d.setState(Data.State.NORMAL);
+            
+        }
+        return d;
+    }
+
     @Override
     public Data getLap() {
         Data d = super.getLap();
