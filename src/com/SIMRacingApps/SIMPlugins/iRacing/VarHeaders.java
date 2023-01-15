@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * @author Jeffrey Gilliam
- * @copyright Copyright (C) 2015 - 2022 Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2023 Jeffrey Gilliam
  * @since 1.0
  * @license Apache License 2.0
  */

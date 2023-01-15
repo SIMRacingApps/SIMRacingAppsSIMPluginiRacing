@@ -20,7 +20,7 @@ import com.SIMRacingApps.Util.State;
  * For current value, we will have to save the next value when we pit.
  * 
  * @author Jeffrey Gilliam
- * @copyright Copyright (C) 2015 - 2022 Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2023 Jeffrey Gilliam
  * @since 1.5
  * @license Apache License 2.0
  */

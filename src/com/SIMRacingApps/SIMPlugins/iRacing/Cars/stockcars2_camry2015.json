@@ -1,7 +1,7 @@
 {
     "Description": "Toyota Camry Class B",
     "MfrLogo":     "com/SIMRacingApps/Cars/toyota.png",
-    "Copyright": "Copyright (C) 2015 - 2022 Jeffrey Gilliam",
+    "Copyright": "Copyright (C) 2015 - 2023 Jeffrey Gilliam",
     "Gauges" : {
         "FuelPressure": {
             "default": {
