@@ -4168,7 +4168,7 @@ else
             _setGauge(new iRacingGauge(Gauge.Type.FULLCOURSEYELLOWMODE,         this, track, IODriver, "dcFCYToggle", "", null, null));
             _setGauge(new Changeables(Gauge.Type.FRONTFLAP,                     this, track, IODriver, "dpFNOMKnobSetting", "", null, null));
             if (m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeader("dpWingFront") != null) {
-                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpWingFront", "mm", null, null));
+                _setGauge(new iRacingGauge(Gauge.Type.FRONTWING,                this, track, IODriver, "dpWingFront", "deg", null, null));
             }
             else
             if (IODriver.getVarHeaders().getVarHeader("dpFWingAngle") != null) {

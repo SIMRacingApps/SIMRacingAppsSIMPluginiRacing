@@ -1,0 +1,180 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2022 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/bmw.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "iRacing":           "First=7400, Shift=7750, Last=7850, Blink=7950, RedLine=8000 for #64(0) - bmwlmdh",
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6900.0, "End": 7700.0},
+                    "SHIFT":       {"Start": 7700.0, "End": 7900.0},
+                    "SHIFTBLINK":  {"Start": 7900.0, "End": 99999999.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           7.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   7.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    20.0,
+                "MinorIncrement":    10.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 5.0},
+                    "WARNING":  {"Start": 5.0,  "End": 10.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    3.0,
+                "MinorIncrement":    1.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   7.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           12.0,
+                "MajorIncrement":    3.0,
+                "MinorIncrement":    1.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   8.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           55.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    2.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   55.0,
+                "CapacityIncrement": 0.5,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 3.0},
+                    "WARNING":  {"Start": 3.0, "End": 6.0}
+                }
+            }
+        },
+        "HYSDeployMode": {
+            "default": {
+                "Name":              "HYS",
+                "TypeName":          "DEPLOY MODE",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           0.0,
+                "Maximum":           1.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   1.0,
+                "CapacityIncrement": 1.0,
+                "OnResetChange":     false,
+                "IsChangable":       false,
+                "IsFixed":           false,
+                "States": {
+                    "NODEPLOY":     {"Start": -1.0, "End": 1.0, "Name": "Car/Gauge/HYSDeployMode", "Value": "NODEPLOY"},
+                    "QUAL":         {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/HYSDeployMode", "Value": "QUAL"},
+                    "ATTACK":       {"Start":  2.0, "End": 3.0, "Name": "Car/Gauge/HYSDeployMode", "Value": "ATTACK"},
+                    "BALANCED":     {"Start":  3.0, "End": 4.0, "Name": "Car/Gauge/HYSDeployMode", "Value": "BALANCED"},
+                    "BUILD":        {"Start":  4.0, "End": 5.0, "Name": "Car/Gauge/HYSDeployMode", "Value": "BUILD"}
+                }
+            }
+        },
+        "TractionControlRear": {
+            "default": {
+                "Name":              "TRACTION CONTROL",
+                "TypeName":          "REAR",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   10.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        },
+        "TractionControlFront": {
+            "default": {
+                "Name":              "TRACTION CONTROL",
+                "TypeName":          "FRONT",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   10.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false
+            }
+        }
+    }
+}
