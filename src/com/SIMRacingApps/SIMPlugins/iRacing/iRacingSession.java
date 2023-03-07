@@ -1,6 +1,8 @@
 package com.SIMRacingApps.SIMPlugins.iRacing;
 
 import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -1904,7 +1906,14 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         
         if (_loadCameras()) {
             
-            _camera camera  = m_camera_groups.get(cameraName.toLowerCase());
+            String _cameraName = cameraName.toLowerCase();
+                    
+            try {
+                _cameraName = java.net.URLDecoder.decode(_cameraName, StandardCharsets.UTF_8.name());
+            }
+            catch (UnsupportedEncodingException e) {}
+            
+            _camera camera  = m_camera_groups.get(_cameraName);
             
             String carNumber = "";
             

@@ -16,9 +16,9 @@
                 "MinorIncrement":    0.2,
                 "StateAscending":    true,
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 6450.0, "End": 7800.0},
-                    "SHIFT":       {"Start": 7800.0, "End": 7850.0},
-                    "SHIFTBLINK":  {"Start": 7850.0, "End": 99999999.0}
+                    "SHIFTLIGHTS": {"Start": 6650.0, "End": 7850.0},
+                    "SHIFT":       {"Start": 7850.0, "End": 8000.0},
+                    "SHIFTBLINK":  {"Start": 8000.0, "End": 99999999.0}
                 }
             }
         },
@@ -32,7 +32,7 @@
                 "MajorIncrement":    10.0,
                 "MinorIncrement":    5.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   120.0,
+                "CapacityMaximum":   104.0,
                 "CapacityIncrement": 1.0,
                 "IsFixed":           false,
                 "IsChangable":       true,
@@ -54,11 +54,11 @@
                 "MajorIncrement":    5.0,
                 "MinorIncrement":    1.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   26.4,
+                "CapacityMaximum":   20.8,
                 "StateAscending":    false,
                 "States": {
                     "CRITICAL": {"Start": 0.0, "End": 10.0},
-                    "WARNING":  {"Start": 10.0, "End": 20.0}
+                    "WARNING":  {"Start": 10.0, "End": 15.0}
                 }
             }
         },
@@ -72,7 +72,7 @@
                 "MajorIncrement":    5.0,
                 "MinorIncrement":    1.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   16.0,
+                "CapacityMaximum":   9.5,
                 "StateAscending":    false,
                 "States": {
                     "CRITICAL": {"Start": 0.0, "End": 4.0},

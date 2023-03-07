@@ -4149,6 +4149,7 @@ else
         
         if (isME()) {
             _setGauge(new iRacingGauge(Gauge.Type.ABS,                          this, track, IODriver, "dcABS", "", null, null));
+            _setGauge(new iRacingGauge(Gauge.Type.ABSACTIVE,                    this, track, IODriver, "BrakeABSactive", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.ANTIROLLFRONT,                this, track, IODriver, "dcAntiRollFront", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.ANTIROLLREAR,                 this, track, IODriver, "dcAntiRollRear", "", null, null));
             _setGauge(new iRacingGauge(Gauge.Type.BRAKE,                        this, track, IODriver, "Brake", "%", null, null));
