@@ -1,0 +1,97 @@
+{
+    "Description": "Chevrolet Monte Carlo SS",
+    "Copyright":   "Copyright (C) 2015 - 2023 Jeffrey Gilliam",
+    "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
+    "Gauges": {
+        "FuelLevel": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          22.0,
+                "MajorIncrement":   2.0,
+                "MinorIncrement":   1.0,
+                "CapacityMinimum":  0.0,
+                "CapacityMaximum":  22.1553175,
+                "CapacityIncrement":1.0,
+                "States": {
+                    "CRITICAL": { "Start": 0.0, "End": 1.0 },
+                    "WARNING":  { "Start": 1.0, "End": 2.0 }
+                }
+            }
+        },
+        "FuelPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          7.0,
+                "MajorIncrement":   1.0,
+                "MinorIncrement":   0.5,
+                "States": {
+                    "CRITICAL": { "Start": 0.0, "End": 3.0 }
+                }
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          120.0,
+                "MajorIncrement":   20.0,
+                "MinorIncrement":   10.0,
+                "States": {
+                    "CRITICAL": { "Start": 0.0,  "End": 10.0 },
+                    "WARNING":  { "Start": 10.0, "End": 30.0 }
+                }
+            }
+        },
+        "OilTemp": {
+            "default": {
+                "Minimum":          100.0,
+                "Maximum":          300.0,
+                "MajorIncrement":   20.0,
+                "MinorIncrement":   10.0,
+                "States": {
+                    "CRITICAL": { "Start": 275.0, "End": 999999999.0 }
+                }
+            }
+        },
+        "Tachometer": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          9.0,
+                "MajorIncrement":   1.0,
+                "MinorIncrement":   0.2,
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 5600.0, "End": 6400.0},
+                    "SHIFT":       {"Start": 6400.0, "End": 6800.0},
+                    "SHIFTBLINK":  {"Start": 6800.0, "End": 99999999.0}
+                }
+            }
+        },
+        "Tape": {
+            "default": {
+                "Reader": "DataVarTape4"
+            }
+        },
+        "WaterPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          120.0,
+                "MajorIncrement":   20.0,
+                "MinorIncrement":   10.0,
+                "States": {
+                    "CRITICAL": { "Start": 0.0,  "End": 10.0 },
+                    "WARNING":  { "Start": 10.0, "End": 30.0 }
+                }
+            }
+        },
+        "WaterTemp": {
+            "default": {
+                "Minimum":          100.0,
+                "Maximum":          300.0,
+                "MajorIncrement":   20.0,
+                "MinorIncrement":   10.0,
+                "States": {
+                    "CRITICAL": { "Start": 270.0, "End": 999999999.0 }
+                }
+            }
+        }
+    }
+}

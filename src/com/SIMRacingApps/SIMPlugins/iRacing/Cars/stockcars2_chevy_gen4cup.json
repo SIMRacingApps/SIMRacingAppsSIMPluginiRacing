@@ -1,0 +1,63 @@
+{
+    "Description": "Chevrolet Gen 4",
+    "Copyright":   "Copyright (C) 2015 - 2023 Jeffrey Gilliam",
+    "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
+    "Gauges" : {
+        "FuelPressure": {
+            "default": {
+                "Minimum":          0.0,
+                "Maximum":          15.0,
+                "MajorIncrement":   3.0,
+                "MinorIncrement":   1.5,
+                "States": {
+                    "CRITICAL": { "Start": 0.0, "End": 3.0 }
+                }
+            }
+        },
+        "OilTemp": {
+            "default": {
+                "States": {
+                    "CRITICAL": { "Start": 275.0, "End": 99999999.0 }
+                }
+            }
+        },
+        "Tachometer": {
+            "default": {
+                "iRacing":  "First=8000, Shift=8500, Last=9000, Blink=9500, RedLine=8100",
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 9100.0, "End": 9500.0},
+                    "SHIFT": {"Start": 9500.0, "End": 99999999.0}
+                }
+            },
+            "atlanta 2022 oval": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7500.0, "End": 7900.0},
+                    "SHIFT": {"Start": 7900.0, "End": 99999999.0}
+                }
+            },
+            "daytona oval": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7500.0, "End": 7900.0},
+                    "SHIFT": {"Start": 7900.0, "End": 99999999.0}
+                }
+            },
+            "daytona 2011 oval": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7500.0, "End": 7900.0},
+                    "SHIFT": {"Start": 7900.0, "End": 99999999.0}
+                }
+            },
+            "talladega": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7500.0, "End": 7900.0},
+                    "SHIFT": {"Start": 7900.0, "End": 99999999.0}
+                }
+            }
+        },
+        "Tape": {
+            "default": {
+                "Reader": "DataVarTape"
+            }
+        }
+    }
+}

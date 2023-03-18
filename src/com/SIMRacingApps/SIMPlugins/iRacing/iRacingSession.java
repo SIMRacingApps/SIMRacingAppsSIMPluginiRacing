@@ -538,6 +538,19 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
+    public Data getIsGarageVisible() {
+        Data d = super.getIsGarageVisible();
+        d.setState(Data.State.OFF);
+        
+        if (m_SIMPlugin.isConnected()) {
+            boolean flag = m_SIMPlugin.getIODriver().getVars().getBoolean("IsGarageVisible");
+            d.setValue(flag);
+            d.setState(Data.State.NORMAL);
+        }
+        return d;
+    }
+    
+    @Override
     public Data getIsGreenFlag() {
         Data d = super.getIsGreenFlag();
         d.setState(Data.State.OFF);

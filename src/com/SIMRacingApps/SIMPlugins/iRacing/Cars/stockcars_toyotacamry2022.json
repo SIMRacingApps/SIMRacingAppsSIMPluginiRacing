@@ -16,11 +16,12 @@
                 "MajorIncrement":    1.0,
                 "MinorIncrement":    0.2,
                 "StateAscending":    true,
-                "iRacing": "First=8000, Shift=9000, Last=9000, Blink=9200, RedLine=9800",
-                "xStates": {
-                    "SHIFTLIGHTS": {"Start": 3880.0, "End": 4700.0},
-                    "SHIFT":       {"Start": 4700.0, "End": 4730.0},
-                    "SHIFTBLINK":  {"Start": 4730.0, "End": 99999999.0}
+                "iRacing":           "First=8000, Shift=9000, Last=9000, Blink=9200, RedLine=9800",
+                "iRacing202303":     "First=8000, Shift=9000, Last=9000, Blink=9200, RedLine=9120",
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 8000.0, "End": 8850.0},
+                    "SHIFT":       {"Start": 8850.0, "End": 9000.0},
+                    "SHIFTBLINK":  {"Start": 9000.0, "End": 99999999.0}
                 }
             }
         },
