@@ -1545,6 +1545,42 @@ public class iRacingSession extends com.SIMRacingApps.Session {
     }
 
     @Override
+    public Data getRestart() {
+        Data d = super.getRestart();
+        
+        if (m_SIMPlugin.isConnected()) {
+            String s = m_SIMPlugin.getIODriver().getSessionInfo().getString("WeekendInfo","WeekendOptions","Restarts");
+            d.setValue(s.startsWith("double") ? RestartMethod.DOUBLEFILE : (s.startsWith("single") ? RestartMethod.SINGLEFILE : s));
+            d.setState(Data.State.NORMAL);
+        }
+        return d;
+    }
+
+    @Override
+    public Data setRestart(String method) {
+        Data d = super.setRestart(method);
+        
+        if (m_SIMPlugin.isConnected()) {
+            //as of the 2023 Winter build, only 2 methods are supported
+            //see https://support.iracing.com/support/solutions/articles/31000133518-session-admin-chat-commands
+            if (method.equals(RestartMethod.DOUBLEFILE)) {
+                setChat(this.getSendKeys("ADMIN_COMMANDS", "RESTART").replace("[METHOD]", "double")).getString();
+                d.setValue(method);
+                d.setState(Data.State.NORMAL);
+            }
+            else 
+            if (method.equals(RestartMethod.SINGLEFILE)) {
+                setChat(this.getSendKeys("ADMIN_COMMANDS", "RESTART").replace("[METHOD]", "single")).getString();
+                d.setValue(method);
+                d.setState(Data.State.NORMAL);
+            }
+                
+        }
+        return d;
+    }
+
+    
+    @Override
     public Data getSpotterPitCountDown() {
         Data d = super.getSpotterPitCountDown();
         int count = this.m_SIMPlugin.getIODriver().getReportPitBoxCount();
