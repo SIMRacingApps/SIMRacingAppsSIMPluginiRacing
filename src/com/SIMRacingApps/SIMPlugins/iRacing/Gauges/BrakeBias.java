@@ -48,6 +48,9 @@ public class BrakeBias extends iRacingGauge {
 
         if (brake_bias_correction) {
             String sBrakeBiasSetup = m_IODriver.getSessionInfo().getString("CarSetup","Chassis","Front","FrontBrakeBias");
+            if (sBrakeBiasSetup.isEmpty())
+                sBrakeBiasSetup = m_IODriver.getSessionInfo().getString("CarSetup","Chassis","Front","BrakeBalanceBar");
+            
             double brakeBias       = d.getDouble();
             
             //recalculate offset if something has changed

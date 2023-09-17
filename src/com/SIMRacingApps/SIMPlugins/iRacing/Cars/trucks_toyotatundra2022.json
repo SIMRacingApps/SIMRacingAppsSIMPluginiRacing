@@ -6,9 +6,9 @@
         "FuelPressure": {
             "default": {
                 "Minimum":          0.0,
-                "Maximum":          15.0,
-                "MajorIncrement":   3.0,
-                "MinorIncrement":   1.5,
+                "Maximum":          100.0,
+                "MajorIncrement":   10.0,
+                "MinorIncrement":   5.0,
                 "States": {
                     "CRITICAL": { "Start": 0.0, "End": 2.0 },
                     "WARNING":  { "Start": 2.0, "End": 4.0 }

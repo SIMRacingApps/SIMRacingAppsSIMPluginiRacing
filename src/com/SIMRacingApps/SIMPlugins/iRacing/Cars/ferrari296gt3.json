@@ -1,0 +1,193 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2023 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "Ferrari 296 GT3",
+    "MfrLogo":     "com/SIMRacingApps/Cars/ferrari.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           8.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 4500.0, "End": 7000.0},
+                    "SHIFT":       {"Start": 7000.0, "End": 7500.0},
+                    "SHIFTBLINK":  {"Start": 7500.0, "End": 99999.0}
+                }
+            },
+            "default-1": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6750.0, "End": 7250.0},
+                    "SHIFT":       {"Start": 7250.0, "End": 7350.0},
+                    "SHIFTBLINK":  {"Start": 7350.0, "End": 99999.0}
+                }
+            },
+            "default-2": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6850.0, "End": 7350.0},
+                    "SHIFT":       {"Start": 7350.0, "End": 7450.0},
+                    "SHIFTBLINK":  {"Start": 7450.0, "End": 99999.0}
+                }
+            },
+            "default-3": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6830.0, "End": 7330.0},
+                    "SHIFT":       {"Start": 7330.0, "End": 75200.0},
+                    "SHIFTBLINK":  {"Start": 7520.0, "End": 99999.0}
+                }
+            },
+            "default-4": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6760.0, "End": 7260.0},
+                    "SHIFT":       {"Start": 7260.0, "End": 7460.0},
+                    "SHIFTBLINK":  {"Start": 7460.0, "End": 99999.0}
+                }
+            },
+            "default-5": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6750.0, "End": 7250.0},
+                    "SHIFT":       {"Start": 7250.0, "End": 7450.0},
+                    "SHIFTBLINK":  {"Start": 7450.0, "End": 99999.0}
+                }
+            },
+            "default-6": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6700.0, "End": 7200.0},
+                    "SHIFT":       {"Start": 7200.0, "End": 7400.0},
+                    "SHIFTBLINK":  {"Start": 7400.0, "End": 99999.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    20.0,
+                "MinorIncrement":    10.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 5.0},
+                    "WARNING":  {"Start": 5.0,  "End": 10.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    2.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   13.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    2.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   9.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 4.0, "End": 4.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           110.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   104.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 1.0},
+                    "WARNING":  {"Start": 1.0, "End": 2.0}
+                }
+            }
+        },
+        "FuelPressure": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "kpa",
+                "imperial":          "psi",
+                "metric":            "kpa",
+                "Minimum":           0.0,
+                "Maximum":           1000.0,
+                "MajorIncrement":    200.0,
+                "MinorIncrement":    100.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 200.0},
+                    "WARNING":  {"Start": 200.0, "End": 400.0}
+                }
+            }
+        },
+        "ThrottleShape": {
+            "default": {
+                "Name":              "THROTTLE",
+                "TypeName":          "SHAPE{{}}",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           6.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   6.0,
+                "CapacityIncrement": 1.0
+            }
+        }
+    }
+}

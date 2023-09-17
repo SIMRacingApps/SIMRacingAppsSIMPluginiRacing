@@ -307,10 +307,10 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             @SuppressWarnings("unchecked")
             Map<String,String> groupMap = (Map<String,String>)m_sendKeys.get(group);
             if (group != null && groupMap.containsKey(command)) {
-                return groupMap.get(command);
+                keys = groupMap.get(command);
             }
         }
-        return keys;
+        return Server.getArg("iracing-sendkeys-"+group+"-"+command,keys);
     }
 
     private class _camera {
@@ -1902,9 +1902,8 @@ public class iRacingSession extends com.SIMRacingApps.Session {
             SendKeys.delay(Integer.parseInt(Server.getArg("iracing-chatmodedelay","200")));
         
             String sentText = this.getSendKeys("CHAT", "ALL").replace("[TEXT]", text);
-            if (Server.getArg("sendkeys-testmode",false))
-                sentText = "testmode="+sentText;
-            SendKeys.sendKeys(sentText);
+            if (!Server.getArg("sendkeys-testmode",false))
+                SendKeys.sendKeys(sentText);
             d.setValue("ChatSent: " + sentText);
             d.setState(Data.State.NORMAL);
             Server.logger().info(d.getString());
@@ -1938,10 +1937,18 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         Data d = super.setChatFlag(onOffFlag);
         
         if (onOffFlag) {
-            d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "CHAT").replace("[DRIVER]", "")).getString());
+            d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "CHAT")
+                .replace("[DRIVER]", "")
+                .replace("[NUMBER]", "")
+                .replace("[DRIVERNAME]", "")
+            ).getString());
         }
         else {
-            d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "NCHAT").replace("[DRIVER]", "")).getString());
+            d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "NCHAT")
+                    .replace("[DRIVER]", "")
+                    .replace("[NUMBER]", "")
+                    .replace("[DRIVERNAME]", "")
+                ).getString());
         }
         d.setState(Data.State.NORMAL);
         return d;

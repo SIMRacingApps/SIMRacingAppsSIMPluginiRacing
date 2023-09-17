@@ -2941,10 +2941,20 @@ else
         
         if (!m_number.isEmpty()) {
             if (onOffFlag) {
-                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "ADMIN").replace("[DRIVER]", m_number)).getString());
+                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin
+                    .getSession().getSendKeys("ADMIN_COMMANDS", "ADMIN")
+                    .replace("[NUMBER]", m_number)
+                    .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                    .replace("[DRIVER]", m_number)
+                ).getString());
             }
             else {
-                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "NADMIN").replace("[DRIVER]", m_number)).getString());
+                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession()
+                    .getSendKeys("ADMIN_COMMANDS", "NADMIN")
+                    .replace("[DRIVER]", m_number)
+                    .replace("[NUMBER]", m_number)
+                    .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                ).getString());
             }
             d.setState(Data.State.NORMAL);
         }
@@ -2958,12 +2968,30 @@ else
 
         if (!m_number.isEmpty()) {
             if (uom.equalsIgnoreCase("lap"))
-                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "BLACK").replace("[DRIVER]", m_number).replace("[TIME]", String.format("L%d", quantity))).getString());
+                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin
+                    .getSession().getSendKeys("ADMIN_COMMANDS", "BLACK")
+                    .replace("[DRIVER]", m_number)
+                    .replace("[NUMBER]", m_number)
+                    .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                    .replace("[TIME]", String.format("L%d", quantity))
+                ).getString());
             else {
                 if (quantity < 0)
-                    d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "BLACK").replace("[DRIVER]", m_number).replace("[TIME]", "D")).getString());  //drive through
+                    d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin
+                        .getSession().getSendKeys("ADMIN_COMMANDS", "BLACK")
+                        .replace("[DRIVER]", m_number)
+                        .replace("[NUMBER]", m_number)
+                        .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                        .replace("[TIME]", "D")
+                    ).getString());  //drive through
                 else
-                    d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "BLACK").replace("[DRIVER]", m_number).replace("[TIME]", String.format("%d", quantity))).getString());
+                    d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession()
+                        .getSendKeys("ADMIN_COMMANDS", "BLACK")
+                        .replace("[DRIVER]", m_number)
+                        .replace("[NUMBER]", m_number)
+                        .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                        .replace("[TIME]", String.format("%d", quantity))
+                    ).getString());
             }
     
             d.setState(Data.State.NORMAL);
@@ -2977,6 +3005,8 @@ else
         d.setValue(m_iRacingSIMPlugin.getSession().setChat(
             this.m_iRacingSIMPlugin.getSession().getSendKeys("CHAT", "DRIVER")
                 .replace("[DRIVER]", m_number)
+                .replace("[NUMBER]", m_number)
+                .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
                 .replace("[TEXT]",text)
         ).getString());
         d.setState(Data.State.NORMAL);
@@ -2990,10 +3020,20 @@ else
         
         if (!m_number.isEmpty()) {
             if (onOffFlag) {
-                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "CHAT").replace("[DRIVER]", m_number)).getString());
+                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession()
+                    .getSendKeys("ADMIN_COMMANDS", "CHAT")
+                    .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                    .replace("[NUMBER]", m_number)
+                    .replace("[DRIVER]", m_number)
+                ).getString());
             }
             else {
-                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "NCHAT").replace("[DRIVER]", m_number)).getString());
+                d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession()
+                        .getSendKeys("ADMIN_COMMANDS", "NCHAT")
+                        .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                        .replace("[NUMBER]", m_number)
+                        .replace("[DRIVER]", m_number)
+                    ).getString());
             }
             d.setState(Data.State.NORMAL);
         }
@@ -3006,7 +3046,12 @@ else
         d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
-            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "CLEAR").replace("[DRIVER]", m_number)).getString());
+            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession()
+                    .getSendKeys("ADMIN_COMMANDS", "CLEAR")
+                    .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                    .replace("[NUMBER]", m_number)
+                    .replace("[DRIVER]", m_number)
+                ).getString());
             d.setState(Data.State.NORMAL);
         }
         return d;
@@ -3018,7 +3063,12 @@ else
         d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
-            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "DQ").replace("[DRIVER]", m_number)).getString());
+            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession()
+                    .getSendKeys("ADMIN_COMMANDS", "DQ")
+                    .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                    .replace("[NUMBER]", m_number)
+                    .replace("[DRIVER]", m_number)
+                ).getString());
             d.setState(Data.State.NORMAL);
         }
         return d;
@@ -3030,7 +3080,12 @@ else
         d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
-            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "EOL").replace("[DRIVER]", m_number)).getString());
+            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession()
+                    .getSendKeys("ADMIN_COMMANDS", "EOL")
+                    .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                    .replace("[NUMBER]", m_number)
+                    .replace("[DRIVER]", m_number)
+                ).getString());
             d.setState(Data.State.NORMAL);
         }
         return d;
@@ -3055,7 +3110,12 @@ else
         d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
-            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "REMOVE").replace("[DRIVER]", m_number)).getString());
+            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession()
+                    .getSendKeys("ADMIN_COMMANDS", "REMOVE")
+                    .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                    .replace("[NUMBER]", m_number)
+                    .replace("[DRIVER]", m_number)
+                ).getString());
             d.setState(Data.State.NORMAL);
         }
         return d;
@@ -3067,7 +3127,12 @@ else
         d.setState(Data.State.OFF);
         
         if (!m_number.isEmpty()) {
-            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession().getSendKeys("ADMIN_COMMANDS", "WAVEBY").replace("[DRIVER]", m_number)).getString());
+            d.setValue(m_iRacingSIMPlugin.getSession().setChat(this.m_iRacingSIMPlugin.getSession()
+                    .getSendKeys("ADMIN_COMMANDS", "WAVEBY")
+                    .replace("[DRIVERNAME]", getDriverName(false).getString().replace(" ","."))
+                    .replace("[NUMBER]", m_number)
+                    .replace("[DRIVER]", m_number)
+                ).getString());
             d.setState(Data.State.NORMAL);
         }
         return d;
