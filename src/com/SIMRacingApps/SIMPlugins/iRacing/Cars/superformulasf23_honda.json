@@ -1,8 +1,8 @@
 {
     "Copyright":   "Copyright (C) 2015 - 2023 Jeffrey Gilliam",
     "License":     "Apache License 2.0",
-    "Description": "Super Formula F23 Toyota",
-    "MfrLogo":     "com/SIMRacingApps/Cars/toyota.png",
+    "Description": "Super Formula F23 Honda",
+    "MfrLogo":     "com/SIMRacingApps/Cars/Honda.png",
     "Comment":     "The defaults are based on the Gen6 Chevrolet SS at Texas Oval. A basic 1.5 mile track",
     "Gauges": {
         "Tachometer": {
