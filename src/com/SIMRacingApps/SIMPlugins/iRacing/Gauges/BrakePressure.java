@@ -13,7 +13,7 @@ import com.SIMRacingApps.SIMPlugins.iRacing.IODrivers.IODriver;
  * Use the Brake precentage to calculate the brake pressure
  * 
  * @author Jeffrey Gilliam
- * @copyright Copyright (C) 2015 - 2023 Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2024 Jeffrey Gilliam
  * @since 1.5
  * @license Apache License 2.0
  */

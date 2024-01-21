@@ -1,7 +1,7 @@
 {
     "Description": "Pontiac Grand Prix 1987",
     "MfrLogo":     "com/SIMRacingApps/Cars/pontiac.png",
-    "Copyright": "Copyright (C) 2015 - 2023 Jeffrey Gilliam",
+    "Copyright": "Copyright (C) 2015 - 2024 Jeffrey Gilliam",
     "Gauges" : {
         "Tachometer": {
             "default": {

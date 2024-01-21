@@ -15,7 +15,7 @@ import com.SIMRacingApps.Util.FindFile;
 import com.owlike.genson.Genson;
 /**
  * @author Jeffrey Gilliam
- * @copyright Copyright (C) 2015 - 2023 Jeffrey Gilliam
+ * @copyright Copyright (C) 2015 - 2024 Jeffrey Gilliam
  * @since 1.0
  * @license Apache License 2.0
  */
