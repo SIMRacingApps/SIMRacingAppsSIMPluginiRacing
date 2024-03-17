@@ -237,7 +237,7 @@ public class FuelLevel extends iRacingGauge {
 
                 //get the current var values
                 boolean changeFlag = ((m_IODriver.getVars().getBitfield("PitSvFlags") & PitSvFlags.FuelFill) != 0);
-                Data    varValue   = _readVar("PitSvFuel");
+                Data    varValue   = _readVar("PitSvFuel","");
                 
                 //If fuel was added because we requested it to be
                 //and the flags changed while in the pit stall

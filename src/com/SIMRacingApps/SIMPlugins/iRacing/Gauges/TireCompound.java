@@ -29,7 +29,7 @@ public class TireCompound extends Tire {
     public void _tireCurrent(Tire tire) {
         this.m_valueCurrent = _readVar();
         if (this.m_car.isME())
-            this.m_valueNext    = _readVar("PitSvTireCompound");
+            this.m_valueNext    = _readVar("PitSvTireCompound","");
         else
             this.m_valueNext    = this.m_valueCurrent;  //do this until iRacing provides it in the telemetry for the other cars
         this.m_isDirty = this.m_valueCurrent.getDouble() != this.m_valueNext.getDouble(); 

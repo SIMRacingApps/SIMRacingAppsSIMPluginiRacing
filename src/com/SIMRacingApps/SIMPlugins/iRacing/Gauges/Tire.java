@@ -78,7 +78,7 @@ public class Tire extends iRacingGauge {
             maxTires = getMaxCount();
             
             if (!maxTires.getState().equals(Data.State.NOTAVAILABLE) && Server.getArg("use-iRacing-tire-limit", true)) {
-                Data count = this._readVar(m_tire + "TiresAvailable");   //has the remaining tires, calculate used
+                Data count = this._readVar(m_tire + "TiresAvailable","");   //has the remaining tires, calculate used
                 
                 if (!count.getState().equals(Data.State.NOTAVAILABLE) && !maxTires.getState().equals(Data.State.NOTAVAILABLE)) {
                     d.setValue(maxTires.getInteger() - count.getInteger(),"",Data.State.NORMAL);
@@ -91,7 +91,7 @@ public class Tire extends iRacingGauge {
     @Override
     public Data getMaxCount() {
         Data d = super.getMaxCount();
-        String session = this._readVar("SessionNum").getStringFormatted("%.0f");
+        String session = this._readVar("SessionNum","").getStringFormatted("%.0f");
         String sessionType = this.m_IODriver.getSessionInfo().getString("SessionInfo","Sessions",session,"SessionType").toUpperCase();
         
         if (sessionType.equals("RACE")) {
@@ -103,7 +103,7 @@ public class Tire extends iRacingGauge {
             else {
                 //as of June 2020, iRacing has max tire counts per tire
                 if (Server.getArg("use-iRacing-tire-limit", true)) {
-                    Data count = this._readVar("PlayerCarDryTireSetLimit");
+                    Data count = this._readVar("PlayerCarDryTireSetLimit","");
                     
                     //greater than zero means limit is in place for this session
                     if (!count.getState().equals(Data.State.NOTAVAILABLE) && count.getInteger() > 0) {

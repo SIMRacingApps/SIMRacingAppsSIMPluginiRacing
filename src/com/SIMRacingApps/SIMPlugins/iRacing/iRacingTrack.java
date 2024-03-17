@@ -70,6 +70,44 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
     }
     
     @Override
+    public Data getCondition() {
+        Data d = super.getCondition();
+        d.setState(Data.State.OFF);
+
+        if (m_SIMPlugin.isConnected()) {
+            /* New var introducded with Rain in the March 2024 build.
+            - Vars: "TrackWetness": 7
+            - enum irsdk_TrackWetness
+              {
+              irsdk_TrackWetness_UNKNOWN = 0,
+              irsdk_TrackWetness_Dry,
+              irsdk_TrackWetness_MostlyDry,
+              irsdk_TrackWetness_VeryLightlyWet,
+              irsdk_TrackWetness_LightlyWet,
+              irsdk_TrackWetness_ModeratelyWet,
+              irsdk_TrackWetness_VeryWet,
+              irsdk_TrackWetness_ExtremelyWet
+              };
+            */
+            Integer trackWetness = m_SIMPlugin.getIODriver().getVars().getInteger("TrackWetness");
+            if (trackWetness >= 0) {
+                String s = "DRY";
+                switch (trackWetness) {
+                    case 2: s = "MOSTLY DRY"; break;
+                    case 3: s = "VERY LIGHTLY WET"; break;
+                    case 4: s = "LIGHTLY WET"; break;
+                    case 5: s = "MODERATELY WET"; break;
+                    case 6: s = "VERY WET"; break;
+                    case 7: s = "EXTREMELY WET"; break;
+                }
+                d.setValue(s);
+                d.setState(Data.State.NORMAL);
+            }
+        }
+        return d;
+    }
+    
+    @Override
     public Data getConfiguration() {
         Data d = super.getConfiguration();
         d.setState(Data.State.OFF);
@@ -416,6 +454,13 @@ public class iRacingTrack extends com.SIMRacingApps.Track {
                 d.setValue(s);
                 d.setState(Data.State.NORMAL);
             }
+            VarHeader precipitation = m_SIMPlugin.getIODriver().getVarHeaders().getVarHeaderValue("Precipitation",m_SIMPlugin.getIODriver().getVars());
+            if (precipitation != null && (double)precipitation.Value > 0.0 ) {
+                d.setValue(String.format("Rain %.0f%%", (double)precipitation.Value * 100));
+                d.setState(Data.State.NORMAL);
+            }
+                
+            
         }
         return d;
     }

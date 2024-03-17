@@ -167,8 +167,8 @@ public class TirePressure extends Tire {
                 if (!m_valueCurrent.getState().equals(Data.State.NORMAL) 
                 &&  varValue.getState().equals(Data.State.NORMAL)
                 ) {
-                    m_valueCurrent.set(_readVar(m_tire + "coldPressure"));
-                    Server.logger().info(String.format("TirePressure%s: New Car, initializing valueCurrent = %f %s, %f psi",m_tire,m_valueCurrent.getDouble(),m_valueCurrent.getUOM(),m_valueCurrent.convertUOM("psi").getDouble()));
+                    m_valueCurrent.set(_readVar(m_tire + "coldPressure","kPa"));
+                    Server.logger().info(String.format("TirePressure%s: New Car, initializing valueCurrent = %s %f %s, %f psi",m_tire,m_tireCompound.getValueCurrent().getString(), m_valueCurrent.getDouble(),m_valueCurrent.getUOM(),m_valueCurrent.convertUOM("psi").getDouble()));
                 }
 
                 if (varValue.getState().equals(Data.State.NORMAL)) {

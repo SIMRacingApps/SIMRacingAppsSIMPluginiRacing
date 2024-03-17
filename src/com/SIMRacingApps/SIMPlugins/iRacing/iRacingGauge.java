@@ -51,7 +51,7 @@ public class iRacingGauge extends Gauge {
         
         m_IODriver              = IODriver;
         m_varName               = varName;
-        m_varHeader             = IODriver.getVarHeaders().getVarHeader(varName);
+        m_varHeader             = m_IODriver.getVarHeaders().getVarHeader(varName);
         m_iRacingUOM            = m_varHeader != null && !m_varHeader.Unit.isEmpty() ? m_varHeader.Unit : defaultUOM;
         m_updateSIMTimestamp    = 0.0;
         m_currentLap            = 1;
@@ -120,13 +120,24 @@ public class iRacingGauge extends Gauge {
     
     //utility method to read the var and return the value with UOM and States applied
     //only use the value if the state is NORMAL
-    protected Data _readVar(String varName) {
+    protected Data _readVar(String varName, String defaultUOM) {
         Data d = new Data(varName,0.0,"",Data.State.NOTAVAILABLE);
         double value = d.getDouble();
         
+        VarHeader varHeader = m_varHeader;
+        String    iRacingUOM = m_iRacingUOM;
+        
+        //override these if the var names do not match
+        if(!varName.equals(m_varName)) {
+            varHeader     = m_IODriver.getVarHeaders().getVarHeader(varName);
+            iRacingUOM    = m_varHeader != null && !m_varHeader.Unit.isEmpty() ? m_varHeader.Unit : defaultUOM;
+        }
+        
+        String    m_iRacingUOM = varHeader != null && !m_varHeader.Unit.isEmpty() ? m_varHeader.Unit : defaultUOM;
+        
         //need to report NOTAVAILABLE if the SIM is not running or 
         //this car doesn't have this gauge
-        if (m_varHeader == null || !m_IODriver.isConnected()) {
+        if (varHeader == null || !m_IODriver.isConnected()) {
             d.setState(Data.State.NOTAVAILABLE);
         }
         else
@@ -134,7 +145,7 @@ public class iRacingGauge extends Gauge {
             if (!varName.isEmpty()){
                 try {
                     //if this var is an array, use the id as the index
-                    if (m_varHeader.Count > 1)
+                    if (varHeader.Count > 1)
                         value = m_IODriver.getVars().getDouble(varName,m_car.getId().getInteger());
                     else
                         value = m_IODriver.getVars().getDouble(varName);
@@ -169,7 +180,7 @@ public class iRacingGauge extends Gauge {
                         else
                         //Now normalize all the values that are percentages to be times 100
                         //except those that are already normalized.
-                        if (m_iRacingUOM.equals("%") 
+                        if (iRacingUOM.equals("%") 
                         && !varName.equals("dcBrakeBias")
                         ) {
                             value *= 100.0;
@@ -206,5 +217,5 @@ public class iRacingGauge extends Gauge {
         return d;
     }
     
-    protected Data _readVar() { return _readVar(m_varName); }
+    protected Data _readVar() { return _readVar(m_varName,m_iRacingUOM); }
 }

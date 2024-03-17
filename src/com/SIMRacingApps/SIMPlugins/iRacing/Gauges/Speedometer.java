@@ -70,7 +70,7 @@ public class Speedometer extends iRacingGauge {
         super._onDataVersionChange(state, currentLap, sessionTime, lapCompletedPercent, trackLength);
         
         if (m_car.isME()) {
-            m_speed = _readVar("Speed");
+            m_speed = _readVar("Speed","km/h");
         }
         else {
         	if (m_car.isValid()) {
