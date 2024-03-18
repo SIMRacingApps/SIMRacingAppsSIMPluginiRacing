@@ -30,32 +30,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // A C++ wrapper around the irsdk calls that takes care of reading a .ibt file
 
-class irsdkDiskClient
+//****FixMe, rename to irsdkDiskReader
+class irsdkDiskClient 
 {
 public:
 
-	irsdkDiskClient()
-		: m_ibtFile(NULL)
-		, m_sessionInfoString(NULL)
-		, m_varHeaders(NULL)
-		, m_varBuf(NULL)
-	{
-		memset(&m_header, 0, sizeof(m_header));
-		memset(&m_diskSubHeader, 0, sizeof(m_diskSubHeader));
-	}
-
-	irsdkDiskClient(const char *path)
-		: m_ibtFile(NULL)
-		, m_sessionInfoString(NULL)
-		, m_varHeaders(NULL)
-		, m_varBuf(NULL)
-	{
-		memset(&m_header, 0, sizeof(m_header));
-		memset(&m_diskSubHeader, 0, sizeof(m_diskSubHeader));
-
-		openFile(path);
-	}
-
+	irsdkDiskClient();
+	irsdkDiskClient(const char *path);
 	~irsdkDiskClient() { closeFile(); }
 
 	bool isFileOpen() { return m_ibtFile != NULL; }
@@ -115,4 +96,92 @@ protected:
 	FILE *m_ibtFile;
 };
 
+class irsdkDiskWriter
+{
+public:
+
+	irsdkDiskWriter();
+	irsdkDiskWriter(const char *path);
+	~irsdkDiskWriter() { closeFile(); }
+
+	bool isFileOpen() { return m_ibtFile != NULL; }
+	bool openFile(const char *path);
+	void closeFile();
+
+	int addNewVariable(const char *name, const char *desc, const char *unit, const irsdk_VarType type, int count = 1);
+	bool isHeaderFinalized() { return m_isHeaderFinalized; }
+	void finalizeHeader();
+
+	// write next line to file and clear buffers
+	void writeLine();
+	int getDataCount() { return m_diskSubHeader.sessionRecordCount; }
+
+	// return how many variables this .ibt file has in the header
+	int getNumVars();
+
+	int getVarIdx(const char *name);
+
+	// get info on the var
+	const char* getVarName(int idx);
+	const char* getVarDesc(int idx);
+	const char* getVarUnit(int idx);
+
+	// what is the base type of the data
+	irsdk_VarType getVarType(int idx);
+	irsdk_VarType getVarType(const char *name) { return getVarType(getVarIdx(name)); }
+
+	// how many elements in array, or 1 if not an array
+	int getVarCount(int idx);
+	int getVarCount(const char *name) { return getVarCount(getVarIdx(name)); }
+
+	// we track session time in disk header, use this accessor to update the count
+	time_t getSessionStartDate() { return m_diskSubHeader.sessionStartDate; }
+	void setSessionStartDate(const time_t date) { m_diskSubHeader.sessionStartDate = date; }
+
+	double getSessionStartTime_s() { return m_diskSubHeader.sessionStartTime; }
+	void setSessionStartTime_s(const double time) { m_diskSubHeader.sessionStartTime = time; }
+
+	double getSessionEndTime_s() { return m_diskSubHeader.sessionEndTime; }
+	void setSessionEndTime_s(const double time) { m_diskSubHeader.sessionEndTime = time; }
+
+	// we track number of laps in disk header, use this accessor to update the count
+	int getSessionLapCount() { return m_diskSubHeader.sessionLapCount; }
+	void setSessionLapCount(const int lap) { m_diskSubHeader.sessionLapCount = lap; }
+
+	// idx is the variables index, entry is the array offset, or 0 if not an array element
+	// will convert data to requested type
+	bool setVar(bool val, int idx, int entry = 0);
+	bool setVar(bool val, const char *name, int entry = 0) { return setVar(val, getVarIdx(name), entry); }
+
+	bool setVar(int val, int idx, int entry = 0);
+	bool setVar(int val, const char *name, int entry = 0) { return setVar(val, getVarIdx(name), entry); }
+	
+	bool setVar(float val, int idx, int entry = 0);
+	bool setVar(float val, const char *name, int entry = 0) { return setVar(val, getVarIdx(name), entry); }
+
+	bool setVar(double val, int idx, int entry = 0);
+	bool setVar(double val, const char *name, int entry = 0) { return setVar(val, getVarIdx(name), entry); }
+
+	// get the whole string
+	//char* getSessionStr() { return m_sessionInfoString; }
+
+protected:
+
+	irsdk_header m_header;
+	irsdk_diskSubHeader m_diskSubHeader;
+	int m_diskSubHeaderOffset;
+	bool m_isHeaderFinalized;
+
+	//****Note, for now static allocate our buffers
+	// could easily aquire these at creation time
+	const static int MAX_SESSIONSTR_LEN = 1048576;
+	const static int MAX_VAR_COUNT = 1000;
+	const static int MAX_VAR_BUF_SIZE = MAX_VAR_COUNT * 32;
+
+	char m_sessionInfoString[MAX_SESSIONSTR_LEN];
+	irsdk_varHeader m_varHeaders[MAX_VAR_COUNT];
+	char m_varBuf[MAX_VAR_BUF_SIZE];
+
+	FILE *m_ibtFile;
+};
 #endif // IRSDKDISKCLIENT_H

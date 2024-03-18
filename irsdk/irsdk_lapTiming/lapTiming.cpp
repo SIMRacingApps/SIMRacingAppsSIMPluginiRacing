@@ -30,7 +30,7 @@
 
 
 // uncomment to dump race info to dos box as well as to yaml files
-#define DUMP_TO_DISPLAY
+//#define DUMP_TO_DISPLAY
 
 // 'live' session info
 
@@ -109,6 +109,23 @@ struct DriverEntry
 // updated for each driver as they cross the start/finish line
 DriverEntry g_driverTableTable[g_maxCars];
 
+// notify everyone when we update the file
+static const _TCHAR IRSDK_LAPTIMINGDATAVALIDEVENTNAME[] = _T("Local\\IRSDKLapTimingDataValidEvent");
+HANDLE hDataValidEvent = NULL;
+
+//****Note, implement this listener on client side to get notifications when data is updated
+/*
+// startup on client side
+hDataValidEvent = OpenEvent(SYNCHRONIZE, false, IRSDK_LAPTIMINGDATAVALIDEVENTNAME);
+
+// sleep till signaled
+if(hDataValidEvent)
+	WaitForSingleObject(hDataValidEvent, timeOut);
+
+// shutdown
+if(hDataValidEvent)
+	CloseHandle(hDataValidEvent);
+*/
 
 //---------------------------
 
@@ -284,6 +301,7 @@ const char* generateLiveYAMLString()
 	len += _snprintf(tstr+len, m_len-len,"CarStatus:\n");
 	if(g_PaceMode.isValid())
 		len += _snprintf(tstr+len, m_len-len," PaceMode: %d\n", g_PaceMode.getInt()); // irsdk_PaceMode, Are we pacing or not
+
 	len += _snprintf(tstr+len, m_len-len," Cars:\n");
 	for(int i=0; i<g_maxCars; i++)
 	{
@@ -301,8 +319,10 @@ const char* generateLiveYAMLString()
 		len += _snprintf(tstr+len, m_len-len,"   CarIdxSteer: %.2f\n", g_CarIdxSteer.getFloat(i)); // rad, Steering wheel angle by car index
 		len += _snprintf(tstr+len, m_len-len,"   CarIdxTrackSurface: %d\n", g_CarIdxTrackSurface.getInt(i)); // irsdk_TrkLoc, Track surface type by car index
 		len += _snprintf(tstr+len, m_len-len,"   CarIdxTrackSurfaceMaterial: %d\n", g_CarIdxTrackSurfaceMaterial.getInt(i)); // irsdk_TrkSurf, Track surface material type by car index
+
 		//****Note, don't use this one any more, it is replaced by CarIdxLastLapTime
 		len += _snprintf(tstr+len, m_len-len,"   CarIdxLapTime: %.6f\n", g_lapTime[i]); // s, last lap time or -1 if not yet crossed s/f
+
 		// new variables, check if they exist on members
 		if(g_CarIdxLastLapTime.isValid())
 			len += _snprintf(tstr+len, m_len-len,"   CarIdxLastLapTime: %.6f\n", g_CarIdxLastLapTime.getFloat(i)); // s, Cars last lap time
@@ -337,32 +357,37 @@ const char* generateLiveYAMLString()
 }
 
 // called 60 times a second, if we are connected
-void processYAMLLiveString(const char *yamlStr)
+bool processYAMLLiveString()
 {
 	static DWORD lastTime = 0;
+	bool wasUpdated = false;
 
-	// validate string
-	if(yamlStr && yamlStr[0])
+	//****Note, your code goes here
+	// can write to disk, parse, etc
+
+	// output file once every 1 seconds
+	DWORD minTime = (DWORD)(1.0f * 1000);
+	DWORD curTime = timeGetTime(); // millisecond resolution
+	if(abs((long long)(curTime - lastTime)) > minTime)
 	{
-		//****Note, your code goes here
-		// can write to disk, parse, etc
+		lastTime = curTime;
 
-		// output file once every 5 seconds
-		DWORD minTime = (DWORD)(5.0f * 1000);
-		DWORD curTime = timeGetTime(); // millisecond resolution
-		if(abs((long long)(curTime - lastTime)) > minTime)
+		const char *yamlStr = generateLiveYAMLString();
+		// validate string
+		if(yamlStr && yamlStr[0])
 		{
-			lastTime = curTime;
-
 			FILE *f = fopen("liveStr.txt", "w");
 			if(f)
 			{
 				fputs(yamlStr, f);
 				fclose(f);
 				f = NULL;
+				wasUpdated = true;
 			}
 		}
 	}
+
+	return wasUpdated;
 }
 
 // called only when it changes
@@ -632,13 +657,23 @@ void run()
 	// wait up to 16 ms for start of session or new data
 	if(irsdkClient::instance().waitForData(16))
 	{
+		bool wasUpdated = false;
+
 		// and grab the data
 		processLapInfo();
-		processYAMLLiveString(generateLiveYAMLString());
+		if(processYAMLLiveString())
+			wasUpdated = true;
 
 		// only process session string if it changed
 		if(irsdkClient::instance().wasSessionStrUpdated())
+		{
 			processYAMLSessionString(irsdkClient::instance().getSessionStr());
+			wasUpdated = true;
+		}
+
+		// notify clients
+		if(wasUpdated && hDataValidEvent)
+			PulseEvent(hDataValidEvent);
 
 #ifdef DUMP_TO_DISPLAY
 		// update the display as well
@@ -679,9 +714,28 @@ bool init()
 	// ask for 1ms timer so sleeps are more precise
 	timeBeginPeriod(1);
 
+	// startup event broadcaster
+	hDataValidEvent = CreateEvent(NULL, true, false, IRSDK_DATAVALIDEVENTNAME);
+
 	//****Note, put your init logic here
 	
 	return true;
+}
+
+void deInit()
+{
+	printf("Shutting down.\n\n");
+
+	// shutdown
+	if(hDataValidEvent)
+	{
+		//make sure event not left triggered (probably redundant)
+		ResetEvent(hDataValidEvent);
+		CloseHandle(hDataValidEvent);
+		hDataValidEvent = NULL;
+	}
+
+	timeEndPeriod(1);
 }
 
 int main(int argc, char *argv[])
@@ -695,8 +749,7 @@ int main(int argc, char *argv[])
 			run();
 		}
 
-		printf("Shutting down.\n\n");
-		timeEndPeriod(1);
+		deInit();
 	}
 	else
 		printf("init failed\n");

@@ -71,21 +71,25 @@ public class BroadcastMsg {
 //
 //    enum irsdk_PitCommandMode				// this only works when the driver is in the car
     public static class PitCommandMode {
-        public final static short PitCommand_Clear = 0;    // Clear all pit checkboxes
-        public final static short PitCommand_WS = 1;       // Clean the winshield, using one tear off
-        public final static short PitCommand_Fuel = 2;     // Add fuel, optionally specify the amount to add in liters or pass '0' to use existing amount
-        public final static short PitCommand_LF = 3;       // Change the left front tire, optionally specifying the pressure in KPa or pass '0' to use existing pressure
-        public final static short PitCommand_RF = 4;       // right front
-        public final static short PitCommand_LR = 5;       // left rear
-        public final static short PitCommand_RR = 6;       // right rear
-        public final static short PitCommand_ClearTires=7; // Clear tire pit checkboxes
-        public final static short PitCommand_FR=8;         // Request a fast Repair
-        public final static short PitCommand_Last = 9;     // placeholder
+        public final static short PitCommand_Clear = 0;      // Clear all pit checkboxes
+        public final static short PitCommand_WS = 1;         // Clean the winshield, using one tear off
+        public final static short PitCommand_Fuel = 2;       // Add fuel, optionally specify the amount to add in liters or pass '0' to use existing amount
+        public final static short PitCommand_LF = 3;         // Change the left front tire, optionally specifying the pressure in KPa or pass '0' to use existing pressure
+        public final static short PitCommand_RF = 4;         // right front
+        public final static short PitCommand_LR = 5;         // left rear
+        public final static short PitCommand_RR = 6;         // right rear
+        public final static short PitCommand_ClearTires = 7; // Clear tire pit checkboxes
+        public final static short PitCommand_FR = 8;         // Request a fast Repair
+        public final static short PitCommand_ClearWS = 9;    // Uncheck Clean the winshield checkbox
+        public final static short PitCommand_ClearFR = 10;   // Uncheck request a fast repair
+        public final static short PitCommand_ClearFuel = 11; // Uncheck add fuel
+        public final static short PitCommand_TC = 12;        // Change tire compound
+        public final static short PitCommand_Last = 13;      // placeholder
 
         private static short _getCmd(String cmd) {
             short sCmd = -1;
 
-            if (cmd.matches("[0-6]"))
+            if (cmd.matches("[0-9]"))
                 sCmd = Short.parseShort(cmd);
             else
             if (cmd.equalsIgnoreCase("Clear"))
@@ -114,6 +118,19 @@ public class BroadcastMsg {
             else
             if (cmd.equalsIgnoreCase("FR"))
                 sCmd = PitCommand_FR;
+            else
+            if (cmd.equalsIgnoreCase("CelarWS"))
+                sCmd = PitCommand_ClearWS;
+            else
+            if (cmd.equalsIgnoreCase("ClearFR"))
+                sCmd = PitCommand_ClearFR;
+            else
+            if (cmd.equalsIgnoreCase("ClearFuel"))
+                sCmd = PitCommand_ClearFuel;
+            else
+            if (cmd.equalsIgnoreCase("TC"))
+                sCmd = PitCommand_TC;
+
             return sCmd;
         }
 

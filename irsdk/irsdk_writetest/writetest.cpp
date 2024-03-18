@@ -32,9 +32,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Uncomment to log data to display
 //#define LOG_TO_DISPLAY
 
-// Uncomment to log to ascii CSV format instead of binary IBT format
-//#define LOG_TO_CSV
-
 // Uncomment to log only when driver in car
 //#define LOG_IN_CAR_ONLY
 
@@ -65,6 +62,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 // 16 ms timeout
 #define TIMEOUT 16
+
+// set to true, or pass -csv on the command line to log to a csv file rather than a .ibt file
+bool g_logToCSV = false;
 
 char *g_data = NULL;
 int g_nData = 0;
@@ -590,11 +590,11 @@ bool open_file(FILE* &file, time_t &t_time)
 {
 	// get current time
 	t_time = time(NULL);
-#ifdef LOG_TO_CSV
-	file = openUniqueFile("irsdk_session", "csv", t_time, false);
-#else
-	file = openUniqueFile("irsdk_session", "ibt", t_time, true);
-#endif
+
+	if(g_logToCSV)
+		file = openUniqueFile("irsdk_session", "csv", t_time, false);
+	else
+		file = openUniqueFile("irsdk_session", "ibt", t_time, true);
 
 	if(file)
 	{
@@ -610,9 +610,9 @@ void close_file(FILE* &file, time_t t_time)
 	if(file)
 	{
 
-#ifndef LOG_TO_CSV
-		logCloseIBT(file);
-#endif
+		if(!g_logToCSV)
+			logCloseIBT(file);
+
 		// write last state string recieved out to disk
 		logStateToFile(t_time);
 
@@ -651,11 +651,18 @@ void ex_program(int sig)
 	exit(0);
 }
 
-int main()
+int main(int argc, char** argv)
 {
 	printf("irsdk_writetest 1.0\n");
-	printf(" demo program to save iRacing telemetry data to a .csv file\n\n");
+	printf(" demo program to save iRacing telemetry data to a .ibt file\n pass -csv to dump to a csv file\n\n");
 
+	// quick hack to take -csv on command line
+	if(argc > 1 && 0 == strcmp(argv[1], "-csv"))
+	{
+		g_logToCSV = true;
+		printf("switching to csv mode\n\n");
+	}
+	
 	// trap ctrl-c
 	signal(SIGINT, ex_program);
 	printf("press enter to exit:\n\n");
@@ -667,7 +674,7 @@ int main()
 	timeBeginPeriod(1);
 	g_data = NULL;
 	g_nData = 0;
-	
+
 	while(!_kbhit())
 	{
 		// wait for new data and copy it into the g_data buffer, if g_data is not null
@@ -694,21 +701,19 @@ int main()
 						// open file if first time
 						if(!g_file && open_file(g_file, g_ttime))
 						{
-#ifdef LOG_TO_CSV
+							if(g_logToCSV)
 								logHeaderToCSV(pHeader, g_file, g_ttime);
-#else
+							else
 								logHeaderToIBT(pHeader, g_file, g_ttime);
-#endif
 						}
 
 						// and log data to file
 						if(g_file)
 						{
-#ifdef LOG_TO_CSV
-							logDataToCSV(pHeader, g_data, g_file);
-#else
-							logDataToIBT(pHeader, g_data, g_file);
-#endif
+							if(g_logToCSV)
+								logDataToCSV(pHeader, g_data, g_file);
+							else
+								logDataToIBT(pHeader, g_data, g_file);
 						}
 					}
 					else

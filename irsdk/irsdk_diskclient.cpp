@@ -27,6 +27,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include <assert.h>
 #include "irsdk_defines.h"
@@ -35,6 +36,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #pragma warning(disable:4996)
 
+irsdkDiskClient::irsdkDiskClient()
+	: m_ibtFile(NULL)
+	, m_sessionInfoString(NULL)
+	, m_varHeaders(NULL)
+	, m_varBuf(NULL)
+{
+	memset(&m_header, 0, sizeof(m_header));
+	memset(&m_diskSubHeader, 0, sizeof(m_diskSubHeader));
+}
+
+irsdkDiskClient::irsdkDiskClient(const char *path)
+	: m_ibtFile(NULL)
+	, m_sessionInfoString(NULL)
+	, m_varHeaders(NULL)
+	, m_varBuf(NULL)
+{
+	memset(&m_header, 0, sizeof(m_header));
+	memset(&m_diskSubHeader, 0, sizeof(m_diskSubHeader));
+
+	openFile(path);
+}
 
 bool irsdkDiskClient::openFile(const char *path)
 {
@@ -452,3 +474,522 @@ int irsdkDiskClient::getSessionStrVal(const char *path, char *val, int valLen)
 	return 0;
 }
 
+//-----------------
+
+irsdkDiskWriter::irsdkDiskWriter()
+	: m_ibtFile(NULL)
+	, m_diskSubHeaderOffset(0)
+	, m_isHeaderFinalized(false)
+{
+	memset(&m_header, 0, sizeof(m_header));
+	memset(&m_diskSubHeader, 0, sizeof(m_diskSubHeader));
+	memset(&m_sessionInfoString, 0, sizeof(m_sessionInfoString));
+	memset(&m_varHeaders, 0, sizeof(m_varHeaders));
+	memset(m_varBuf, 0, sizeof(m_varBuf));
+}
+
+irsdkDiskWriter::irsdkDiskWriter(const char *path)
+	: m_ibtFile(NULL)
+	, m_diskSubHeaderOffset(0)
+	, m_isHeaderFinalized(false)
+{
+	memset(&m_header, 0, sizeof(m_header));
+	memset(&m_diskSubHeader, 0, sizeof(m_diskSubHeader));
+	memset(&m_sessionInfoString, 0, sizeof(m_sessionInfoString));
+	memset(&m_varHeaders, 0, sizeof(m_varHeaders));
+	memset(m_varBuf, 0, sizeof(m_varBuf));
+
+	openFile(path);
+}
+
+bool irsdkDiskWriter::openFile(const char *path)
+{
+	assert(m_ibtFile == NULL);
+
+	m_ibtFile = fopen(path, "wb");
+	if(m_ibtFile)
+	{
+		// output record header
+		memset(&m_header, 0, sizeof(m_header));
+		memset(&m_diskSubHeader, 0, sizeof(m_diskSubHeader));
+
+		m_diskSubHeaderOffset = 0;
+		m_isHeaderFinalized = false;
+
+		memset(m_sessionInfoString, 0, sizeof(m_sessionInfoString));
+		memset(m_varBuf, 0, sizeof(m_varBuf));
+		memset(m_varHeaders, 0, sizeof(m_varHeaders));
+
+		//****RemoveMe, fake yaml string
+		sprintf(m_sessionInfoString, "---\n...\n");
+
+		return true;
+	}
+
+	return false;
+}
+
+void irsdkDiskWriter::closeFile()
+{
+	if(m_ibtFile)
+	{
+		fseek(m_ibtFile, m_diskSubHeaderOffset, SEEK_SET);
+		fwrite(&m_diskSubHeader, 1, sizeof(m_diskSubHeader), m_ibtFile);
+		fclose(m_ibtFile);
+	}
+	m_ibtFile = NULL;
+}
+
+int getSizeOfVarType(const irsdk_VarType type)
+{
+	switch(type)
+	{
+	// 1 byte
+	case irsdk_char:
+	case irsdk_bool: return 1;
+
+	// 4 bytes
+	case irsdk_int:
+	case irsdk_bitField:
+	case irsdk_float: return 4;
+
+	// 8 bytes
+	case irsdk_double: return 8;
+
+	default:
+		assert(false);
+		return 1;
+	}
+}
+
+int irsdkDiskWriter::addNewVariable(const char *name, const char *desc, const char *unit, const irsdk_VarType type, int count)
+{
+	assert(m_ibtFile);
+	assert(!m_isHeaderFinalized);
+	assert(count >= 1);
+
+	if(m_ibtFile && !m_isHeaderFinalized)
+	{
+		// room for the variable?
+		if(m_header.numVars < MAX_VAR_COUNT && 
+			(m_header.bufLen + count) < MAX_VAR_BUF_SIZE)
+		{
+			int idx = m_header.numVars;
+			m_header.numVars++;
+
+			m_varHeaders[idx].type = type;	// irsdk_VarType
+			m_varHeaders[idx].offset = m_header.bufLen;		// offset fron start of buffer row
+			m_varHeaders[idx].count = count;		// number of entrys (array)
+			m_header.bufLen += count * getSizeOfVarType(type);
+
+			m_varHeaders[idx].countAsTime = false;
+
+			strncpy(m_varHeaders[idx].name, name, sizeof(char) * IRSDK_MAX_STRING);
+			strncpy(m_varHeaders[idx].desc, desc, sizeof(char) * IRSDK_MAX_DESC);
+			strncpy(m_varHeaders[idx].unit, unit, sizeof(char) * IRSDK_MAX_STRING);	// something like "kg/m^2"
+
+			return idx;
+		}
+	}
+
+	return -1; // bogus index
+}
+
+void irsdkDiskWriter::finalizeHeader()
+{
+	assert(m_ibtFile);
+	assert(!m_isHeaderFinalized);
+
+	if(m_ibtFile && !m_isHeaderFinalized)
+	{
+		int offset = 0;
+
+		// main header
+		m_header.ver = 1;
+		m_header.status = irsdk_stConnected;
+		m_header.tickRate = 60;
+		offset += sizeof(m_header);
+
+		// sub header is written out at end of session
+		memset(&m_diskSubHeader, 0, sizeof(m_diskSubHeader));
+		m_diskSubHeaderOffset = offset;
+		offset += sizeof(m_diskSubHeader);
+
+		// pointer to var definitions
+		m_header.varHeaderOffset = offset;
+		offset += m_header.numVars * sizeof(irsdk_varHeader);
+
+		// pointer to session info string
+		m_header.sessionInfoUpdate = 0;
+		m_header.sessionInfoLen = (int)strlen(m_sessionInfoString);
+		m_header.sessionInfoOffset = offset;
+		offset += m_header.sessionInfoLen;
+
+		// pointer to start of buffered data
+		m_header.numBuf = 1;
+		m_header.varBuf[0].bufOffset = offset;
+		m_header.varBuf[0].tickCount = 0;
+
+		fwrite(&m_header, 1, sizeof(m_header), m_ibtFile);
+		fwrite(&m_diskSubHeader, 1, sizeof(m_diskSubHeader), m_ibtFile);
+		fwrite(&m_varHeaders, 1, m_header.numVars * sizeof(irsdk_varHeader), m_ibtFile);
+		fwrite(m_sessionInfoString, 1, m_header.sessionInfoLen, m_ibtFile);
+
+		if(ftell(m_ibtFile) != m_header.varBuf[0].bufOffset)
+			printf("ERROR: m_ibtFile pointer mismach: %d != %d\n", ftell(m_ibtFile), m_header.varBuf[0].bufOffset);
+
+		m_isHeaderFinalized = true;
+	}
+}
+
+// write next line to file and clear buffers
+void irsdkDiskWriter::writeLine()
+{
+	assert(m_ibtFile);
+	assert(m_isHeaderFinalized);
+
+	if(m_ibtFile && m_isHeaderFinalized)
+	{
+		fwrite(m_varBuf, 1, m_header.bufLen, m_ibtFile);
+		m_diskSubHeader.sessionRecordCount++;
+
+		// zero out data so we are ready for the next line
+		memset(m_varBuf, 0, sizeof(m_varBuf));
+	}
+}
+
+// return how many variables this .ibt file has in the header
+int irsdkDiskWriter::getNumVars()
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+		return m_header.numVars;
+
+	return -1;
+}
+
+int irsdkDiskWriter::getVarIdx(const char *name)
+{
+	assert(m_ibtFile);
+	assert(name);
+
+	if(m_ibtFile && name)
+	{
+		for(int idx=0; idx<m_header.numVars; idx++)
+		{
+			if(0 == strncmp(name, m_varHeaders[idx].name, IRSDK_MAX_STRING))
+			{
+				return idx;
+			}
+		}
+	}
+
+	return -1;
+}
+
+irsdk_VarType irsdkDiskWriter::getVarType(int idx)
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+	{
+		if(idx >= 0 && idx < m_header.numVars)
+		{
+			return (irsdk_VarType)m_varHeaders[idx].type;
+		}
+
+		//invalid variable index
+		assert(false);
+	}
+
+	return irsdk_char;
+}
+
+// get info on the var
+const char* irsdkDiskWriter::getVarName(int idx)
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+	{
+		if(idx >= 0 && idx < m_header.numVars)
+		{
+			return m_varHeaders[idx].name;
+		}
+
+		//invalid variable index
+		assert(false);
+	}
+
+	return NULL;
+}
+
+const char* irsdkDiskWriter::getVarDesc(int idx)
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+	{
+		if(idx >= 0 && idx < m_header.numVars)
+		{
+			return m_varHeaders[idx].desc;
+		}
+
+		//invalid variable index
+		assert(false);
+	}
+
+	return NULL;
+}
+
+const char* irsdkDiskWriter::getVarUnit(int idx)
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+	{
+		if(idx >= 0 && idx < m_header.numVars)
+		{
+			return m_varHeaders[idx].unit;
+		}
+
+		//invalid variable index
+		assert(false);
+	}
+
+	return NULL;
+}
+
+int irsdkDiskWriter::getVarCount(int idx)
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+	{
+		if(idx >= 0 && idx < m_header.numVars)
+		{
+			return m_varHeaders[idx].count;
+		}
+
+		//invalid variable index
+		assert(false);
+	}
+
+	return 0;
+}
+
+//---
+
+bool irsdkDiskWriter::setVar(bool val, int idx, int entry)
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+	{
+		if(idx >= 0 && idx < m_header.numVars)
+		{
+			if(entry >= 0 && entry < m_varHeaders[idx].count)
+			{
+				char * data = m_varBuf + m_varHeaders[idx].offset;
+				switch(m_varHeaders[idx].type)
+				{
+				// 1 byte
+				case irsdk_char:
+				case irsdk_bool:
+					((char*)data)[entry] = val;
+					break;
+
+				// 4 bytes
+				case irsdk_int:
+				case irsdk_bitField:
+					((int*)data)[entry] = (int)val;
+					break;
+					
+				// technically there is no right conversion...
+				case irsdk_float:
+					((float*)data)[entry] = (float)val;
+					break;
+
+				// 8 bytes
+				case irsdk_double:
+					((double*)data)[entry] = (double)val;
+					break;
+				}
+
+				return true;
+			}
+			else
+			{
+				// invalid offset
+				assert(false);
+			}
+		}
+		else
+		{
+			//invalid variable index
+			assert(false);
+		}
+	}
+
+	return false;
+}
+
+bool irsdkDiskWriter::setVar(int val, int idx, int entry)
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+	{
+		if(idx >= 0 && idx < m_header.numVars)
+		{
+			if(entry >= 0 && entry < m_varHeaders[idx].count)
+			{
+				char * data = m_varBuf + m_varHeaders[idx].offset;
+				switch(m_varHeaders[idx].type)
+				{
+				// 1 byte
+				case irsdk_char:
+				case irsdk_bool:
+					((char*)data)[entry] = (bool)val;
+					break;
+
+				// 4 bytes
+				case irsdk_int:
+				case irsdk_bitField:
+					((int*)data)[entry] = (int)val;
+					break;
+					
+				case irsdk_float:
+					((float*)data)[entry] = (float)val;
+					break;
+
+				// 8 bytes
+				case irsdk_double:
+					((double*)data)[entry] = (double)val;
+					break;
+				}
+
+				return true;
+			}
+			else
+			{
+				// invalid offset
+				assert(false);
+			}
+		}
+		else
+		{
+			//invalid variable index
+			assert(false);
+		}
+	}
+
+	return false;
+}
+
+bool irsdkDiskWriter::setVar(float val, int idx, int entry)
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+	{
+		if(idx >= 0 && idx < m_header.numVars)
+		{
+			if(entry >= 0 && entry < m_varHeaders[idx].count)
+			{
+				char * data = m_varBuf + m_varHeaders[idx].offset;
+				switch(m_varHeaders[idx].type)
+				{
+				// 1 byte
+				case irsdk_char:
+				case irsdk_bool:
+					((char*)data)[entry] = (bool)val;
+					break;
+
+				// 4 bytes
+				case irsdk_int:
+				case irsdk_bitField:
+					((int*)data)[entry] = (int)val;
+					break;
+					
+				case irsdk_float:
+					((float*)data)[entry] = (float)val;
+					break;
+
+				// 8 bytes
+				case irsdk_double:
+					((double*)data)[entry] = (double)val;
+					break;
+				}
+
+				return true;
+			}
+			else
+			{
+				// invalid offset
+				assert(false);
+			}
+		}
+		else
+		{
+			//invalid variable index
+			assert(false);
+		}
+	}
+
+	return false;
+}
+
+bool irsdkDiskWriter::setVar(double val, int idx, int entry)
+{
+	assert(m_ibtFile);
+
+	if(m_ibtFile)
+	{
+		if(idx >= 0 && idx < m_header.numVars)
+		{
+			if(entry >= 0 && entry < m_varHeaders[idx].count)
+			{
+				char * data = m_varBuf + m_varHeaders[idx].offset;
+				switch(m_varHeaders[idx].type)
+				{
+				// 1 byte
+				case irsdk_char:
+				case irsdk_bool:
+					((char*)data)[entry] = (bool)val;
+					break;
+
+				// 4 bytes
+				case irsdk_int:
+				case irsdk_bitField:
+					((int*)data)[entry] = (int)val;
+					break;
+					
+				case irsdk_float:
+					((float*)data)[entry] = (float)val;
+					break;
+
+				// 8 bytes
+				case irsdk_double:
+					((double*)data)[entry] = (double)val;
+					break;
+				}
+
+				return true;
+			}
+			else
+			{
+				// invalid offset
+				assert(false);
+			}
+		}
+		else
+		{
+			//invalid variable index
+			assert(false);
+		}
+	}
+
+	return false;
+}

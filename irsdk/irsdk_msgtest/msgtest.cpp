@@ -99,6 +99,14 @@ int main()
 	printf(" - press 'C' to uncheck clear winshield.\n");
 	printf(" - press 'D' to uncheck a fast repair.\n");
 	printf(" - press 'E' to uncheck add fuel.\n");
+	printf("\n");
+	printf(" - press 'F' to trigger screen shot\n");
+	printf(" - press 'G' to start video capture\n");
+	printf(" - press 'H' to stop video capture\n");
+	printf(" - press 'I' to toggle video capture\n");
+	printf(" - press 'J' to show video timer\n");
+	printf(" - press 'K' to hide video timer\n");
+	printf("\n");
 	printf(" press any other key to exit\n\n");
 
 	bool done = false;
@@ -317,6 +325,36 @@ int main()
 		case 'E':
 			printf("Clear Add Fuel pit commands\n");
 			irsdk_broadcastMsg(irsdk_BroadcastPitCommand, irsdk_PitCommand_ClearFuel, 0);
+			break;
+
+		case 'F':
+			printf("Trigger screen shot\n");
+			irsdk_broadcastMsg(irsdk_BroadcastVideoCapture, irsdk_VideoCapture_TriggerScreenShot, 0);
+			break;
+
+		case 'G':
+			printf("Start video capture\n");
+			irsdk_broadcastMsg(irsdk_BroadcastVideoCapture, irsdk_VideoCaptuer_StartVideoCapture, 0);
+			break;
+
+		case 'H':
+			printf("Stop video capture\n");
+			irsdk_broadcastMsg(irsdk_BroadcastVideoCapture, irsdk_VideoCaptuer_EndVideoCapture, 0);
+			break;
+
+		case 'I':
+			printf("Toggle video capture\n");
+			irsdk_broadcastMsg(irsdk_BroadcastVideoCapture, irsdk_VideoCaptuer_ToggleVideoCapture, 0);
+			break;
+
+		case 'J':
+			printf("Show video timer\n");
+			irsdk_broadcastMsg(irsdk_BroadcastVideoCapture, irsdk_VideoCaptuer_ShowVideoTimer, 0);
+			break;
+
+		case 'K':
+			printf("Hide video timer\n");
+			irsdk_broadcastMsg(irsdk_BroadcastVideoCapture, irsdk_VideoCaptuer_HideVideoTimer, 0);
 			break;
 
 		default:
