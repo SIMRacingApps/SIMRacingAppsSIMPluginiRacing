@@ -160,6 +160,11 @@ public class TirePressure extends Tire {
 
                 m_tireCompound._tireCurrent(this);  //keep the TireCompound Gauge up to date
                 
+                //if the compound was changed, then the tire must be changed
+                if (m_tireCompound.getIsDirty().getBoolean() && !m_changeFlag) {
+                    setChangeFlag(true);
+                }
+                
                 //if current is not set, then initialize it with the first value we see
                 //otherwise, it should not change until the tire is changed
                 //TODO: check if dropped in from Garage, if changes made in Garage are picked up.

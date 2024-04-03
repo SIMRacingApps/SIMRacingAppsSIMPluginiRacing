@@ -80,7 +80,7 @@ public class BroadcastMsg {
         public final static short PitCommand_RR = 6;         // right rear
         public final static short PitCommand_ClearTires = 7; // Clear tire pit checkboxes
         public final static short PitCommand_FR = 8;         // Request a fast Repair
-        public final static short PitCommand_ClearWS = 9;    // Uncheck Clean the winshield checkbox
+        public final static short PitCommand_ClearWS = 9;    // Uncheck Clean the windshield checkbox
         public final static short PitCommand_ClearFR = 10;   // Uncheck request a fast repair
         public final static short PitCommand_ClearFuel = 11; // Uncheck add fuel
         public final static short PitCommand_TC = 12;        // Change tire compound
@@ -119,7 +119,7 @@ public class BroadcastMsg {
             if (cmd.equalsIgnoreCase("FR"))
                 sCmd = PitCommand_FR;
             else
-            if (cmd.equalsIgnoreCase("CelarWS"))
+            if (cmd.equalsIgnoreCase("ClearWS"))
                 sCmd = PitCommand_ClearWS;
             else
             if (cmd.equalsIgnoreCase("ClearFR"))

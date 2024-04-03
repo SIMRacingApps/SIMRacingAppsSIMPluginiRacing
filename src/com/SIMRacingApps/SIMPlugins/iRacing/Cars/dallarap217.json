@@ -215,9 +215,8 @@
                 "IsFixed":           false,
                 "IsChangable":       true,
                 "States": {
-                    "0": {"Start":  -1.0, "End": 0.0,        "Name": "Car/Gauge/TireCompound", "Value": ""},
-                    "1": {"Start":   0.0, "End": 1.0,        "Name": "Car/Gauge/TireCompound", "Value": "DRY"},
-                    "2": {"Start":   1.0, "End": 9999.0,     "Name": "Car/Gauge/TireCompound", "Value": "WET"}
+                    "0":  {"Start":   0.0, "End": 1.0,        "Name": "Car/Gauge/TireCompound", "Value": "DRY"},
+                    "1":  {"Start":   1.0, "End": 2.0,        "Name": "Car/Gauge/TireCompound", "Value": "WET"}
                 }
             }
         }

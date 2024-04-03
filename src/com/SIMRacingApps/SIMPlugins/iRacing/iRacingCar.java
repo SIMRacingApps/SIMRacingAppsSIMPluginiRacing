@@ -499,6 +499,7 @@ public class iRacingCar extends Car {
         iRacingGauge RF        = (iRacingGauge) _getGauge(Gauge.Type.TIREPRESSURERF);
         iRacingGauge RR        = (iRacingGauge) _getGauge(Gauge.Type.TIREPRESSURERR);
         iRacingGauge fastRepair= (iRacingGauge) _getGauge(Gauge.Type.FASTREPAIRS);
+        iRacingGauge compound  = (iRacingGauge) _getGauge(Gauge.Type.TIRECOMPOUND);
 
         //get the latest timestamp of the supported gauges
         double timestamp = Math.abs(LF._getSIMCommandTimestamp());
@@ -508,6 +509,7 @@ public class iRacingCar extends Car {
         timestamp = Math.max(timestamp, Math.abs(fuellevel._getSIMCommandTimestamp()));
         timestamp = Math.max(timestamp, Math.abs(tearoff._getSIMCommandTimestamp()));
         timestamp = Math.max(timestamp, Math.abs(fastRepair._getSIMCommandTimestamp()));
+        timestamp = Math.max(timestamp, Math.abs(compound._getSIMCommandTimestamp()));
         
         //test these as a group because if any are sent, we start with a #clear, otherwise nothing is sent
         //give time for all the commands to come in before sending them
@@ -532,6 +534,18 @@ public class iRacingCar extends Car {
                 removeTearoff = true;
             }
             
+            if (compound._getSIMCommandTimestamp() > 0.0) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d",compound.getType().getString(),compound._getSIMCommandValue())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_TC, compound._getSIMCommandValue());
+                removeTearoff = true;
+            }
+            else //keep existing setting
+            if (compound._getSIMCommandTimestamp() == 0.0 && compound.getChangeFlag().getBoolean()) {
+                Server.logger().info(String.format("_sendSetupCommands() %s", String.format("Car/REFERENCE/Gauge/%s/setNextValue/%d",compound.getType().getString(),compound.getValueNext().getInteger())));
+                BroadcastMsg.PitCommandMode.send(m_iRacingSIMPlugin.getIODriver(), BroadcastMsg.PitCommandMode.PitCommand_TC, compound.getValueNext().getInteger());
+                removeTearoff = true;
+            }
+
             //as of Sept. 2017 build, iRacing makes you change both tires on the same side at the same time
             //found it will the both on, when only one is set, but it will not turn both off
             //This just helps inforce that.
@@ -617,6 +631,7 @@ public class iRacingCar extends Car {
             fuellevel._clearSIMCommandTimestamp();
             tearoff._clearSIMCommandTimestamp();
             fastRepair._clearSIMCommandTimestamp();
+            compound._clearSIMCommandTimestamp();
             
             m_sentSetupCommandsTimestamp = m_sessionTime; 
             return true;
