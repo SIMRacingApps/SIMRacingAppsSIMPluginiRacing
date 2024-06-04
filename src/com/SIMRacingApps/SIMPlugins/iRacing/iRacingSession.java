@@ -1937,17 +1937,11 @@ public class iRacingSession extends com.SIMRacingApps.Session {
         Data d = super.setChatFlag(onOffFlag);
         
         if (onOffFlag) {
-            d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "CHAT")
-                .replace("[DRIVER]", "")
-                .replace("[NUMBER]", "")
-                .replace("[DRIVERNAME]", "")
+            d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "CHATALL")
             ).getString());
         }
         else {
-            d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "NCHAT")
-                    .replace("[DRIVER]", "")
-                    .replace("[NUMBER]", "")
-                    .replace("[DRIVERNAME]", "")
+            d.setValue(setChat(this.getSendKeys("ADMIN_COMMANDS", "NCHATALL")
                 ).getString());
         }
         d.setState(Data.State.NORMAL);
