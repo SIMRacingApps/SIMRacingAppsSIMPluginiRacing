@@ -1,0 +1,9 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2024 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+    }
+}

@@ -1,6 +1,6 @@
 {
     "Description": "Street Stock",
-    "MfrLogo":     "com/SIMRacingApps/Cars/chevrolet.png",
+    "MfrLogo":     "com/SIMRacingApps/Cars/casino.png",
     "Copyright": "Copyright (C) 2015 - 2024 Jeffrey Gilliam",
     "Gauges" : {
         "FuelLevel": {
@@ -55,13 +55,13 @@
         "Tachometer": {
             "default": {
                 "Minimum":          0.0,
-                "Maximum":          10.0,
+                "Maximum":          11.0,
                 "MajorIncrement":   1.0,
                 "MinorIncrement":   0.5,
                 "States": {
-                   "SHIFTLIGHTS":  {"Start": 5910.0,  "End": 6500.0},
-                    "SHIFT":       {"Start": 6500.0, "End": 6600.0},
-                    "SHIFTBLINK":  {"Start": 6600.0, "End": 99999999.0}
+                   "SHIFTLIGHTS":  {"Start": 5910.0,  "End": 7010.0},
+                    "SHIFT":       {"Start": 7010.0, "End": 7100.0},
+                    "SHIFTBLINK":  {"Start": 7100.0, "End": 99999999.0}
                 }
             }
         },

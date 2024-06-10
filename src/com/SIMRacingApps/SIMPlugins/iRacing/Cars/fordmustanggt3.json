@@ -2,27 +2,24 @@
     "Copyright":   "Copyright (C) 2015 - 2024 Jeffrey Gilliam",
     "License":     "Apache License 2.0",
     "Description": "",
-    "MfrLogo":     "com/SIMRacingApps/Cars/porsche.png",
+    "MfrLogo":     "com/SIMRacingApps/Cars/ford.png",
     "Comment":     "Gauges not defined here are inherieted from Car.json",
     "Gauges": {
         "Tachometer": {
             "default": {
                 "Name":              "RPM",
                 "TypeName":          "x1000",
-                "UOM":               "rev/min",
-                "imperial":          "rev/min",
-                "metric":            "rev/min",
+                "UOM":               "rpm",
                 "Multiplier":        0.001,
                 "Minimum":           0.0,
-                "Maximum":           10.0,
+                "Maximum":           9.0,
                 "MajorIncrement":    1.0,
                 "MinorIncrement":    0.2,
                 "StateAscending":    true,
-                "iRacing":           "First=7500, Shift=8500, Last=9300, Blink=9450, RedLine=9500",
                 "States": {
-                    "SHIFTLIGHTS": {"Start": 8400.0, "End": 9200.0},
-                    "SHIFT":       {"Start": 9200.0, "End": 9300.0},
-                    "SHIFTBLINK":  {"Start": 9300.0, "End": 99999999.0}
+                    "SHIFTLIGHTS": {"Start": 7200.0, "End": 8000.0},
+                    "SHIFT":       {"Start": 8000.0, "End": 8080.0},
+                    "SHIFTBLINK":  {"Start": 8080.0, "End": 99999.0}
                 }
             }
         },
@@ -45,33 +42,17 @@
             "default": {
                 "Name":              "WATER",
                 "TypeName":          "LEVEL",
-                "UOM":               "qt",
+                "UOM":               "l",
                 "Minimum":           0.0,
-                "Maximum":           30.0,
+                "Maximum":           20.0,
                 "MajorIncrement":    5.0,
                 "MinorIncrement":    2.5,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   23.2,
+                "CapacityMaximum":   10.6,
                 "StateAscending":    false,
                 "States": {
-                    "CRITICAL": {"Start": 0.0,  "End": 10.0},
-                    "WARNING":  {"Start": 10.0, "End": 15.0}
-                }
-            }
-        },
-        "WaterPressure": {
-            "default": {
-                "Name":              "WATER",
-                "TypeName":          "PRESSURE",
-                "UOM":               "psi",
-                "Minimum":           0.0,
-                "Maximum":           100.0,
-                "MajorIncrement":    10.0,
-                "MinorIncrement":    5.0,
-                "StateAscending":    false,
-                "States": {
-                    "CRITICAL": {"Start": 0.0,  "End": 15.0},
-                    "WARNING":  {"Start": 15.0, "End": 30.0}
+                    "CRITICAL": {"Start": 0.0, "End": 2.0},
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
                 }
             }
         },
@@ -79,17 +60,33 @@
             "default": {
                 "Name":              "OIL",
                 "TypeName":          "LEVEL",
-                "UOM":               "qt",
+                "UOM":               "l",
                 "Minimum":           0.0,
-                "Maximum":           12.0,
-                "MajorIncrement":    2.0,
-                "MinorIncrement":    1.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    2.5,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   11.6,
+                "CapacityMaximum":   16.5,
                 "StateAscending":    false,
                 "States": {
                     "CRITICAL": {"Start": 0.0, "End": 2.0},
-                    "WARNING":  {"Start": 2.0, "End": 5.0}
+                    "WARNING":  {"Start": 2.0, "End": 4.0}
+                }
+            }
+        },
+        "OilPressure": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "PRESSURE",
+                "UOM":               "psi",
+                "Minimum":           0.0,
+                "Maximum":           100.0,
+                "MajorIncrement":    20.0,
+                "MinorIncrement":    10.0,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0,  "End": 5.0},
+                    "WARNING":  {"Start": 5.0,  "End": 10.0}
                 }
             }
         },
@@ -99,38 +96,20 @@
                 "TypeName":          "LEVEL",
                 "UOM":               "l",
                 "Minimum":           0.0,
-                "Maximum":           120.0,
+                "Maximum":           110.0,
                 "MajorIncrement":    10.0,
-                "MinorIncrement":    5.0,
+                "MinorIncrement":    1.0,
                 "CapacityMinimum":   0.0,
-                "CapacityMaximum":   120.0,
+                "CapacityMaximum":   110.0,
                 "CapacityIncrement": 1.0,
                 "IsFixed":           false,
                 "IsChangable":       true,
                 "OnResetChange":     true,
                 "StateAscending":    false,
                 "States": {
-                    "CRITICAL": {"Start": 0.0, "End": 8.0},
-                    "WARNING":  {"Start": 8.0, "End": 16.0}
+                    "CRITICAL": {"Start": 0.0, "End": 6.0},
+                    "WARNING":  {"Start": 6.0, "End": 12.0}
                 }
-            }
-        },
-        "TractionControlFront": {
-            "default": {
-                "Name":              "TRACTION CONTROL",
-                "TypeName":          "FRONT",
-                "UOM":               "",
-                "imperial":          "",
-                "metric":            "",
-                "StateAscending":    false,
-                "Minimum":           1.0,
-                "Maximum":           11.0,
-                "MajorIncrement":    1.0,
-                "MinorIncrement":    1.0,
-                "CapacityMinimum":   1.0,
-                "CapacityMaximum":   11.0,
-                "CapacityIncrement": 1.0,
-                "IsFixed":           false
             }
         },
         "TireCompound": {
@@ -152,8 +131,8 @@
                 "IsFixed":           false,
                 "IsChangable":       true,
                 "States": {
-                    "0": {"Start":   0.0, "End": 1.0, "Name": "Car/Gauge/TireCompound", "Value": "DRY"},
-                    "1": {"Start":   1.0, "End": 2.0, "Name": "Car/Gauge/TireCompound", "Value": "WET"}
+                    "0":  {"Start":   0.0, "End": 1.0,        "Name": "Car/Gauge/TireCompound", "Value": "DRY"},
+                    "1":  {"Start":   1.0, "End": 2.0,        "Name": "Car/Gauge/TireCompound", "Value": "WET"}
                 }
             }
         }
