@@ -1,0 +1,209 @@
+{
+    "Copyright":   "Copyright (C) 2015 - 2024 Jeffrey Gilliam",
+    "License":     "Apache License 2.0",
+    "Description": "",
+    "MfrLogo":     "com/SIMRacingApps/Cars/bmw.png",
+    "Comment":     "Gauges not defined here are inherieted from Car.json",
+    "Gauges": {
+        "Tachometer": {
+            "default": {
+                "Name":              "RPM",
+                "TypeName":          "x1000",
+                "UOM":               "rpm",
+                "Multiplier":        0.001,
+                "Minimum":           0.0,
+                "Maximum":           8.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    0.2,
+                "StateAscending":    true,
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 5620.0, "End": 6400.0},
+                    "SHIFT":       {"Start": 6400.0, "End": 6600.0},
+                    "SHIFTBLINK":  {"Start": 6600.0, "End": 99999999.0}
+                }
+            },
+            "default-1": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 5450.0, "End": 7060.0},
+                    "SHIFT":       {"Start": 7060.0, "End": 7450.0},
+                    "SHIFTBLINK":  {"Start": 7450.0, "End": 99999999.0}
+                }
+            },
+            "default-2": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 5800.0, "End": 7120.0},
+                    "SHIFT":       {"Start": 7120.0, "End": 7450.0},
+                    "SHIFTBLINK":  {"Start": 7450.0, "End": 99999999.0}
+                }
+            },
+            "default-3": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6450.0, "End": 7250.0},
+                    "SHIFT":       {"Start": 7250.0, "End": 7450.0},
+                    "SHIFTBLINK":  {"Start": 7450.0, "End": 99999999.0}
+                }
+            },
+            "default-4": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 6900.0, "End": 7340.0},
+                    "SHIFT":       {"Start": 7340.0, "End": 7450.0},
+                    "SHIFTBLINK":  {"Start": 7450.0, "End": 99999999.0}
+                }
+            },
+            "default-5": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7250.0, "End": 7410.0},
+                    "SHIFT":       {"Start": 7410.0, "End": 7450.0},
+                    "SHIFTBLINK":  {"Start": 7450.0, "End": 99999999.0}
+                }
+            },
+            "default-6": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7250.0, "End": 7410.0},
+                    "SHIFT":       {"Start": 7410.0, "End": 7450.0},
+                    "SHIFTBLINK":  {"Start": 7450.0, "End": 99999999.0}
+                }
+            },
+            "default-7": {
+                "States": {
+                    "SHIFTLIGHTS": {"Start": 7250.0, "End": 7410.0},
+                    "SHIFT":       {"Start": 7410.0, "End": 7450.0},
+                    "SHIFTBLINK":  {"Start": 7450.0, "End": 99999999.0}
+                }
+            }
+        },
+        "FuelLevel": {
+            "default": {
+                "Name":              "FUEL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           105.0,
+                "MajorIncrement":    10.0,
+                "MinorIncrement":    5.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   105.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 10.0},
+                    "WARNING":  {"Start": 10.0, "End": 20.0}
+                }
+            }
+        },
+        "WaterLevel": {
+            "default": {
+                "Name":              "WATER",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    2.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   15.7,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 10.0},
+                    "WARNING":  {"Start": 10.0, "End": 15.0}
+                }
+            }
+        },
+        "OilLevel": {
+            "default": {
+                "Name":              "OIL",
+                "TypeName":          "LEVEL",
+                "UOM":               "l",
+                "Minimum":           0.0,
+                "Maximum":           20.0,
+                "MajorIncrement":    5.0,
+                "MinorIncrement":    2.5,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   7.0,
+                "CapacityIncrement": 1.0,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "OnResetChange":     true,
+                "StateAscending":    false,
+                "States": {
+                    "CRITICAL": {"Start": 0.0, "End": 3.0},
+                    "WARNING":  {"Start": 3.0, "End": 5.0}
+                }
+            }
+        },
+        "Gear": {
+            "default": {
+                "Name":              "GEAR",
+                "TypeName":          "",
+                "UOM":               "",
+                "Minimum":           -1.0,
+                "Maximum":           7.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   -1.0,
+                "CapacityMaximum":   7.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true,
+                "States": {
+                    "R": {"Start": -1.0, "End": 0.0, "Name": "Car/Gauge/Gear", "Value": "R"},
+                    "N": {"Start":  0.0, "End": 1.0, "Name": "Car/Gauge/Gear", "Value": "N"},
+                    "1": {"Start":  1.0, "End": 2.0, "Name": "Car/Gauge/Gear", "Value": "1"},
+                    "2": {"Start":  2.0, "End": 3.0, "Name": "Car/Gauge/Gear", "Value": "2"},
+                    "3": {"Start":  3.0, "End": 4.0, "Name": "Car/Gauge/Gear", "Value": "3"},
+                    "4": {"Start":  4.0, "End": 5.0, "Name": "Car/Gauge/Gear", "Value": "4"},
+                    "5": {"Start":  5.0, "End": 6.0, "Name": "Car/Gauge/Gear", "Value": "5"},
+                    "6": {"Start":  6.0, "End": 7.0, "Name": "Car/Gauge/Gear", "Value": "6"},
+                    "7": {"Start":  7.0, "End": 8.0, "Name": "Car/Gauge/Gear", "Value": "7"}
+                }
+            }
+        },
+        "ThrottleShape": {
+            "default": {
+                "Name":              "THROTTLE",
+                "TypeName":          "SHAPE{{}}",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "StateAscending":    false,
+                "Minimum":           1.0,
+                "Maximum":           10.0,
+                "MajorIncrement":    2.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   1.0,
+                "CapacityMaximum":   10.0,
+                "CapacityIncrement": 1.0
+            }
+        },
+        "TireCompound": {
+            "default": {
+                "Name":              "TIRE",
+                "TypeName":          "COMPOUND",
+                "UOM":               "",
+                "imperial":          "",
+                "metric":            "",
+                "Minimum":           0.0,
+                "Maximum":           1.0,
+                "MajorIncrement":    1.0,
+                "MinorIncrement":    1.0,
+                "CapacityMinimum":   0.0,
+                "CapacityMaximum":   1.0,
+                "CapacityIncrement": 1.0,
+                "StateAscending":    true,
+                "OnResetChange":     true,
+                "IsFixed":           false,
+                "IsChangable":       true,
+                "States": {
+                    "0": {"Start":   0.0, "End": 1.0, "Name": "Car/Gauge/TireCompound", "Value": "DRY"},
+                    "1": {"Start":   1.0, "End": 2.0, "Name": "Car/Gauge/TireCompound", "Value": "WET"}
+                }
+            }
+        }
+    }
+}
