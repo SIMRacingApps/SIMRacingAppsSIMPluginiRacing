@@ -2577,6 +2577,39 @@ else
     }
 
     @Override
+    public Data getPushToPassRemaining() {
+        Data d = super.getPushToPassRemaining();
+        d.setState(Data.State.OFF);
+        if (isValid()) {
+            if (isME()) {
+                VarHeader P2P_Count = m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeaderValue("P2P_Count",m_iRacingSIMPlugin.getIODriver().getVars());
+                if (P2P_Count != null) {
+                    d.setValue(P2P_Count.Value,"s");
+                    d.setState(Data.State.NORMAL);
+                }
+            }
+        }
+        return d;
+    }
+
+    @Override
+    public Data getIsPushToPassActive() {
+        Data d = super.getIsPushToPassActive();
+        d.setState(Data.State.OFF);
+        if (isValid()) {
+            if (isME()) {
+                VarHeader P2P_Status = m_iRacingSIMPlugin.getIODriver().getVarHeaders().getVarHeaderValue("P2P_Status",m_iRacingSIMPlugin.getIODriver().getVars());
+                if (P2P_Status != null) {
+                    d.setValue((boolean)P2P_Status.Value,"boolean");
+                    d.setState(Data.State.NORMAL);
+                }
+            }
+        }
+        return d;
+    }
+
+    
+    @Override
     public Data getRadioChannel() {
         Data d = super.getRadioChannel();
         d.setState(Data.State.OFF);
